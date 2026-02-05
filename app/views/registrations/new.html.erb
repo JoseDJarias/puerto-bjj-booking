@@ -1,0 +1,61 @@
+<h2 class="mb-2 text-xl font-semibold text-slate-900">Create your account</h2>
+<p class="mb-6 text-sm text-slate-600">Join Puerto BJJ and start booking your classes.</p>
+
+<%= form_with model: @user, url: registration_path do |form| %>
+  <!-- Error Messages -->
+  <% if @user.errors.any? %>
+    <div class="mb-6 rounded-lg bg-red-50 p-4" role="alert">
+      <h3 class="mb-2 text-sm font-semibold text-red-800">Please fix the following errors:</h3>
+      <ul class="list-disc pl-5 text-sm text-red-700">
+        <% @user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- Email Field -->
+  <div class="mb-5">
+    <%= form.label :email_address, "Email", class: "mb-2 block text-sm font-medium text-slate-700" %>
+    <%= form.email_field :email_address,
+        required: true,
+        autofocus: true,
+        autocomplete: "username",
+        placeholder: "you@example.com",
+        class: "block w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/10" %>
+  </div>
+
+  <!-- Password Field -->
+  <div class="mb-5">
+    <%= form.label :password, "Password", class: "mb-2 block text-sm font-medium text-slate-700" %>
+    <%= form.password_field :password,
+        required: true,
+        autocomplete: "new-password",
+        placeholder: "••••••••",
+        maxlength: 72,
+        class: "block w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/10" %>
+    <p class="mt-2 text-xs text-slate-500">Must be at least 8 characters</p>
+  </div>
+
+  <!-- Password Confirmation Field -->
+  <div class="mb-6">
+    <%= form.label :password_confirmation, "Confirm password", class: "mb-2 block text-sm font-medium text-slate-700" %>
+    <%= form.password_field :password_confirmation,
+        required: true,
+        autocomplete: "new-password",
+        placeholder: "••••••••",
+        maxlength: 72,
+        class: "block w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/10" %>
+  </div>
+
+  <!-- Submit Button -->
+  <%= form.submit "Create account",
+      class: "mb-4 w-full cursor-pointer rounded-lg bg-indigo-600 px-4 py-3 font-semibold text-white transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500/50 active:bg-indigo-800" %>
+
+  <!-- Sign In Link -->
+  <div class="text-center">
+    <span class="text-sm text-slate-600">Already have an account?</span>
+    <%= link_to "Sign in", new_session_path,
+        class: "text-sm font-medium text-indigo-600 transition hover:text-indigo-700" %>
+  </div>
+<% end %>

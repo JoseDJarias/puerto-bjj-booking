@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Puerto BJJ Booking" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Puerto BJJ Booking">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <main class="flex min-h-screen items-center justify-center px-4 py-12">
+      <div class="w-full max-w-md">
+        <!-- Logo/Branding -->
+        <div class="mb-8 text-center">
+          <h1 class="text-3xl font-bold text-slate-900">Puerto BJJ</h1>
+          <p class="mt-2 text-sm text-slate-600">Book your next class</p>
+        </div>
+
+        <!-- Card Container -->
+        <div class="rounded-2xl bg-white p-8 shadow-lg ring-1 ring-slate-900/5">
+          <!-- Flash Messages -->
+          <% if alert = flash[:alert] %>
+            <div class="mb-6 rounded-lg bg-red-50 p-4 text-sm text-red-800" role="alert" id="alert">
+              <%= alert %>
+            </div>
+          <% end %>
+
+          <% if notice = flash[:notice] %>
+            <div class="mb-6 rounded-lg bg-green-50 p-4 text-sm text-green-800" role="status" id="notice">
+              <%= notice %>
+            </div>
+          <% end %>
+
+          <!-- Page Content -->
+          <%= yield %>
+        </div>
+
+        <!-- Footer Note -->
+        <p class="mt-8 text-center text-xs text-slate-500">
+          Puerto Jiu-Jitsu Academy
+        </p>
+      </div>
+    </main>
+  </body>
+</html>

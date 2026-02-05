@@ -1,36 +1,36 @@
-<h2 class="mb-6 text-xl font-semibold text-slate-900">Sign in</h2>
+<h2 class="mb-6 text-xl font-semibold text-slate-900"><%= t('auth.sign_in.title') %></h2>
 
-<%= form_with url: session_url do |form| %>
+<%= form_with url: session_path do |form| %>
   <!-- Email Field -->
   <div class="mb-5">
-    <%= form.label :email_address, "Email", class: "mb-2 block text-sm font-medium text-slate-700" %>
+    <%= form.label :email_address, t('auth.sign_in.email_label'), class: "mb-2 block text-sm font-medium text-slate-700" %>
     <%= form.email_field :email_address,
         required: true,
         autofocus: true,
         autocomplete: "username",
-        placeholder: "you@example.com",
+        placeholder: t('auth.sign_in.email_placeholder'),
         value: params[:email_address],
         class: "block w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/10" %>
   </div>
 
   <!-- Password Field -->
   <div class="mb-6">
-    <%= form.label :password, "Password", class: "mb-2 block text-sm font-medium text-slate-700" %>
+    <%= form.label :password, t('auth.sign_in.password_label'), class: "mb-2 block text-sm font-medium text-slate-700" %>
     <%= form.password_field :password,
         required: true,
         autocomplete: "current-password",
-        placeholder: "••••••••",
+        placeholder: t('auth.sign_in.password_placeholder'),
         maxlength: 72,
         class: "block w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/10" %>
   </div>
 
   <!-- Submit Button -->
-  <%= form.submit "Sign in",
+  <%= form.submit t('auth.sign_in.submit_button'),
       class: "mb-4 w-full cursor-pointer rounded-lg bg-indigo-600 px-4 py-3 font-semibold text-white transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500/50 active:bg-indigo-800" %>
 
   <!-- Forgot Password Link -->
   <div class="text-center">
-    <%= link_to "Forgot password?", new_password_path,
+    <%= link_to t('auth.sign_in.forgot_password'), new_password_path,
         class: "text-sm font-medium text-indigo-600 transition hover:text-indigo-700" %>
   </div>
 <% end %>
@@ -38,13 +38,13 @@
 <!-- Divider -->
 <div class="my-6 flex items-center">
   <div class="flex-1 border-t border-slate-200"></div>
-  <span class="px-4 text-xs text-slate-500">or</span>
+  <span class="px-4 text-xs text-slate-500"><%= t('auth.sign_in.divider') %></span>
   <div class="flex-1 border-t border-slate-200"></div>
 </div>
 
 <!-- Sign Up Link -->
 <div class="text-center">
-  <span class="text-sm text-slate-600">Don't have an account?</span>
-  <%= link_to "Sign up", new_registration_path,
+  <span class="text-sm text-slate-600"><%= t('auth.sign_in.no_account') %></span>
+  <%= link_to t('auth.sign_in.sign_up_link'), new_registration_path,
       class: "text-sm font-medium text-indigo-600 transition hover:text-indigo-700" %>
 </div>

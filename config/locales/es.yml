@@ -1,0 +1,107 @@
+es:
+  # === AUTENTICACIÓN ===
+  auth:
+    branding:
+      title: "Puerto BJJ"
+      tagline: "Reserva tu próxima clase"
+      footer: "Puerto Jiu-Jitsu Academy"
+    
+    sign_in:
+      title: "Iniciar sesión"
+      email_label: "Correo electrónico"
+      email_placeholder: "tu@ejemplo.com"
+      password_label: "Contraseña"
+      password_placeholder: "••••••••"
+      submit_button: "Iniciar sesión"
+      forgot_password: "¿Olvidaste tu contraseña?"
+      divider: "o"
+      no_account: "¿No tienes cuenta?"
+      sign_up_link: "Regístrate"
+    
+    sign_up:
+      title: "Crear tu cuenta"
+      subtitle: "Únete a Puerto BJJ y comienza a reservar tus clases."
+      email_label: "Correo electrónico"
+      email_placeholder: "tu@ejemplo.com"
+      password_label: "Contraseña"
+      password_placeholder: "••••••••"
+      password_hint: "Debe tener al menos 8 caracteres"
+      password_confirmation_label: "Confirmar contraseña"
+      password_confirmation_placeholder: "••••••••"
+      submit_button: "Crear cuenta"
+      already_have_account: "¿Ya tienes cuenta?"
+      sign_in_link: "Inicia sesión"
+      errors:
+        title: "Por favor corrige los siguientes errores:"
+    
+    forgot_password:
+      title: "¿Olvidaste tu contraseña?"
+      subtitle: "Ingresa tu correo y te enviaremos instrucciones para restablecerla."
+      email_label: "Correo electrónico"
+      email_placeholder: "tu@ejemplo.com"
+      submit_button: "Enviar instrucciones"
+      back_to_sign_in: "Volver a iniciar sesión"
+    
+    reset_password:
+      title: "Actualiza tu contraseña"
+      subtitle: "Elige una contraseña segura para mantener tu cuenta protegida."
+      new_password_label: "Nueva contraseña"
+      new_password_placeholder: "••••••••"
+      confirm_password_label: "Confirmar contraseña"
+      confirm_password_placeholder: "••••••••"
+      submit_button: "Actualizar contraseña"
+      back_to_sign_in: "Volver a iniciar sesión"
+  
+  # === FLASH MESSAGES ===
+  flash:
+    alerts:
+      access_denied: "Acceso denegado."
+      admin_required: "Se requieren privilegios de administrador."
+      active_membership_required: "Por favor activa tu membresía para reservar clases."
+      try_again_later: "Intenta de nuevo más tarde."
+      invalid_credentials: "Prueba con otro correo o contraseña."
+      membership_not_included: "Tu membresía no incluye clases de %{class_type}."
+      membership_expired: "Tu membresía ha expirado."
+      account_inactive: "Tu cuenta está inactiva."
+      no_membership: "No tienes una membresía activa."
+    
+    notices:
+      welcome: "¡Bienvenido a Puerto BJJ! Tu cuenta ha sido creada."
+      password_reset_sent: "Instrucciones para restablecer la contraseña enviadas (si el usuario existe)."
+      password_updated: "Tu contraseña ha sido actualizada."
+      signed_out: "Sesión cerrada exitosamente."
+  
+  # === MODELOS ===
+  activerecord:
+    models:
+      user: "Usuario"
+      membership: "Membresía"
+      membership_plan: "Plan de Membresía"
+      membership_package: "Paquete"
+      class_type: "Tipo de Clase"
+    
+    attributes:
+      user:
+        email_address: "Correo electrónico"
+        password: "Contraseña"
+        password_confirmation: "Confirmación de contraseña"
+        first_name: "Nombre"
+        last_name: "Apellido"
+        phone: "Teléfono"
+        role: "Rol"
+        status: "Estado"
+      
+      membership:
+        start_date: "Fecha de inicio"
+        end_date: "Fecha de fin"
+        amount_paid: "Monto pagado"
+        status: "Estado"
+      
+      membership_plan:
+        name: "Nombre"
+        duration_months: "Duración (meses)"
+        price: "Precio"
+      
+      membership_package:
+        name: "Nombre"
+        description: "Descripción"

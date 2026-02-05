@@ -12,19 +12,19 @@ class ApplicationController < ActionController::Base
   
   def require_admin
     unless Current.user&.admin?
-      redirect_to root_path, alert: "Access denied. Admin privileges required."
+      redirect_to root_path, alert: t('flash.alerts.admin_required')
     end
   end
 
   def require_instructor_or_admin
     unless Current.user&.can_check_in_students?
-      redirect_to root_path, alert: "Access denied."
+      redirect_to root_path, alert: t('flash.alerts.access_denied')
     end
   end
 
   def require_active_membership
     unless Current.user&.can_book_classes?
-      redirect_to root_path, alert: "Please activate your membership to book classes."
+      redirect_to root_path, alert: t('flash.alerts.active_membership_required')
     end
   end
 end

@@ -1,37 +1,37 @@
-<h2 class="mb-2 text-xl font-semibold text-slate-900">Update your password</h2>
-<p class="mb-6 text-sm text-slate-600">Choose a strong password to keep your account secure.</p>
+<h2 class="mb-2 text-xl font-semibold text-slate-900"><%= t('auth.reset_password.title') %></h2>
+<p class="mb-6 text-sm text-slate-600"><%= t('auth.reset_password.subtitle') %></p>
 
 <%= form_with url: password_path(params[:token]), method: :put do |form| %>
   <!-- New Password Field -->
   <div class="mb-5">
-    <%= form.label :password, "New password", class: "mb-2 block text-sm font-medium text-slate-700" %>
+    <%= form.label :password, t('auth.reset_password.new_password_label'), class: "mb-2 block text-sm font-medium text-slate-700" %>
     <%= form.password_field :password,
         required: true,
         autofocus: true,
         autocomplete: "new-password",
-        placeholder: "••••••••",
+        placeholder: t('auth.reset_password.new_password_placeholder'),
         maxlength: 72,
         class: "block w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/10" %>
   </div>
 
   <!-- Confirm Password Field -->
   <div class="mb-6">
-    <%= form.label :password_confirmation, "Confirm password", class: "mb-2 block text-sm font-medium text-slate-700" %>
+    <%= form.label :password_confirmation, t('auth.reset_password.confirm_password_label'), class: "mb-2 block text-sm font-medium text-slate-700" %>
     <%= form.password_field :password_confirmation,
         required: true,
         autocomplete: "new-password",
-        placeholder: "••••••••",
+        placeholder: t('auth.reset_password.confirm_password_placeholder'),
         maxlength: 72,
         class: "block w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/10" %>
   </div>
 
   <!-- Submit Button -->
-  <%= form.submit "Update password",
+  <%= form.submit t('auth.reset_password.submit_button'),
       class: "mb-4 w-full cursor-pointer rounded-lg bg-indigo-600 px-4 py-3 font-semibold text-white transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500/50 active:bg-indigo-800" %>
 
   <!-- Back to Sign In Link -->
   <div class="text-center">
-    <%= link_to "Back to sign in", new_session_path,
+    <%= link_to t('auth.reset_password.back_to_sign_in'), new_session_path,
         class: "text-sm font-medium text-indigo-600 transition hover:text-indigo-700" %>
   </div>
 <% end %>

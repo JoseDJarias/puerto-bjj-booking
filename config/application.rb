@@ -23,5 +23,13 @@ module PuertoBjjBooking
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # Internationalization configuration
+    config.i18n.default_locale = :es
+    config.i18n.available_locales = [:es, :en]
+    config.i18n.fallbacks = [:en]
+    
+    # Time zone for Costa Rica
+    config.time_zone = "America/Costa_Rica"
   end
 end

@@ -29,16 +29,10 @@
 !/tmp/storage/.keep
 
 /public/assets
-/public/packs
-/public/packs-test
-/public/vite
-/public/vite-test
-/public/sitemap.xml.gz
 
-# Add sprockets-manifest-*.json to .gitignore to avoid causing conflicts
-# on deployments that use the same Rails master key.
-/public/assets/.sprockets-manifest-*.json
+# Ignore key files for decrypting credentials and more.
+/config/*.key
 
-# Ignore master key for decrypting credentials and more.
-/config/master.key
-/config/credentials.yml.enc
+
+/app/assets/builds/*
+!/app/assets/builds/.keep

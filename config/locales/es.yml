@@ -71,6 +71,24 @@ es:
       password_updated: "Tu contraseña ha sido actualizada."
       signed_out: "Sesión cerrada exitosamente."
   
+  # === DASHBOARD ===
+  dashboard:
+    title: "Inicio"
+    pending_approval:
+      title: "Esperando aprobación"
+      message: "Tu cuenta está pendiente de revisión. Te notificaremos cuando un administrador la haya aprobado."
+      hint: "Si tienes dudas, contáctanos."
+    membership_expired:
+      title: "Mensualidad vencida"
+      message: "No tienes una membresía activa. Activa o renueva tu membresía para reservar clases."
+      cta: "Ver opciones de membresía"
+    welcome:
+      title: "Bienvenido"
+      greeting: "Hola, %{name}"
+      subtitle: "Tu membresía está activa. Puedes reservar tus clases."
+      cta: "Ver clases disponibles"
+    sign_out: "Cerrar sesión"
+
   # === MODELOS ===
   activerecord:
     models:

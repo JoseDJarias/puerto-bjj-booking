@@ -16,7 +16,7 @@ module Authorizable
   # === PERMISOS DE RESERVA ===
   
   def can_book_classes?
-    active? && valid_membership?
+    active? && approved? && valid_membership?
   end
 
   def valid_membership?
@@ -61,6 +61,17 @@ module Authorizable
 
   def member?
     role == "member"
+  end
+
+  # === APROBACIÓN (registro pendiente de admin) ===
+  # Admins e instructores se consideran aprobados por defecto.
+  
+  def approved?
+    admin? || instructor? || approved_at.present?
+  end
+
+  def pending_approval?
+    !approved? && member?
   end
 
   # === MEMBRESÍA ===

@@ -1,0 +1,76 @@
+<%= form_with model: [:admin, membership], class: "space-y-6" do |f| %>
+  
+  <% if membership.errors.any? %>
+    <div class="rounded-lg bg-red-50 p-4 border border-red-200">
+      <ul class="list-disc pl-5 text-sm text-red-700">
+        <% membership.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :user_id, class: "mb-1 block text-sm font-medium text-slate-700" %>
+    
+    <% if @preselected_user || membership.persisted? %>
+      <div class="block w-full rounded-lg border border-slate-200 bg-slate-100 px-4 py-2 text-slate-600 cursor-not-allowed">
+        <%= @preselected_user&.email_address || membership.user.email_address %>
+      </div>
+      <%= f.hidden_field :user_id, value: (@preselected_user&.id || membership.user_id) %>
+    <% else %>
+      <%= f.collection_select :user_id, @users, :id, :email_address, { prompt: t('admin.memberships.form.select_user') }, { class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" } %>
+    <% end %>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <%= f.label :membership_plan_id, class: "mb-1 block text-sm font-medium text-slate-700" %>
+      <%= f.collection_select :membership_plan_id, @plans, :id, :name, { prompt: t('admin.memberships.form.select_plan') }, { class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" } %>
+      <p class="mt-1 text-xs text-slate-500"><%= t('admin.memberships.form.plan_help') %></p>
+    </div>
+
+    <div>
+      <%= f.label :membership_package_id, class: "mb-1 block text-sm font-medium text-slate-700" %>
+      <%= f.collection_select :membership_package_id, @packages, :id, :name, { prompt: t('admin.memberships.form.select_package') }, { class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" } %>
+    </div>
+  </div>
+
+  <div>
+    <%= f.label :start_date, class: "mb-1 block text-sm font-medium text-slate-700" %>
+    <%= f.date_field :start_date, class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" %>
+  </div>
+
+  <div class="pt-4 border-t border-slate-100">
+    <details class="group">
+      <summary class="flex cursor-pointer items-center text-sm font-medium text-indigo-600 hover:text-indigo-800 select-none">
+        <span><%= t('admin.memberships.form.manual_override') %></span>
+        <span class="ml-2 transition-transform duration-200 group-open:rotate-180">▼</span>
+      </summary>
+      
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-4 rounded-lg border border-slate-200">
+        <div>
+          <%= f.label :amount_paid, class: "mb-1 block text-sm font-medium text-slate-700" %>
+          <%= f.number_field :amount_paid, step: "0.01", class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500", placeholder: "Auto" %>
+        </div>
+        
+        <div>
+          <%= f.label :end_date, class: "mb-1 block text-sm font-medium text-slate-700" %>
+          <%= f.date_field :end_date, class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" %>
+        </div>
+
+        <div>
+           <%= f.label :status, class: "mb-1 block text-sm font-medium text-slate-700" %>
+           <%= f.select :status, Membership.statuses.keys.map { |s| [t("enums.membership.status.#{s}"), s] }, {}, class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" %>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <div class="flex gap-3 pt-6">
+    <%= f.submit membership.persisted? ? t('admin.common.update') : t('admin.common.create'), class: "rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 cursor-pointer" %>
+    
+    <% cancel_path = @preselected_user ? admin_user_path(@preselected_user) : admin_memberships_path %>
+    <%= link_to t('admin.common.cancel'), cancel_path, class: "rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50" %>
+  </div>
+<% end %>

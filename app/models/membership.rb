@@ -8,57 +8,55 @@ class Membership < ApplicationRecord
   validates :start_date, presence: true
   validates :amount_paid, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 
-  scope :active, -> { where(status: :active).where("end_date >= ?", Date.today) }
+  # Scopes using Date.current for timezone safety
+  scope :active, -> { where(status: :active).where("end_date >= ?", Date.current) }
 
-  before_create :calculate_end_date
-  before_create :calculate_amount_paid
+  # Callbacks: before_validation allows setting data before db constraints check
+  before_validation :calculate_end_date, on: :create
+  before_validation :calculate_amount_paid, on: :create
   after_create :expire_conflicting_memberships
 
   def active?
-    status == "active" && end_date >= Date.today
+    status == "active" && end_date >= Date.current
   end
 
   def expired?
-    end_date < Date.today
+    end_date < Date.current
   end
 
   def days_remaining
     return 0 if expired?
-    (end_date - Date.today).to_i
-  end
-
-  def expires_soon?(days = 7)
-    days_remaining <= days && days_remaining > 0
+    (end_date - Date.current).to_i
   end
 
   def drop_in?
-    membership_plan.duration_months == 0
-  end
-
-  def recurring?
-    !drop_in?
+    membership_plan&.duration_months == 0
   end
 
   private
 
   def calculate_end_date
-    if membership_plan.duration_months == 0
-      # Drop-in: solo válido por el día
+    return if end_date.present? # Allow manual override
+
+    return unless start_date && membership_plan
+
+    if drop_in?
       self.end_date = start_date
     else
-      # Planes regulares
       self.end_date = start_date + membership_plan.duration_months.months
     end
   end
 
   def calculate_amount_paid
-    return if amount_paid.present?
+    return if amount_paid.present? # Allow manual override
+
+    return unless membership_plan && membership_package
     
     base_price = membership_plan.price
     modifier = membership_package.price_modifier || 0
     total = base_price + modifier
     
-    # Aplicar descuento del 50% si es segunda disciplina
+    # Apply 50% discount for second discipline
     if concurrent_membership?
       total = total * 0.5
     end
@@ -67,21 +65,19 @@ class Membership < ApplicationRecord
   end
 
   def concurrent_membership?
-    # Verificar si ya tiene otra membresía activa recurrente
+    # Check if user has another active recurring membership
     user.memberships
-        .where(status: :active)
-        .where("end_date >= ?", Date.today)
-        .where("id != ?", id || 0)
-        .where("memberships.membership_plan_id IN (?)", MembershipPlan.recurring.pluck(:id))
+        .active
+        .where.not(id: id)
+        .where(membership_plan_id: MembershipPlan.recurring.select(:id))
         .exists?
   end
 
   def expire_conflicting_memberships
-    # Solo expirar membresías drop-in anteriores
-    # Las membresías recurrentes pueden coexistir (para combos de disciplinas)
+    # Expire previous drop-ins only
     user.memberships
         .where.not(id: id)
-        .where(status: :active)
+        .active
         .joins(:membership_plan)
         .where(membership_plans: { duration_months: 0 })
         .update_all(status: :expired)

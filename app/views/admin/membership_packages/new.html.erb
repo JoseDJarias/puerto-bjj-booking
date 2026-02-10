@@ -1,0 +1,16 @@
+<% content_for :page_title, t('admin.packages.new.title') rescue "Nuevo Paquete" %>
+
+<div class="mx-auto max-w-lg">
+  <div class="mb-6">
+    <h2 class="text-xl font-semibold text-slate-900"><%= t('admin.packages.new.title') rescue "Nuevo Paquete" %></h2>
+    <p class="mt-1 text-sm text-slate-500">Define un nuevo grupo de disciplinas.</p>
+  </div>
+
+  <div class="bg-white p-6 shadow-sm rounded-xl border border-slate-200">
+    <%= render "form", membership_package: @membership_package %>
+  </div>
+
+  <div class="mt-4 text-center">
+    <%= link_to t('admin.common.back'), admin_membership_packages_path, class: "text-sm font-medium text-slate-500 hover:text-slate-700" %>
+  </div>
+</div>

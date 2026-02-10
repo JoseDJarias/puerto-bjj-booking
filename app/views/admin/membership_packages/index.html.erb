@@ -1,0 +1,43 @@
+<% content_for :page_title, t('admin.packages.index.title') rescue "Paquetes" %>
+
+<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+  <h2 class="text-xl font-semibold text-slate-900"><%= t('admin.packages.index.title') rescue "Paquetes" %></h2>
+  <%= link_to t('admin.packages.index.new'), new_admin_membership_package_path, class: "inline-flex justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700" %>
+</div>
+
+<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+  <% @packages.each do |pkg| %>
+    <div class="rounded-xl border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow flex flex-col">
+      <div class="p-5 flex-1">
+        <div class="flex justify-between items-start mb-4">
+          <h3 class="font-semibold text-slate-900 text-lg"><%= pkg.name %></h3>
+          <span class="px-2 py-0.5 text-xs font-medium rounded-full <%= pkg.active? ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600' %>">
+            <%= pkg.active? ? 'Activo' : 'Inactivo' %>
+          </span>
+        </div>
+        
+        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Incluye:</p>
+        
+        <div class="flex flex-wrap gap-2 mb-4">
+          <% if pkg.class_types.any? %>
+            <% pkg.class_types.each do |ct| %>
+              <span class="bg-indigo-50 text-indigo-700 text-xs px-2 py-1 rounded-md font-medium border border-indigo-100">
+                <%= ct.name %>
+              </span>
+            <% end %>
+          <% else %>
+             <span class="text-slate-400 text-sm italic">Ninguna disciplina seleccionada</span>
+          <% end %>
+        </div>
+
+        <% if pkg.description.present? %>
+          <p class="text-sm text-slate-500 mt-2 line-clamp-2"><%= pkg.description %></p>
+        <% end %>
+      </div>
+
+      <div class="bg-slate-50 px-5 py-3 border-t border-slate-100 text-right rounded-b-xl">
+        <%= link_to t('admin.common.edit'), edit_admin_membership_package_path(pkg), class: "text-sm font-medium text-indigo-600 hover:text-indigo-800" %>
+      </div>
+    </div>
+  <% end %>
+</div>

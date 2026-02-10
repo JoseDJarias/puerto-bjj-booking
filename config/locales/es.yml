@@ -52,6 +52,142 @@ es:
       submit_button: "Actualizar contraseña"
       back_to_sign_in: "Volver a iniciar sesión"
   
+  # === ADMIN ===
+  admin:
+    layout:
+      title: "Admin - Puerto BJJ"
+      brand: "Puerto BJJ"
+      nav_label: "Navegación del panel"
+      home: "Inicio"
+      plans: "Planes"
+      users: "Usuarios"
+      memberships: "Membresías"
+      classes: "Clases"
+      class_types: "Disciplinas" # Nuevo item de menú
+      open_menu: "Abrir menú"
+      close_menu: "Cerrar menú"
+
+    # --- Sección Común (Para reutilizar en todos los CRUDs) ---
+    common:
+      actions: "Acciones"
+      active: "Estado"
+      active_record: "Activo (Visible)"
+      yes: "Sí"
+      no: "No"
+      edit: "Editar"
+      delete: "Eliminar"
+      back: "Volver al listado"
+      cancel: "Cancelar"
+      create: "Crear"
+      update: "Actualizar"
+      show: "Ver detalles"
+    
+    errors:
+      header: "No pudimos guardar los cambios:"
+
+    # --- Recursos Específicos ---
+    plans:
+      drop_in: "1 día"
+      index:
+        title: "Planes de membresía"
+        new: "Nuevo plan"
+      new:
+        title: "Nuevo plan de membresía"
+      edit:
+        title: "Editar plan de membresía"
+      form:
+        duration_hint: "0 = drop-in (válido 1 día). 1 = mensual, 2 = bimestre, 3 = trimestre."
+      flash:
+        created: "Plan creado correctamente."
+        updated: "Plan actualizado correctamente."
+    
+    class_types:
+      index:
+        title: "Disciplinas y Tipos de Clase"
+        new: "Nueva Disciplina"
+      new:
+        title: "Registrar nueva disciplina"
+      edit:
+        title: "Editar disciplina"
+      flash:
+        created: "Disciplina creada correctamente."
+        updated: "Disciplina actualizada correctamente."
+
+    packages:
+      index:
+        title: "Paquetes de Acceso"
+        new: "Nuevo Paquete"
+      new:
+        title: "Crear Paquete"
+      edit:
+        title: "Editar Paquete"
+      form:
+        select_classes: "Disciplinas incluidas"
+      flash:
+        created: "Paquete creado correctamente."
+        updated: "Paquete actualizado correctamente."
+
+    users:
+      index:
+        title: "Gestión de Usuarios"
+        role: "Rol"
+        joined_at: "Registro"
+        pending_action: "Pendiente (Aprobar)"
+        approved_badge: "Aprobado"
+      edit:
+        title: "Editar Usuario"
+        subtitle: "Gestiona los permisos y datos de %{email}"
+        admin_section: "Zona de Administración"
+      show:
+        title: "Detalle de Usuario"
+        back: "Volver a usuarios"
+        memberships_title: "Historial de Membresías"
+        new_membership: "+ Nueva Membresía"
+        no_memberships: "Este usuario no tiene membresías activas ni historial."
+      flash:
+        updated: "Usuario actualizado correctamente."
+        deleted: "Usuario eliminado."
+        approved: "Usuario aprobado y activado."
+
+    memberships:
+      index:
+        title: "Control de Membresías"
+        new: "Vender Membresía"
+        table:
+          plan_details: "Detalles del Plan"
+          validity: "Vigencia"
+      new:
+        title: "Nueva Membresía"
+        subtitle: "Asignando plan a %{name}"
+      edit:
+        title: "Editar Membresía"
+      form:
+        plan_help: "El precio y fecha fin se calcularán automáticamente."
+        manual_override: "Ajustes Manuales (Admin)"
+        select_user: "Seleccionar alumno..."
+        select_plan: "Seleccionar plan..."
+        select_package: "Seleccionar paquete..."
+      flash:
+        created: "Membresía creada. Cobro registrado: %{amount}"
+        updated: "Membresía actualizada correctamente."
+        deleted: "Membresía eliminada."
+
+    enums:
+      user:
+        role:
+          member: "Miembro"
+          instructor: "Instructor"
+          admin: "Administrador"
+        status:
+          active: "Activo"
+          inactive: "Inactivo"
+          suspended: "Suspendido"
+      membership:
+        status:
+          active: "Activa"
+          expired: "Vencida"
+          cancelled: "Cancelada"  
+
   # === FLASH MESSAGES ===
   flash:
     alerts:
@@ -89,14 +225,15 @@ es:
       cta: "Ver clases disponibles"
     sign_out: "Cerrar sesión"
 
-  # === MODELOS ===
+  # === MODELOS (ActiveRecord) ===
+  # Esto es clave para que los labels de los forms se pongan solos
   activerecord:
     models:
       user: "Usuario"
       membership: "Membresía"
       membership_plan: "Plan de Membresía"
       membership_package: "Paquete"
-      class_type: "Tipo de Clase"
+      class_type: "Tipo de Clase" # Disciplina
     
     attributes:
       user:
@@ -123,3 +260,8 @@ es:
       membership_package:
         name: "Nombre"
         description: "Descripción"
+      
+      class_type:
+        name: "Nombre de la disciplina"
+        description: "Descripción"
+        active: "Activo"

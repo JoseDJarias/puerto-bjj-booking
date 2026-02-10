@@ -1,0 +1,32 @@
+<%= form_with model: [:admin, class_type], class: "space-y-5" do |f| %>
+  <% if class_type.errors.any? %>
+    <div class="rounded-lg bg-red-50 p-4">
+      <p class="text-sm font-medium text-red-800"><%= t('admin.errors.header') %></p>
+      <ul class="mt-2 list-disc pl-5 text-sm text-red-700">
+        <% class_type.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :name, t('activerecord.attributes.class_type.name'), class: "mb-1 block text-sm font-medium text-slate-700" %>
+    <%= f.text_field :name, class: "block w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900 focus:border-indigo-500 focus:ring-indigo-500", autofocus: true, placeholder: "Ej: Muay Thai, Yoga, Boxeo..." %>
+  </div>
+
+  <div>
+    <%= f.label :description, t('activerecord.attributes.class_type.description'), class: "mb-1 block text-sm font-medium text-slate-700" %>
+    <%= f.text_area :description, rows: 3, class: "block w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900 focus:border-indigo-500 focus:ring-indigo-500" %>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <%= f.check_box :active, class: "h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" %>
+    <%= f.label :active, t('admin.common.active_record'), class: "text-sm text-slate-700" %>
+  </div>
+
+  <div class="flex gap-3 pt-2">
+    <%= f.submit class_type.persisted? ? t('admin.common.update') : t('admin.common.create'), class: "rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 cursor-pointer" %>
+    <%= link_to t('admin.common.cancel'), admin_class_types_path, class: "rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50" %>
+  </div>
+<% end %>

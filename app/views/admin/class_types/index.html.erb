@@ -1,0 +1,35 @@
+<% content_for :page_title, t('admin.class_types.index.title') %>
+
+<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+  <h2 class="text-xl font-semibold text-slate-900"><%= t('admin.class_types.index.title') %></h2>
+  <%= link_to t('admin.class_types.index.new'), new_admin_class_type_path, class: "inline-flex justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" %>
+</div>
+
+<div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+  <table class="min-w-full divide-y divide-slate-200">
+    <thead class="bg-slate-50">
+      <tr>
+        <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600"><%= t('activerecord.attributes.class_type.name') %></th>
+        <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600"><%= t('activerecord.attributes.class_type.description') %></th>
+        <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600"><%= t('admin.common.active') %></th>
+        <th scope="col" class="relative px-4 py-3"><span class="sr-only"><%= t('admin.common.actions') %></span></th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-200 bg-white">
+      <% @class_types.each do |class_type| %>
+        <tr class="hover:bg-slate-50">
+          <td class="whitespace-nowrap px-4 py-3 text-sm font-medium text-slate-900"><%= class_type.name %></td>
+          <td class="px-4 py-3 text-sm text-slate-600 max-w-xs truncate"><%= class_type.description %></td>
+          <td class="whitespace-nowrap px-4 py-3 text-sm">
+            <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium <%= class_type.active? ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
+              <%= class_type.active? ? t('admin.common.yes') : t('admin.common.no') %>
+            </span>
+          </td>
+          <td class="whitespace-nowrap px-4 py-3 text-right text-sm">
+            <%= link_to t('admin.common.edit'), edit_admin_class_type_path(class_type), class: "font-medium text-indigo-600 hover:text-indigo-700" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,9 @@
+<% content_for :page_title, t('admin.class_types.new.title') %>
+
+<div class="mx-auto max-w-lg">
+  <h2 class="mb-6 text-xl font-semibold text-slate-900"><%= t('admin.class_types.new.title') %></h2>
+  <%= render "form", class_type: @class_type %>
+  <p class="mt-4">
+    <%= link_to t('admin.common.back'), admin_class_types_path, class: "text-sm text-indigo-600 hover:text-indigo-700" %>
+  </p>
+</div>

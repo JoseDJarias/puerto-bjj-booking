@@ -1,0 +1,38 @@
+<%= form_with model: [:admin, membership_plan], class: "space-y-5" do |f| %>
+  <% if membership_plan.errors.any? %>
+    <div class="rounded-lg bg-red-50 p-4">
+      <p class="text-sm font-medium text-red-800"><%= t('auth.sign_up.errors.title') %></p>
+      <ul class="mt-2 list-disc pl-5 text-sm text-red-700">
+        <% membership_plan.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :name, t('activerecord.attributes.membership_plan.name'), class: "mb-1 block text-sm font-medium text-slate-700" %>
+    <%= f.text_field :name, class: "block w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900 focus:border-indigo-500 focus:ring-indigo-500", autofocus: true %>
+  </div>
+
+  <div>
+    <%= f.label :duration_months, t('activerecord.attributes.membership_plan.duration_months'), class: "mb-1 block text-sm font-medium text-slate-700" %>
+    <%= f.number_field :duration_months, min: 0, step: 1, class: "block w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900 focus:border-indigo-500 focus:ring-indigo-500" %>
+    <p class="mt-1 text-xs text-slate-500"><%= t('admin.plans.form.duration_hint') %></p>
+  </div>
+
+  <div>
+    <%= f.label :price, t('activerecord.attributes.membership_plan.price'), class: "mb-1 block text-sm font-medium text-slate-700" %>
+    <%= f.number_field :price, min: 0, step: 0.01, class: "block w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900 focus:border-indigo-500 focus:ring-indigo-500" %>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <%= f.check_box :active, class: "h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" %>
+    <%= f.label :active, t('admin.plans.form.active'), class: "text-sm text-slate-700" %>
+  </div>
+
+  <div class="flex gap-3 pt-2">
+    <%= f.submit membership_plan.persisted? ? t('admin.plans.form.update') : t('admin.plans.form.create'), class: "rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" %>
+    <%= link_to t('admin.plans.cancel'), admin_membership_plans_path, class: "rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50" %>
+  </div>
+<% end %>

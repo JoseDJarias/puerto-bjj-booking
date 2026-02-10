@@ -1,0 +1,33 @@
+<% content_for :page_title, t('admin.plans.index.title') %>
+
+<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+  <h2 class="text-xl font-semibold text-slate-900"><%= t('admin.plans.index.title') %></h2>
+  <%= link_to t('admin.plans.index.new'), new_admin_membership_plan_path, class: "inline-flex justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" %>
+</div>
+
+<div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+  <table class="min-w-full divide-y divide-slate-200">
+    <thead class="bg-slate-50">
+      <tr>
+        <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600"><%= t('activerecord.attributes.membership_plan.name') %></th>
+        <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600"><%= t('activerecord.attributes.membership_plan.duration_months') %></th>
+        <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600"><%= t('activerecord.attributes.membership_plan.price') %></th>
+        <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600"><%= t('admin.plans.index.active') %></th>
+        <th scope="col" class="relative px-4 py-3"><span class="sr-only"><%= t('admin.plans.index.actions') %></span></th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-200 bg-white">
+      <% @membership_plans.each do |plan| %>
+        <tr class="hover:bg-slate-50">
+          <td class="whitespace-nowrap px-4 py-3 text-sm font-medium text-slate-900"><%= plan.name %></td>
+          <td class="whitespace-nowrap px-4 py-3 text-sm text-slate-600"><%= plan.duration_months == 0 ? t('admin.plans.drop_in') : plan.duration_months %></td>
+          <td class="whitespace-nowrap px-4 py-3 text-sm text-slate-600"><%= number_to_currency(plan.price) %></td>
+          <td class="whitespace-nowrap px-4 py-3 text-sm"><%= plan.active? ? t('admin.plans.yes') : t('admin.plans.no') %></td>
+          <td class="whitespace-nowrap px-4 py-3 text-right text-sm">
+            <%= link_to t('admin.plans.index.edit'), edit_admin_membership_plan_path(plan), class: "font-medium text-indigo-600 hover:text-indigo-700" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,9 @@
+<% content_for :page_title, t('admin.plans.new.title') %>
+
+<div class="mx-auto max-w-lg">
+  <h2 class="mb-6 text-xl font-semibold text-slate-900"><%= t('admin.plans.new.title') %></h2>
+  <%= render "form", membership_plan: @membership_plan %>
+  <p class="mt-4">
+    <%= link_to t('admin.plans.back'), admin_membership_plans_path, class: "text-sm text-indigo-600 hover:text-indigo-700" %>
+  </p>
+</div>

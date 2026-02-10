@@ -1,0 +1,65 @@
+<% content_for :page_title, t('admin.users.edit.title') %>
+
+<div class="mx-auto max-w-lg">
+  <div class="mb-6">
+    <h2 class="text-xl font-semibold text-slate-900"><%= t('admin.users.edit.title') %></h2>
+    <p class="mt-1 text-sm text-slate-500"><%= t('admin.users.edit.subtitle', email: @user.email_address) %></p>
+  </div>
+
+  <div class="bg-white p-6 shadow-sm rounded-xl border border-slate-200">
+    <%= form_with model: [:admin, @user], class: "space-y-6" do |f| %>
+      
+      <% if @user.errors.any? %>
+        <div class="rounded-lg bg-red-50 p-4 border border-red-200">
+          <ul class="list-disc pl-5 text-sm text-red-700">
+            <% @user.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <%= f.label :first_name, class: "mb-1 block text-sm font-medium text-slate-700" %>
+          <%= f.text_field :first_name, class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" %>
+        </div>
+        <div>
+          <%= f.label :last_name, class: "mb-1 block text-sm font-medium text-slate-700" %>
+          <%= f.text_field :last_name, class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" %>
+        </div>
+      </div>
+
+      <div>
+        <%= f.label :email_address, class: "mb-1 block text-sm font-medium text-slate-700" %>
+        <%= f.email_field :email_address, class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" %>
+      </div>
+
+      <div>
+        <%= f.label :phone, class: "mb-1 block text-sm font-medium text-slate-700" %>
+        <%= f.telephone_field :phone, class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" %>
+      </div>
+
+      <div class="pt-4 border-t border-slate-100">
+        <h3 class="text-sm font-medium text-slate-900 mb-3"><%= t('admin.users.edit.admin_section') %></h3>
+        
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <%= f.label :role, class: "mb-1 block text-sm font-medium text-slate-700" %>
+            <%= f.select :role, User.roles.keys.map { |r| [t("enums.user.role.#{r}"), r] }, {}, class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" %>
+          </div>
+
+          <div>
+            <%= f.label :status, class: "mb-1 block text-sm font-medium text-slate-700" %>
+            <%= f.select :status, User.statuses.keys.map { |s| [t("enums.user.status.#{s}"), s] }, {}, class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" %>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-3 pt-6">
+        <%= f.submit t('admin.common.update'), class: "rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 cursor-pointer" %>
+        <%= link_to t('admin.common.cancel'), admin_users_path, class: "rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50" %>
+      </div>
+    <% end %>
+  </div>
+</div>

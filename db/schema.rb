@@ -10,7 +10,35 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_06_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_10_222049) do
+  create_table "bookings", force: :cascade do |t|
+    t.integer "changed_by_id"
+    t.integer "class_schedule_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "status", default: 0, null: false
+    t.integer "submission_count", default: 1, null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["changed_by_id"], name: "index_bookings_on_changed_by_id"
+    t.index ["class_schedule_id"], name: "index_bookings_on_class_schedule_id"
+    t.index ["user_id", "class_schedule_id"], name: "index_bookings_on_user_id_and_class_schedule_id", unique: true
+    t.index ["user_id"], name: "index_bookings_on_user_id"
+  end
+
+  create_table "class_schedules", force: :cascade do |t|
+    t.boolean "cancelled", default: false, null: false
+    t.integer "capacity", default: 20, null: false
+    t.integer "class_type_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "duration_minutes", default: 60, null: false
+    t.integer "instructor_id", null: false
+    t.datetime "starts_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["class_type_id"], name: "index_class_schedules_on_class_type_id"
+    t.index ["instructor_id"], name: "index_class_schedules_on_instructor_id"
+    t.index ["starts_at"], name: "index_class_schedules_on_starts_at"
+  end
+
   create_table "class_types", force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
@@ -78,6 +106,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_06_120000) do
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
+  create_table "solid_cable_messages", force: :cascade do |t|
+    t.binary "channel", limit: 1024, null: false
+    t.integer "channel_hash", limit: 8, null: false
+    t.datetime "created_at", null: false
+    t.binary "payload", limit: 536870912, null: false
+    t.index ["channel"], name: "index_solid_cable_messages_on_channel"
+    t.index ["channel_hash"], name: "index_solid_cable_messages_on_channel_hash"
+    t.index ["created_at"], name: "index_solid_cable_messages_on_created_at"
+    t.index ["id"], name: "index_solid_cable_messages_on_id", unique: true
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "approved_at"
     t.datetime "created_at", null: false
@@ -95,6 +134,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_06_120000) do
     t.index ["status"], name: "index_users_on_status"
   end
 
+  add_foreign_key "bookings", "class_schedules"
+  add_foreign_key "bookings", "users"
+  add_foreign_key "bookings", "users", column: "changed_by_id"
+  add_foreign_key "class_schedules", "class_types"
+  add_foreign_key "class_schedules", "users", column: "instructor_id"
   add_foreign_key "membership_package_class_types", "class_types"
   add_foreign_key "membership_package_class_types", "membership_packages"
   add_foreign_key "memberships", "membership_packages"

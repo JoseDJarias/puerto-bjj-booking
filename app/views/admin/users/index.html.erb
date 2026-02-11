@@ -5,59 +5,65 @@
 </div>
 
 <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-  <table class="min-w-full divide-y divide-slate-200">
-    <thead class="bg-slate-50">
-      <tr>
-        <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600"><%= t('activerecord.models.user') %></th>
-        <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600"><%= t('activerecord.attributes.user.role') %></th>
-        <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600"><%= t('activerecord.attributes.user.status') %></th>
-        <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600"><%= t('admin.users.index.joined_at') %></th>
-        <th scope="col" class="relative px-4 py-3"><span class="sr-only"><%= t('admin.common.actions') %></span></th>
-      </tr>
-    </thead>
-    <tbody class="divide-y divide-slate-200 bg-white">
-      <% @users.each do |user| %>
-        <tr class="hover:bg-slate-50">
-          <td class="px-4 py-3">
-            <div class="flex items-center">
-              <div class="h-10 w-10 flex-shrink-0 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold">
-                <%= user.first_name&.first || user.email_address.first.upcase %>
-              </div>
-              <div class="ml-4">
-                <div class="text-sm font-medium text-slate-900"><%= user.first_name %> <%= user.last_name %></div>
-                <div class="text-sm text-slate-500"><%= user.email_address %></div>
-              </div>
-            </div>
-          </td>
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-slate-200">
+      <thead class="bg-slate-50">
+        <tr>
+          <th scope="col" class="sticky left-0 z-10 bg-slate-50 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600 whitespace-nowrap shadow-[1px_0_0_0_rgba(0,0,0,0.05)]">
+            <%= t('activerecord.models.user') %>
+          </th>
           
-          <td class="whitespace-nowrap px-4 py-3 text-sm text-slate-600">
-            <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset <%= user.admin? ? 'bg-purple-50 text-purple-700 ring-purple-700/10' : (user.instructor? ? 'bg-blue-50 text-blue-700 ring-blue-700/10' : 'bg-slate-50 text-slate-700 ring-slate-600/10') %>">
-              <%= t("enums.user.role.#{user.role}") %>
-            </span>
-          </td>
-
-          <td class="whitespace-nowrap px-4 py-3 text-sm">
-            <% if user.approved_at.present? %>
-              <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-                <%= t('admin.users.index.approved_badge') %>
-              </span>
-            <% else %>
-              <%= button_to approve_admin_user_path(user), method: :patch, class: "inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800 hover:bg-yellow-200 cursor-pointer transition-colors" do %>
-                <%= t('admin.users.index.pending_action') %>
-              <% end %>
-            <% end %>
-          </td>
-
-          <td class="whitespace-nowrap px-4 py-3 text-sm text-slate-500">
-            <%= l(user.created_at.to_date, format: :short) %>
-          </td>
-
-          <td class="whitespace-nowrap px-4 py-3 text-right text-sm font-medium">
-            <%= link_to t('admin.common.edit'), edit_admin_user_path(user), class: "text-indigo-600 hover:text-indigo-900 mr-3" %>
-            <%= link_to t('admin.common.show'), admin_user_path(user), class: "text-slate-600 hover:text-slate-900" %>
-          </td>
+          <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600 whitespace-nowrap"><%= t('activerecord.attributes.user.role') %></th>
+          <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600 whitespace-nowrap"><%= t('activerecord.attributes.user.status') %></th>
+          <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600 whitespace-nowrap"><%= t('admin.users.index.joined_at') %></th>
+          <th scope="col" class="relative px-4 py-3 whitespace-nowrap"><span class="sr-only"><%= t('admin.common.actions') %></span></th>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody class="divide-y divide-slate-200 bg-white">
+        <% @users.each do |user| %>
+          <tr class="group hover:bg-slate-50">
+            
+            <td class="sticky left-0 z-10 bg-white group-hover:bg-slate-50 px-4 py-3 whitespace-nowrap shadow-[1px_0_0_0_rgba(0,0,0,0.05)]">
+              <div class="flex items-center">
+                <div class="h-10 w-10 flex-shrink-0 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold">
+                  <%= user.first_name&.first || user.email_address.first.upcase %>
+                </div>
+                <div class="ml-4">
+                  <div class="text-sm font-medium text-slate-900"><%= user.first_name %> <%= user.last_name %></div>
+                  <div class="text-sm text-slate-500"><%= user.email_address %></div>
+                </div>
+              </div>
+            </td>
+            
+            <td class="whitespace-nowrap px-4 py-3 text-sm text-slate-600">
+              <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset bg-slate-50 text-slate-700 ring-slate-600/10">
+                <%= t("enums.user.role.#{user.role}") %>
+              </span>
+            </td>
+
+            <td class="whitespace-nowrap px-4 py-3 text-sm">
+              <% if user.approved_at.present? %>
+                <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+                  <%= t('admin.users.index.approved_badge') %>
+                </span>
+              <% else %>
+                <%= button_to approve_admin_user_path(user), method: :patch, class: "inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800 hover:bg-yellow-200 cursor-pointer transition-colors" do %>
+                  <%= t('admin.users.index.pending_action') %>
+                <% end %>
+              <% end %>
+            </td>
+
+            <td class="whitespace-nowrap px-4 py-3 text-sm text-slate-500">
+              <%= l(user.created_at.to_date, format: :short) %>
+            </td>
+
+            <td class="whitespace-nowrap px-4 py-3 text-right text-sm font-medium">
+              <%= link_to t('admin.common.edit'), edit_admin_user_path(user), class: "text-indigo-600 hover:text-indigo-900 mr-3" %>
+              <%= link_to t('admin.common.show'), admin_user_path(user), class: "text-slate-600 hover:text-slate-900" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>

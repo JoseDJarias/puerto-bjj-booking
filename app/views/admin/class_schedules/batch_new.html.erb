@@ -1,0 +1,71 @@
+<% content_for :page_title, t('admin.class_schedules.batch_new.title') %>
+
+<div class="mx-auto max-w-2xl">
+  <div class="mb-6">
+    <%= link_to admin_class_schedules_path, class: "text-sm text-slate-500 hover:text-slate-700 flex items-center gap-1 mb-4" do %>
+      <span>←</span> <%= t('admin.class_schedules.batch_new.back') %>
+    <% end %>
+    <h2 class="text-xl font-semibold text-slate-900"><%= t('admin.class_schedules.batch_new.heading') %></h2>
+    <p class="mt-1 text-sm text-slate-500"><%= t('admin.class_schedules.batch_new.subtitle') %></p>
+  </div>
+
+  <div class="bg-white p-6 shadow-sm rounded-xl border border-slate-200">
+    <%= form_with url: batch_create_admin_class_schedules_path, method: :post, scope: :class_schedule, class: "space-y-6" do |f| %>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <%= f.label :class_type_id, class: "mb-1 block text-sm font-medium text-slate-700" %>
+          <%= f.collection_select :class_type_id, @class_types, :id, :name, { prompt: t('admin.class_schedules.form.select_discipline') }, { class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" } %>
+        </div>
+        <div>
+          <%= f.label :instructor_id, class: "mb-1 block text-sm font-medium text-slate-700" %>
+          <%= f.collection_select :instructor_id, @instructors, :id, :first_name, { prompt: t('admin.class_schedules.form.select_instructor') }, { class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" } %>
+        </div>
+      </div>
+
+      <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+        <label class="mb-3 block text-sm font-medium text-slate-900"><%= t('admin.class_schedules.form.days_label') %></label>
+        <div class="flex flex-wrap gap-4">
+          <% t('date.day_names').each_with_index do |day_name, index| %>
+            <label class="inline-flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" name="schedule[days][]" value="<%= index %>" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-5 w-5">
+              <span class="text-sm text-slate-700"><%= day_name %></span>
+            </label>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div>
+          <label class="mb-1 block text-sm font-medium text-slate-700"><%= t('admin.class_schedules.form.start_time') %></label>
+          <input type="time" name="schedule[time]" required class="block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500">
+        </div>
+        
+        <div>
+          <label class="mb-1 block text-sm font-medium text-slate-700"><%= t('admin.class_schedules.form.start_date') %></label>
+          <input type="date" name="schedule[start_date]" value="<%= @default_start %>" required class="block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500">
+        </div>
+
+        <div>
+          <label class="mb-1 block text-sm font-medium text-slate-700"><%= t('admin.class_schedules.form.end_date') %></label>
+          <input type="date" name="schedule[end_date]" value="<%= @default_end %>" required class="block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <%= f.label :duration_minutes, class: "mb-1 block text-sm font-medium text-slate-700" %>
+          <%= f.number_field :duration_minutes, value: 60, class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" %>
+        </div>
+        <div>
+          <%= f.label :capacity, class: "mb-1 block text-sm font-medium text-slate-700" %>
+          <%= f.number_field :capacity, value: 20, class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" %>
+        </div>
+      </div>
+
+      <div class="flex gap-3 pt-4 border-t border-slate-100">
+        <%= f.submit t('admin.class_schedules.form.submit_batch'), class: "rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 cursor-pointer" %>
+      </div>
+    <% end %>
+  </div>
+</div>

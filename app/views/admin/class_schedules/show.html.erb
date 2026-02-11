@@ -1,0 +1,139 @@
+<% content_for :page_title, t('admin.class_schedules.show.page_title') %>
+
+<div class="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+  <div>
+    <div class="flex items-center gap-2 mb-1">
+      <%= link_to admin_class_schedules_path, class: "text-slate-400 hover:text-slate-600" do %>
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+      <% end %>
+      <h2 class="text-2xl font-bold text-slate-900"><%= @class_schedule.class_type.name %></h2>
+    </div>
+    <p class="text-slate-500 pl-7">
+      <%= @class_schedule.starts_at.strftime("%A %d de %B, %I:%M %p") %> • <%= t('admin.class_schedules.show.instructor_prefix') %> <%= @class_schedule.instructor.first_name %>
+    </p>
+  </div>
+
+  <div class="flex gap-4">
+    <div class="rounded-lg bg-white p-3 shadow-sm border border-slate-200 text-center min-w-[100px]">
+      <div class="text-xs text-slate-500 font-medium uppercase"><%= t('admin.class_schedules.show.spots_label') %></div>
+      <div class="text-xl font-bold <%= @class_schedule.full? ? 'text-red-600' : 'text-green-600' %>">
+        <%= @class_schedule.spots_left %> / <%= @class_schedule.capacity %>
+      </div>
+    </div>
+    <div class="rounded-lg bg-white p-3 shadow-sm border border-slate-200 text-center min-w-[100px]">
+      <div class="text-xs text-slate-500 font-medium uppercase"><%= t('admin.class_schedules.show.attended_label') %></div>
+      <div class="text-xl font-bold text-indigo-600">
+        <%= @class_schedule.bookings.attended.count %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+  
+  <div class="lg:col-span-2 space-y-6">
+    
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+      <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+        <h3 class="font-semibold text-slate-800"><%= t('admin.class_schedules.show.roster_title') %></h3>
+        <span class="bg-slate-200 text-slate-600 text-xs px-2 py-1 rounded-full"><%= @class_schedule.bookings.active.count %> <%= t('admin.class_schedules.show.enrolled_count') %></span>
+      </div>
+      
+      <div class="divide-y divide-slate-100">
+        <% if @bookings.active.empty? %>
+          <div class="p-8 text-center text-slate-400">
+            <%= t('admin.class_schedules.show.no_students') %>
+          </div>
+        <% else %>
+          <% @bookings.active.each do |booking| %>
+            <div id="booking_row_<%= booking.id %>" class="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+              <div class="flex items-center gap-4">
+                <div class="h-10 w-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-sm">
+                  <%= booking.user.first_name[0] %><%= booking.user.last_name[0] %>
+                </div>
+                <div>
+                  <div class="font-medium text-slate-900"><%= booking.user.first_name %> <%= booking.user.last_name %></div>
+                  <div class="text-xs text-slate-500">
+                    <%= booking.user.email %> • 
+                    <% if booking.submission_count > 1 %>
+                      <span class="text-orange-500"><%= booking.submission_count %> <%= t('admin.class_schedules.show.booking_changes') %></span>
+                    <% else %>
+                      <%= t('admin.class_schedules.show.direct_booking') %>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <% if booking.attended? %>
+                  <span class="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                    <%= t('admin.class_schedules.show.attended_badge') %>
+                  </span>
+                <% else %>
+                  <%= button_to check_in_admin_booking_path(booking), method: :patch, class: "rounded-md bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50" do %>
+                    <%= t('admin.class_schedules.show.check_in') %>
+                  <% end %>
+                <% end %>
+
+                <%= button_to admin_booking_path(booking), method: :delete, data: { turbo_confirm: t('admin.class_schedules.show.remove_confirm') }, class: "text-slate-400 hover:text-red-600 p-1" do %>
+                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <% if @bookings.where(status: [:cancelled_user, :cancelled_admin]).any? %>
+      <details class="group">
+        <summary class="flex cursor-pointer items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-700">
+          <svg class="h-4 w-4 transition-transform group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+          <%= t('admin.class_schedules.show.view_cancelled_bookings') %>
+        </summary>
+        <div class="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-500">
+          <ul>
+            <% @bookings.where(status: [:cancelled_user, :cancelled_admin]).each do |booking| %>
+              <li class="py-1 flex justify-between">
+                <span><%= booking.user.full_name %></span>
+                <span class="text-xs italic">
+                  <%= booking.cancelled_user? ? t('admin.class_schedules.show.cancelled_by_user') : t('admin.class_schedules.show.cancelled_by_admin') %>
+                </span>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </details>
+    <% end %>
+
+  </div>
+
+  <div class="space-y-6">
+    
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+      <h3 class="font-semibold text-slate-900 mb-4"><%= t('admin.class_schedules.show.add_student_manual') %></h3>
+      
+      <%= form_with model: [:admin, Booking.new], url: admin_bookings_path, local: true do |f| %>
+        <%= f.hidden_field :class_schedule_id, value: @class_schedule.id %>
+        
+        <div class="mb-4">
+          <label class="block text-xs font-medium text-slate-700 mb-1"><%= t('admin.class_schedules.show.search_student') %></label>
+          <%= f.collection_select :user_id, @users_available, :id, :full_name, { prompt: t('admin.class_schedules.show.select_student') }, { class: "block w-full rounded-lg border-slate-300 text-sm focus:ring-indigo-500" } %>
+        </div>
+
+        <%= f.submit t('admin.class_schedules.show.force_enrollment'), class: "w-full rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 cursor-pointer" %>
+        <p class="mt-2 text-xs text-slate-400 text-center">
+          <%= t('admin.class_schedules.show.force_enrollment_note') %>
+        </p>
+      <% end %>
+    </div>
+
+    <div class="bg-indigo-50 rounded-xl border border-indigo-100 p-5">
+      <h4 class="text-sm font-bold text-indigo-900 mb-2"><%= t('admin.class_schedules.show.tips_title') %></h4>
+      <p class="text-xs text-indigo-700 leading-relaxed">
+        <%= t('admin.class_schedules.show.tips_text') %>
+      </p>
+    </div>
+
+  </div>
+</div>

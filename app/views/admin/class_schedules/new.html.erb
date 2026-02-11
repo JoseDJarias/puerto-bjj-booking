@@ -1,0 +1,15 @@
+<% content_for :page_title, t('admin.class_schedules.new.page_title') %>
+
+<div class="mx-auto max-w-2xl">
+  <div class="mb-6 flex items-center gap-2 text-sm text-slate-500">
+    <%= link_to t('admin.class_schedules.new.breadcrumb_calendar'), admin_class_schedules_path, class: "hover:text-indigo-600" %>
+    <span>/</span>
+    <span class="text-slate-900 font-medium"><%= t('admin.class_schedules.new.breadcrumb_new') %></span>
+  </div>
+
+  <div class="bg-white p-6 shadow-sm rounded-xl border border-slate-200">
+    <h2 class="text-xl font-bold text-slate-900 mb-6"><%= t('admin.class_schedules.new.title') %></h2>
+    
+    <%= render "form", class_schedule: @class_schedule %>
+  </div>
+</div>

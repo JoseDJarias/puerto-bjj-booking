@@ -37,7 +37,7 @@
 
           <td class="whitespace-nowrap px-4 py-3 text-sm">
             <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium 
-              <%= membership.active? ? 'bg-green-100 text-green-800' : (membership.expired? ? 'bg-orange-100 text-orange-800' : 'bg-red-100 text-red-800') %>">
+              <%= membership.current? ? 'bg-green-100 text-green-800' : (membership.expired? ? 'bg-orange-100 text-orange-800' : 'bg-red-100 text-red-800') %>">
               <%= t("enums.membership.status.#{membership.status}") %>
             </span>
           </td>
@@ -45,7 +45,7 @@
           <td class="whitespace-nowrap px-4 py-3 text-sm text-slate-500">
             <div class="flex flex-col">
               <span><%= l(membership.start_date, format: :short) %> - <%= l(membership.end_date, format: :short) %></span>
-              <% if membership.active? %>
+              <% if membership.current? %>
                 <span class="text-xs text-indigo-600 font-medium"><%= membership.days_remaining %> días restantes</span>
               <% end %>
             </div>

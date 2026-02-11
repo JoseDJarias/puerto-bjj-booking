@@ -3,7 +3,6 @@ module Admin
     before_action :set_package, only: %i[edit update]
 
     def index
-      # Usamos includes para evitar N+1 queries al cargar los tipos de clase
       @packages = MembershipPackage.includes(:class_types).order(:name)
     end
 

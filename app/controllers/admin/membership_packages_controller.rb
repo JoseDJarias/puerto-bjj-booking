@@ -39,7 +39,6 @@ module Admin
     end
 
     def package_params
-      # ⚠️ OJO: class_type_ids: [] es vital para los checkboxes
       params.require(:membership_package).permit(:name, :description, :price_modifier, :active, class_type_ids: [])
     end
   end

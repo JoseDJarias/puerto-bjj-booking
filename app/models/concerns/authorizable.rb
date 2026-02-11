@@ -1,7 +1,7 @@
 module Authorizable
   extend ActiveSupport::Concern
 
-  # Roles (jerárquicos)
+  # Roles (hierarchical)
   ROLES = {
     member: 0,
     instructor: 1,
@@ -13,17 +13,17 @@ module Authorizable
     enum :status, { active: 0, inactive: 1, suspended: 2 }, default: :active
   end
 
-  # === PERMISOS DE RESERVA ===
+  # === RESERVATION PERMISSIONS ===
   
   def can_book_classes?
     active? && approved? && valid_membership?
   end
 
   def valid_membership?
-    current_memberships.any?(&:active?)
+    current_memberships.any?(&:current?)
   end
 
-  # === PERMISOS ADMINISTRATIVOS ===
+  # === ADMINISTRATIVE PERMISSIONS ===
   
   def can_manage_classes?
     admin?
@@ -77,8 +77,8 @@ module Authorizable
   # === MEMBRESÍA ===
   
   def current_memberships
-    # Retorna TODAS las membresías activas (puede tener múltiples disciplinas)
-    memberships.active.order(end_date: :desc)
+    # Return ALL active memberships (can have multiple disciplines)
+    memberships.current.order(end_date: :desc)
   end
 
   def membership_expires_soon?(days = 7)
@@ -87,7 +87,7 @@ module Authorizable
   end
 
   def all_accessible_class_types
-    # Retorna todos los tipos de clase a los que tiene acceso
+    # Return all class types that the user has access to
     current_memberships.flat_map { |m| m.membership_package.class_types }.uniq
   end
 end

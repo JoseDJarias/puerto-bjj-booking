@@ -26,7 +26,7 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
 gem "solid_cache"
 gem "solid_queue"
-gem "solid_cable"
+gem "solid_cable" # https://github.com/rails/solid_cable
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
@@ -39,6 +39,10 @@ gem "thruster", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
+
+# Useful for calendar functionality
+# Repo link: https://github.com/excid3/simple_calendar
+gem "simple_calendar", "~> 3.0"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

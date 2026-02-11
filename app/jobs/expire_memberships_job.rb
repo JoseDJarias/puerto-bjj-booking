@@ -3,7 +3,7 @@ class ExpireMembershipsJob < ApplicationJob
 
   def perform
     expired_count = Membership.where(status: :active)
-                              .where("end_date < ?", Date.current)
+                              .where(end_date: ...Date.current)
                               .update_all(status: :expired)
     
     if expired_count > 0

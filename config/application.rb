@@ -27,7 +27,7 @@ module PuertoBjjBooking
     # Internationalization configuration
     config.i18n.default_locale = :es
     config.i18n.available_locales = [:es, :en]
-    config.i18n.fallbacks = [:en]
+    config.i18n.fallbacks = [:es]
     
     # Time zone for Costa Rica
     config.time_zone = "America/Costa_Rica"

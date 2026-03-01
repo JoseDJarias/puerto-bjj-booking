@@ -44,6 +44,9 @@ gem "image_processing", "~> 1.2"
 # Repo link: https://github.com/excid3/simple_calendar
 gem "simple_calendar", "~> 3.0"
 
+# Pagination gem [https://github.com/ddnexus/pagy]
+gem "pagy", "~> 43.2.9"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

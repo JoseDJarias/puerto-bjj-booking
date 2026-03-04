@@ -1,15 +1,16 @@
 Rails.application.routes.draw do
-  root "dashboard#show"
-
   resource :registration, only: %i[new create]
   resource :session
   resources :passwords, param: :token
 
   resources :class_schedules, only: [:index] 
   resources :bookings, only: [:create]
+  root "dashboard#show"
+
 
   namespace :admin do
-    root "dashboard#index"
+    get "membership_pricings/index"
+    get "dashboard/index", as: :dashboard
 
     resources :membership_plans, path: "planes"
     resources :class_types
@@ -18,8 +19,18 @@ Rails.application.routes.draw do
       member do
         patch :approve #Generates: /admin/users/:id/approve
       end
+      resources :drop_in_tickets, only: [:create, :destroy] do
+        member do
+          patch :void         # Block ticket access
+          patch :reset_usage  # Reset to available
+        end
+      end
     end
-    resources :memberships, path: "membresias"
+    resources :memberships, path: "membresias" do
+      collection do
+        get :calculate_totals # This creates the route /admin/membresias/calculate_totals
+      end
+    end    
     resources :class_schedules do
       collection do
         # Routes for the bulk generator
@@ -27,10 +38,16 @@ Rails.application.routes.draw do
         post :batch_create # The action that creates the records
       end
     end
+    resources :membership_pricings, path: 'precios'
       # Controller dedicated to the management of reservations by the admin
     resources :bookings, only: [:create, :update, :destroy] do
       member do
         patch :check_in # Route to mark attendance quickly
+      end
+    end
+    resources :drop_in_tickets, only: [:create] do
+      collection do
+        delete :destroy_last
       end
     end
   end

@@ -42,59 +42,71 @@
 
   <% if @memberships.any? %>
     <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-      <table class="min-w-full divide-y divide-slate-200">
-        <thead class="bg-slate-50">
-          <tr>
-            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600"><%= t('activerecord.attributes.membership.membership_plan') %></th>
-            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600"><%= t('activerecord.attributes.membership.status') %></th>
-            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600">Vigencia</th>
-            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600">Monto</th>
-            <th class="relative px-4 py-3"><span class="sr-only">Acciones</span></th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-200 bg-white">
-          <% @memberships.each do |membership| %>
-            <tr class="hover:bg-slate-50">
-              <td class="px-4 py-3">
-                <div class="text-sm font-medium text-slate-900"><%= membership.membership_plan.name %></div>
-                <div class="text-xs text-slate-500"><%= membership.membership_package.name %></div>
-              </td>
-              
-              <td class="px-4 py-3 text-sm">
-                 <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium 
-                  <%= membership.active? ? 'bg-green-100 text-green-800' : (membership.expired? ? 'bg-orange-100 text-orange-800' : 'bg-slate-100 text-slate-800') %>">
-                  <%= t("enums.membership.status.#{membership.status}") %>
-                </span>
-              </td>
-              
-              <td class="px-4 py-3 text-sm text-slate-600">
-                <div class="flex flex-col">
-                  <span><%= l(membership.start_date, format: :short) %> - <%= l(membership.end_date, format: :short) %></span>
-                  <% if membership.active? %>
-                     <span class="text-xs text-indigo-600 font-medium"><%= membership.days_remaining %> días restantes</span>
-                  <% end %>
-                </div>
-              </td>
-
-              <td class="px-4 py-3 text-sm font-medium text-slate-900">
-                <%= number_to_currency(membership.amount_paid) %>
-              </td>
-
-              <td class="px-4 py-3 text-right text-sm font-medium">
-                <%= link_to t('admin.common.edit'), edit_admin_membership_path(membership), class: "text-indigo-600 hover:text-indigo-900" %>
-              </td>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-slate-200" style="min-width: 560px;">
+          <thead class="bg-slate-50">
+            <tr>
+              <th scope="col" class="sticky left-0 z-10 w-[140px] max-w-[140px] bg-slate-50 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600 whitespace-nowrap shadow-[1px_0_0_0_rgba(0,0,0,0.05)]">
+                <%= t('activerecord.attributes.membership.membership_plan') %>
+              </th>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600 whitespace-nowrap"><%= t('activerecord.attributes.membership.status') %></th>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600 whitespace-nowrap"><%= t('admin.users.show.validity') %></th>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-600 whitespace-nowrap">Monto</th>
+              <th scope="col" class="relative px-4 py-3 whitespace-nowrap"><span class="sr-only">Acciones</span></th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody class="divide-y divide-slate-200 bg-white">
+            <% @memberships.each do |membership| %>
+              <tr class="group hover:bg-slate-50">
+                <td class="sticky left-0 z-10 w-[140px] max-w-[140px] bg-white group-hover:bg-slate-50 px-4 py-3 shadow-[1px_0_0_0_rgba(0,0,0,0.05)]">
+                  <div class="min-w-0">
+                    <div class="truncate text-sm font-medium text-slate-900" title="<%= membership.membership_plan.name %>"><%= membership.membership_plan.name %></div>
+                    <div class="truncate text-xs text-slate-500" title="<%= membership.membership_package.name %>"><%= membership.membership_package.name %></div>
+                  </div>
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 text-sm">
+                  <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
+                    <%= membership.active? ? 'bg-green-100 text-green-800' : (membership.expired? ? 'bg-orange-100 text-orange-800' : 'bg-slate-100 text-slate-800') %>">
+                    <%= t("enums.membership.status.#{membership.status}") %>
+                  </span>
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 text-sm text-slate-600">
+                  <div class="flex flex-col">
+                    <span><%= l(membership.start_date, format: :short) %> - <%= l(membership.end_date, format: :short) %></span>
+                    <% if membership.active? %>
+                      <span class="text-xs text-indigo-600 font-medium"><%= t('admin.users.show.days_remaining', count: membership.days_remaining) %></span>
+                    <% end %>
+                  </div>
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 text-sm font-medium text-slate-900">
+                  <%= number_to_currency(membership.amount_paid) %>
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 text-right text-sm font-medium">
+                  <%= link_to t('admin.common.edit'), edit_admin_membership_path(membership), class: "text-indigo-600 hover:text-indigo-900" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
     </div>
   <% else %>
     <div class="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center">
       <svg class="mx-auto h-10 w-10 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
       </svg>
-      <h3 class="mt-2 text-sm font-medium text-slate-900">Sin historial</h3>
+      <h3 class="mt-2 text-sm font-medium text-slate-900"><%= t('admin.users.show.no_history') %></h3>
       <p class="mt-1 text-sm text-slate-500"><%= t('admin.users.show.no_memberships') %></p>
     </div>
   <% end %>
+
+    <div class="mt-12">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-lg font-semibold text-slate-900 italic"><%= t('admin.users.show.credits_wallet') %></h3>
+        
+      </div>
+      <section id="drop-in-section">
+        <%= render "admin/users/drop_in_management", user: @user %>
+      </section>
+     </div>
 </div>

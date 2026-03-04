@@ -33,9 +33,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def require_booking_access
+    return if Current.user&.has_booking_access?
+    redirect_to root_path, alert: t('flash.alerts.booking_access_required')
+  end
+
   def require_active_membership
-    unless Current.user&.can_book_classes?
-      redirect_to root_path, alert: t('flash.alerts.active_membership_required')
-    end
+    require_booking_access
   end
 end

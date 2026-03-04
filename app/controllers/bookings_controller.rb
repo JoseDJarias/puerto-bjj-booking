@@ -2,6 +2,10 @@ class BookingsController < ApplicationController
 
   def create
     @schedule = ClassSchedule.find(params[:class_schedule_id])
+    unless current_user.authorized_for?(@schedule.class_type)
+      redirect_back fallback_location: root_path, alert: "No tienes una membresía activa o tickets para esta clase."
+      return
+    end
     @booking = Booking.find_or_initialize_by(user: current_user, class_schedule: @schedule)
 
     begin

@@ -40,6 +40,8 @@ class Booking < ApplicationRecord
   # B. Update the private button of the user (Book vs Cancel)
   after_commit :broadcast_user_button
 
+  after_update :process_attendance_payment, if: -> { attended? && saved_change_to_status? }
+
   # --- BUSINESS LOGIC METHODS ---
 
   def active_status?
@@ -87,6 +89,26 @@ class Booking < ApplicationRecord
     # Submission limit policy: Maximum 3 attempts allowed
     if submission_count > 3
       errors.add(:base, "You have exceeded the allowed number of changes.")
+    end
+  end
+
+  def process_attendance_payment
+    # 1. ¿El deporte está cubierto por una membresía activa?
+    # Buscamos si el paquete de la membresía incluye el tipo de clase de este booking
+    return if user.memberships.current.any? { |m| m.membership_package.includes_class_type?(class_schedule.class_type) }
+
+    # 2. ¿Ya activó un Drop-in hoy? 
+    # Si ya hay un ticket 'used_today', esta clase sale gratis.
+    return if user.drop_in_active_today?
+
+    # 3. Si no hay membresía ni ticket activo hoy, intentamos activar uno nuevo
+    ticket = user.first_available_ticket
+
+    if ticket
+      ticket.activate!(self)
+    else
+      # 3. No hay nada: Aquí podrías marcar una deuda o notificar al admin
+      # Rails.logger.warn "Usuario #{user.id} asistió sin pago previo."
     end
   end
 

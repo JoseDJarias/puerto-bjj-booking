@@ -30,7 +30,6 @@ module MembershipValidator
     current_memberships.any? { |m| m.membership_package.includes_class_type?(class_type) }
   end
 
-  # Indica si tiene una membresía activa de un deporte (Por nombre)
   def active_on?(package_name)
     current_memberships.joins(:membership_package)
                        .where("LOWER(membership_packages.name) LIKE ?", "%#{package_name.downcase}%")
@@ -45,13 +44,11 @@ module MembershipValidator
     drop_in_tickets.unused.exists?
   end
 
-  # Verifica si tiene tickets prepagados para el deporte
   def ticket_available_for?(class_type)
     package_ids = class_type.membership_packages.pluck(:id)
     drop_in_tickets.unused.where(membership_package_id: package_ids).exists?
   end
 
-  # Devuelve el primer ticket disponible para un paquete específico
   def available_ticket_for(package)
     drop_in_tickets.unused.where(membership_package: package).first
   end
@@ -60,8 +57,14 @@ module MembershipValidator
     !covered_by_membership?(class_type) || membership_expires_soon?
   end
 
+  # Class types the user can book: from memberships, or all if drop-in active today / has unused tickets.
+  def bookable_class_types
+    return ClassType.all if drop_in_active_today? || unused_tickets?
+    all_accessible_class_types
+  end
+
   private
-  
+
   def current_memberships
     memberships.current.order(end_date: :desc)
   end

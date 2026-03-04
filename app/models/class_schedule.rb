@@ -9,18 +9,19 @@ class ClassSchedule < ApplicationRecord
   validates :duration_minutes, numericality: { greater_than: 0 }
   validates :capacity, numericality: { greater_than: 0 }
 
-  # USEFUL SCOPES (Frequent queries)
   scope :upcoming, -> { where("starts_at >= ?", Time.current).order(:starts_at) }
   scope :past, -> { where("starts_at < ?", Time.current).order(starts_at: :desc) }
   scope :active, -> { where(cancelled: false) }
-  
-  # Scope for the calendar: "Give me everything from this week"
-  scope :for_range, ->(start_date, end_date) { 
-    where(starts_at: start_date.beginning_of_day..end_date.end_of_day) 
+  # Booking day rolls at 23:00: after 11 PM user sees next calendar day's classes.
+  scope :for_booking_today, -> {
+    booking_date = Time.current.hour >= 23 ? Date.current + 1.day : Date.current
+    start_bound = [Time.current, booking_date.beginning_of_day].max
+    where(starts_at: start_bound..booking_date.end_of_day).order(:starts_at)
   }
 
-  #Scope for the index page with future classes
-  scope :upcoming, -> { where(starts_at: Time.current..).order(starts_at: :asc) }
+  scope :for_range, ->(start_date, end_date) {
+    where(starts_at: start_date.beginning_of_day..end_date.end_of_day)
+  }
 
   # --- TIME LOGIC ---
   def ends_at

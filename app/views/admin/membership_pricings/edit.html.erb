@@ -1,0 +1,33 @@
+<div class="max-w-3xl mx-auto p-6">
+  <div class="mb-8">
+    <%= link_to "← #{t('admin.membership_pricings.edit.back')}", admin_membership_pricings_path,
+        class: "text-slate-400 hover:text-indigo-600 text-sm font-bold transition-colors" %>
+
+    <div class="flex items-baseline gap-3 mt-2">
+      <h1 class="text-3xl font-black italic text-slate-900"><%= t('admin.membership_pricings.edit.title') %></h1>
+      <span class="text-indigo-500 font-bold text-sm">ID #<%= @pricing.id %></span>
+    </div>
+
+    <p class="text-slate-500">
+      <%= t('admin.membership_pricings.edit.subtitle', package: @pricing.membership_package.name, plan: @pricing.membership_plan.name) %>
+    </p>
+  </div>
+
+  <div class="bg-white rounded-3xl border border-slate-200 shadow-xl p-8 relative overflow-hidden">
+    <div class="absolute top-0 right-0 p-4 opacity-5">
+      <svg class="h-24 w-24 text-indigo-600" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+      </svg>
+    </div>
+
+    <%= render "form", pricing: @pricing %>
+  </div>
+
+  <div class="mt-8 pt-6 border-t border-slate-100 flex justify-center">
+    <%= button_to t('admin.membership_pricings.edit.destroy'),
+        admin_membership_pricing_path(@pricing),
+        method: :delete,
+        form: { data: { turbo_confirm: t('admin.membership_pricings.edit.destroy_confirm') } },
+        class: "text-red-400 hover:text-red-600 text-xs font-bold uppercase tracking-widest transition-colors" %>
+  </div>
+</div>

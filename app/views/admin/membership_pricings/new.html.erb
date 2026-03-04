@@ -1,0 +1,11 @@
+<div class="max-w-3xl mx-auto p-6">
+  <div class="mb-8">
+    <%= link_to "← #{t('admin.membership_pricings.new.back')}", admin_membership_pricings_path, class: "text-slate-400 hover:text-indigo-600 text-sm font-bold transition-colors" %>
+    <h1 class="text-3xl font-black italic text-slate-900 mt-2"><%= t('admin.membership_pricings.new.title') %></h1>
+    <p class="text-slate-500"><%= t('admin.membership_pricings.new.subtitle') %></p>
+  </div>
+
+  <div class="bg-white rounded-3xl border border-slate-200 shadow-xl p-8">
+    <%= render "form", pricing: @pricing %>
+  </div>
+</div>

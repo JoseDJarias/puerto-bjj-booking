@@ -18,25 +18,25 @@ module Admin
       end
 
       DropInTicket.insert_all(tickets_data) if tickets_data.any?
-      respond_after_action("Se agregaron #{quantity} créditos correctamente.")
+      respond_after_action(t('admin.drop_in_tickets.flash.added', count: quantity))
     end
 
     # Remove access
     def void
       @ticket.void!
-      respond_after_action("Ticket ##{@ticket.id} anulado.")
+      respond_after_action(t('admin.drop_in_tickets.flash.voided', id: @ticket.id))
     end
 
     # Reset to available
     def reset_usage
       @ticket.reset!
-      respond_after_action("Ticket ##{@ticket.id} vuelve a estar disponible.")
+      respond_after_action(t('admin.drop_in_tickets.flash.reset', id: @ticket.id))
     end
 
     # Physical deletion (Only if necessary to clean the DB), please use the void method instead.
     def destroy
       @ticket.destroy
-      respond_after_action("Ticket eliminado del historial.")
+      respond_after_action(t('admin.drop_in_tickets.flash.destroyed'))
     end
 
     private

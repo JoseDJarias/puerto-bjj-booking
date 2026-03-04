@@ -57,10 +57,11 @@
     <div class="flex items-center h-full pt-6">
       <div class="flex items-center">
         <%= f.check_box :cancelled, class: "h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" %>
-        <%= f.label :cancelled, class: "ml-2 block text-sm text-slate-900"><%= t('admin.class_schedules.form.cancelled_label') %></label>
+        <%= f.label :cancelled, t('admin.class_schedules.form.cancelled_label'), class: "ml-2 block text-sm text-slate-900" %>
       </div>
     </div>
   </div>
+
 
   <div class="flex items-center justify-end gap-3 pt-6 border-t border-slate-100">
     <%= link_to t('admin.common.cancel'), admin_class_schedules_path, class: "rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50" %>

@@ -4,35 +4,27 @@ module Admin
     before_action :set_collections, only: %i[new create edit update]
 
     def index
-      # 1. SCOPE
       scope = Membership.includes(:user, :membership_plan, :membership_package)
                         .order(created_at: :desc)
 
       case params[:filter]
-        when 'active'
-          scope = scope.current
-        when 'expired'
-          scope = scope.expired_listing
+      when "active"
+        scope = scope.current
+      when "expired"
+        scope = scope.expired_listing
       end
-  
-      # 2. SEARCH (Con el fix de SQLite que hicimos)
+
       if params[:query].present?
         sanitized_query = ActiveRecord::Base.sanitize_sql_like(params[:query])
         q = "%#{sanitized_query}%"
-        # USE LIKE for SQLite (LOWER for Postgres in the future)
         scope = scope.joins(:user).where(
-          "users.first_name LIKE :q OR 
-           users.last_name LIKE :q OR 
-           users.email_address LIKE :q OR 
-           users.phone_number LIKE :q", 
+          "users.first_name LIKE :q OR users.last_name LIKE :q OR users.email_address LIKE :q OR users.phone_number LIKE :q",
           q: q
         )
       end
-  
-      # 3. OPTIMIZED PAGINATION (Here is the change)
-      # USE :countless because it's "Best for Infinite Scroll" and saves queries.
+
       @pagy, @memberships = pagy(:countless, scope, limit: 10)
-  
+
       respond_to do |format|
         format.html
         format.turbo_stream
@@ -82,14 +74,11 @@ module Admin
     def calculate_totals
       clean_params = membership_params.except(:amount_paid)
       @membership = Membership.new(clean_params)
-        # Ejecutamos la lógica de tu modelo
-      if @membership.membership_package_id.present? && @membership.membership_plan_id.present?
-        @membership.preview_totals 
-      end  
-      
+      @membership.preview_totals if @membership.membership_package_id.present? && @membership.membership_plan_id.present?
+
       render json: {
         amount: @membership.amount_paid.to_i,
-        end_date: @membership.end_date ? l(@membership.end_date, format: :long) : "Selecciona plan y deporte"
+        end_date: @membership.end_date ? l(@membership.end_date, format: :long) : t("admin.memberships.form.select_plan_package")
       }
     end
 

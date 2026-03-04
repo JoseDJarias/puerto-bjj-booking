@@ -1,19 +1,8 @@
-<%# app/views/dashboard/states/_price_row.html.erb %>
-<div class="flex items-center justify-between rounded-lg bg-white px-3 py-2 shadow-sm ring-1 ring-slate-200">
-  <div class="flex flex-col">
-    <span class="text-sm font-medium text-slate-900">
-      <%= plan.name %>
-    </span>
-    <span class="text-xs text-slate-500">
-      <% if plan.duration_months.zero? %>
-         <%= t('dashboard.plans.single_access') %>
-      <% else %>
-         <%= t('dashboard.plans.months_count', count: plan.duration_months) %>
-      <% end %>
-    </span>
-  </div>
-  
-  <span class="text-sm font-bold text-slate-900 bg-slate-100 px-2 py-1 rounded">
+<div class="flex items-center justify-between rounded-xl bg-white px-4 py-3 border border-slate-200 hover:border-slate-300 transition-colors">
+  <span class="text-sm font-semibold text-slate-800">
+    <%= plan.name %>
+  </span>
+  <span class="text-base font-bold tabular-nums text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-lg border border-indigo-200">
     <%= number_to_currency(package.price_for(plan) || 0, precision: 0) %>
   </span>
 </div>

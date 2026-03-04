@@ -1,52 +1,80 @@
 module MembershipValidator
   extend ActiveSupport::Concern
 
-  # === VALIDACIÓN DE ACCESO A CLASES ===
-  
-  def can_book?(class_type)
-    return false unless can_book_classes?
-    return false unless membership_includes_class_type?(class_type)
-    true
+  # Responds: "Do we show active_member or pricing_options?"
+  def has_booking_access?
+    return false unless eligible?  # Authorizable
+
+    current_memberships.exists? ||
+      drop_in_active_today? ||
+      unused_tickets?
   end
 
-  def membership_includes_class_type?(class_type)
-    return false unless current_memberships.any?
+  # Responds: "Does the user have access to this class?"
+ def authorized_for?(class_type)
+    return false unless eligible? # De Authorizable
+
+    # 1. ¿Tiene membresía activa para este deporte?
+    return true if covered_by_membership?(class_type)
     
-    # Verificar si ALGUNA de sus membresías incluye el class_type
-    current_memberships.any? do |membership|
-      membership.membership_package.class_types.include?(class_type)
-    end
+    # 2. ¿Ya activó un Drop-in hoy? (Cubre todas las clases del día)
+    return true if drop_in_active_today?
+
+    # 3. ¿Tiene tickets sin usar en la billetera?
+    return true if unused_tickets?
+
+    false
   end
 
-  def days_remaining
-    return 0 unless current_memberships.any?
-    # Retornar el máximo días restantes de todas las membresías
-    current_memberships.map(&:days_remaining).max
+  def covered_by_membership?(class_type)
+    current_memberships.any? { |m| m.membership_package.includes_class_type?(class_type) }
   end
 
-  def membership_summary
-    return "No active membership" unless current_memberships.any?
-    
-    memberships_info = current_memberships.map do |m|
-      {
-        plan: m.membership_plan.name,
-        package: m.membership_package.name,
-        days_remaining: m.days_remaining,
-        expires_on: m.end_date,
-        class_types: m.membership_package.class_types.pluck(:name),
-        amount_paid: m.amount_paid
-      }
-    end
-    
-    {
-      total_memberships: current_memberships.count,
-      memberships: memberships_info,
-      all_class_types: all_accessible_class_types.pluck(:name),
-      earliest_expiration: current_memberships.map(&:end_date).min
-    }
+  # Indica si tiene una membresía activa de un deporte (Por nombre)
+  def active_on?(package_name)
+    current_memberships.joins(:membership_package)
+                       .where("LOWER(membership_packages.name) LIKE ?", "%#{package_name.downcase}%")
+                       .exists?
+  end
+
+  def drop_in_active_today?
+    drop_in_tickets.used.where(used_at: Time.current.all_day).exists?
+  end
+
+  def unused_tickets?
+    drop_in_tickets.unused.exists?
+  end
+
+  # Verifica si tiene tickets prepagados para el deporte
+  def ticket_available_for?(class_type)
+    package_ids = class_type.membership_packages.pluck(:id)
+    drop_in_tickets.unused.where(membership_package_id: package_ids).exists?
+  end
+
+  # Devuelve el primer ticket disponible para un paquete específico
+  def available_ticket_for(package)
+    drop_in_tickets.unused.where(membership_package: package).first
   end
 
   def needs_membership_renewal?
-    !valid_membership? || membership_expires_soon?
+    !covered_by_membership?(class_type) || membership_expires_soon?
   end
+
+  private
+  
+  def current_memberships
+    memberships.current.order(end_date: :desc)
+  end
+
+  def membership_expires_soon?(days = 7)
+    return false unless current_memberships.any?
+    current_memberships.any? { |m| m.days_remaining <= days && m.days_remaining > 0 }
+  end
+
+  def all_accessible_class_types
+    # Return all class types that the user has access to
+    current_memberships.flat_map { |m| m.membership_package.class_types }.uniq
+  end
+
+  def first_available_ticket = drop_in_tickets.unused.first
 end

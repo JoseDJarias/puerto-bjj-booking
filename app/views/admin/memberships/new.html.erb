@@ -1,14 +1,4 @@
-<% content_for :page_title, t('admin.memberships.new.title') %>
-
-<div class="mx-auto max-w-2xl">
-  <div class="mb-6">
-    <h2 class="text-xl font-semibold text-slate-900"><%= t('admin.memberships.new.title') %></h2>
-    <% if @preselected_user %>
-      <p class="mt-1 text-sm text-slate-500"><%= t('admin.memberships.new.subtitle', name: @preselected_user.first_name) %></p>
-    <% end %>
-  </div>
-
-  <div class="bg-white p-6 shadow-sm rounded-xl border border-slate-200">
-    <%= render "form", membership: @membership %>
-  </div>
+<div class="max-w-4xl mx-auto p-4">
+  <h1 class="text-2xl font-black text-slate-900 mb-8 italic">Nueva Membresía</h1>
+  <%= render "form", membership: @membership %>
 </div>

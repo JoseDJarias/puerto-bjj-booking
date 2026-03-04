@@ -1,0 +1,30 @@
+<tr class="group hover:bg-indigo-50/30 transition-colors">
+  <td class="px-4 py-4 whitespace-nowrap">
+    <div class="flex items-center">
+      <div class="h-9 w-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-xs ring-1 ring-indigo-200">
+        <%= membership.user.first_name&.first %>
+      </div>
+      <div class="ml-3">
+        <div class="text-sm font-bold text-slate-900"><%= membership.user.first_name %> <%= membership.user.last_name %></div>
+        <div class="text-xs text-slate-500"><%= membership.user.phone %></div>
+      </div>
+    </div>
+  </td>
+  <td class="px-4 py-4 whitespace-nowrap">
+    <span class="text-sm text-slate-700 font-medium"><%= membership.membership_plan.name %></span>
+    <span class="block text-[10px] text-slate-400"><%= membership.membership_package.name %></span>
+  </td>
+  <td class="px-4 py-4 whitespace-nowrap">
+    <div class="flex flex-col">
+      <span class="text-sm <%= membership.current? ? 'text-slate-900 font-semibold' : 'text-red-500 font-medium' %>">
+        <%= l(membership.end_date, format: :short) %>
+      </span>
+      <% if membership.current? %>
+        <span class="text-[10px] text-green-600 font-bold">Quedan <%= membership.days_remaining %> días</span>
+      <% end %>
+    </div>
+  </td>
+  <td class="px-4 py-4 text-right">
+    <%= link_to "Editar", edit_admin_membership_path(membership), class: "text-indigo-600 hover:text-indigo-900 font-bold text-sm" %>
+  </td>
+</tr>

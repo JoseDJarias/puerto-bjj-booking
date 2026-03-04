@@ -11,84 +11,59 @@ class Membership < ApplicationRecord
   # 'current': It means that the status is active and the date is valid.
   # We use the modern syntax for infinite ranges (Date.current..)
   scope :current, -> { active.where(end_date: Date.current..) }
+  scope :expired_listing, -> { expired.or(where(end_date: ..Date.yesterday)) }
 
   before_validation :calculate_end_date, on: :create
   before_validation :calculate_amount_paid, on: :create
-  after_create :expire_conflicting_drop_ins
 
   def current?
     active? && end_date.present? && end_date >= Date.current
   end
-
   # Helper methods
   def days_remaining
     return 0 unless end_date
-    remaining = (end_date - Date.current).to_i
-    remaining.positive? ? remaining : 0
+    [ (end_date - Date.current).to_i, 0 ].max
   end
 
-  def drop_in?
-    # Delegate the logic to the plan if possible, or check the duration is 0
-    membership_plan&.drop_in?
+  def preview_totals
+    calculate_end_date
+    calculate_amount_paid
   end
 
   private
 
-  # === CALCULATIONS ===
-
   def calculate_end_date
-    return if end_date.present? # Allow manual override
-
-    # Guard clause: If there is no start date or plan, we cannot calculate
+    return if end_date.present? # No sobreescribir si ya se puso manualmente
     return unless start_date && membership_plan
 
-    if drop_in?
-      self.end_date = start_date # Drop-in expires the same day
-    else
-      # .months is a method of ActiveSupport, very secure
-      self.end_date = start_date + membership_plan.duration_months.months
-    end
+    # Los planes ahora siempre tienen duration_months (mínimo 1)
+    self.end_date = start_date + membership_plan.duration_months.months
   end
 
+  # === CALCULATIONS ===
   def calculate_amount_paid
-    return if amount_paid.present?
+    return if amount_paid.to_f > 0
 
-    return unless membership_plan && membership_package
+    return unless membership_plan_id && membership_package_id
+  
+    pricing = MembershipPricing.find_by(
+      membership_package_id: membership_package_id, 
+      membership_plan_id: membership_plan_id
+    )
     
-    base_price = membership_plan.price
-    modifier = membership_package.price_modifier || 0
-    total = base_price + modifier
-    
-    # Apply discount if applicable
-    if concurrent_recurring_membership?
-      total *= 0.5 # 50% discount
+    final_price = pricing&.price || 0
+  
+    if final_price.positive? && user.present?
+      name = membership_package.name.downcase
+      
+      # Lógica simple y directa de Cross-Promotion
+      if name.include?("boxeo") && user&.active_on?("jiujitsu")
+        final_price *= 0.5
+      elsif (name.include?("jiujitsu") || name.include?("mma")) && user&.active_on?("boxeo")
+        final_price *= 0.5
+      end
     end
-    
-    self.amount_paid = total
-  end
-
-  # === BUSINESS LOGIC ===
-
-  def concurrent_recurring_membership?
-    # Search if the user has another active and valid recurring membership
-    user.memberships
-        .current           # We use our new combined scope
-        .where.not(id: id) # That is not this one (important in updates)
-        .joins(:membership_plan)
-        .where("membership_plans.duration_months > 0") # Only recurring plans
-        .exists?
-  end
-
-  def expire_conflicting_drop_ins
-    # If I buy a monthly membership, I expire my old active drop-ins
-    # Only if the current one is not a drop-in
-    return if drop_in?
-
-    user.memberships
-        .where.not(id: id)
-        .active # Search by status DB
-        .joins(:membership_plan)
-        .where(membership_plans: { duration_months: 0 }) # They are drop-ins
-        .update_all(status: :expired)
-  end
+  
+    self.amount_paid = final_price
+  end 
 end

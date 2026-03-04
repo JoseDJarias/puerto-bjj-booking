@@ -1,0 +1,18 @@
+<%# app/views/dashboard/states/_active_member.html.erb %>
+<section class="rounded-2xl bg-white p-8 shadow-lg ring-1 ring-slate-900/5" aria-labelledby="welcome-heading">
+  <h2 id="welcome-heading" class="mb-4 text-xl font-semibold text-slate-900">
+    <%= t('dashboard.welcome.title') %>
+  </h2>
+  <p class="mb-4 text-slate-900">
+    <%= t('dashboard.welcome.greeting', name: user.first_name.presence || user.email_address) %>
+  </p>
+  <p class="mb-6 text-slate-600">
+    <%= t('dashboard.welcome.subtitle') %>
+  </p>
+  <div class="flex flex-col sm:flex-row gap-4">
+    <%= link_to class_schedules_path, class: "inline-flex justify-center items-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-indigo-500 transition-all transform hover:-translate-y-0.5" do %>
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+      <%= t('dashboard.welcome.cta') %>
+    <% end %>
+   </div>
+</section>

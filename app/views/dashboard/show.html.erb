@@ -1,4 +1,5 @@
-<article class="mx-auto w-full max-w-2xl px-4 py-8">
+<%# app/views/dashboard/show.html.erb %>
+<article class="mx-auto w-full max-w-2xl px-4 py-2">
   <header class="mb-8 flex flex-wrap items-center justify-between gap-4">
     <h1 class="text-2xl font-bold text-slate-900">
       <%= t('auth.branding.title') %>
@@ -10,49 +11,10 @@
   </header>
 
   <% if @user.pending_approval? %>
-    <section class="rounded-2xl bg-white p-8 shadow-lg ring-1 ring-slate-900/5" aria-labelledby="pending-heading">
-      <h2 id="pending-heading" class="mb-4 text-xl font-semibold text-slate-900">
-        <%= t('dashboard.pending_approval.title') %>
-      </h2>
-      <p class="mb-4 text-slate-600">
-        <%= t('dashboard.pending_approval.message') %>
-      </p>
-      <p class="text-sm text-slate-500">
-        <%= t('dashboard.pending_approval.hint') %>
-      </p>
-    </section>
-
-  <% elsif @user.approved? && !@user.valid_membership? %>
-    <section class="rounded-2xl bg-white p-8 shadow-lg ring-1 ring-slate-900/5" aria-labelledby="expired-heading">
-      <h2 id="expired-heading" class="mb-4 text-xl font-semibold text-slate-900">
-        <%= t('dashboard.membership_expired.title') %>
-      </h2>
-      <p class="mb-6 text-slate-600">
-        <%= t('dashboard.membership_expired.message') %>
-      </p>
-      <p class="text-sm text-slate-500">
-        <%# CTA para "Ver opciones de membresía" - enlace o botón cuando exista la ruta %>
-        <%= t('dashboard.membership_expired.cta') %>
-      </p>
-    </section>
-
+    <%= render "dashboard/states/pending" %>
+  <% elsif @user.approved? && !@user.has_booking_access? %>
+    <%= render "dashboard/states/pricing_options", packages: @packages, plans: @plans %>
   <% else %>
-    <section class="rounded-2xl bg-white p-8 shadow-lg ring-1 ring-slate-900/5" aria-labelledby="welcome-heading">
-      <h2 id="welcome-heading" class="mb-4 text-xl font-semibold text-slate-900">
-        <%= t('dashboard.welcome.title') %>
-      </h2>
-      <p class="mb-4 text-slate-900">
-        <%= t('dashboard.welcome.greeting', name: @user.first_name.presence || @user.email_address) %>
-      </p>
-      <p class="mb-6 text-slate-600">
-        <%= t('dashboard.welcome.subtitle') %>
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4">
-        <%= link_to class_schedules_path, class: "inline-flex justify-center items-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all transform hover:-translate-y-0.5" do %>
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-          <%= t('dashboard.welcome.cta') %>
-        <% end %>
-       </div>
-    </section>
+    <%= render "dashboard/states/active_member", user: @user %>
   <% end %>
 </article>

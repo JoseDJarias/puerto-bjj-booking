@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_10_222049) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_26_083237) do
   create_table "bookings", force: :cascade do |t|
     t.integer "changed_by_id"
     t.integer "class_schedule_id", null: false
@@ -49,6 +49,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_10_222049) do
     t.index ["name"], name: "index_class_types_on_name", unique: true
   end
 
+  create_table "drop_in_tickets", force: :cascade do |t|
+    t.integer "booking_id"
+    t.datetime "created_at", null: false
+    t.decimal "price_paid", precision: 10, scale: 2
+    t.integer "status", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.datetime "used_at"
+    t.integer "user_id", null: false
+    t.index ["booking_id"], name: "index_drop_in_tickets_on_booking_id"
+    t.index ["user_id"], name: "index_drop_in_tickets_on_user_id"
+  end
+
   create_table "membership_package_class_types", force: :cascade do |t|
     t.integer "class_type_id", null: false
     t.datetime "created_at", null: false
@@ -77,6 +89,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_10_222049) do
     t.decimal "price", precision: 10, scale: 2, null: false
     t.datetime "updated_at", null: false
     t.index ["active"], name: "index_membership_plans_on_active"
+  end
+
+  create_table "membership_pricings", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "membership_package_id", null: false
+    t.integer "membership_plan_id", null: false
+    t.decimal "price", precision: 10, scale: 2, default: "0.0"
+    t.datetime "updated_at", null: false
+    t.index ["membership_package_id", "membership_plan_id"], name: "idx_pricing_on_package_and_plan", unique: true
+    t.index ["membership_package_id"], name: "index_membership_pricings_on_membership_package_id"
+    t.index ["membership_plan_id"], name: "index_membership_pricings_on_membership_plan_id"
   end
 
   create_table "memberships", force: :cascade do |t|
@@ -125,11 +148,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_10_222049) do
     t.string "last_name"
     t.string "password_digest", null: false
     t.string "phone"
+    t.string "phone_number"
     t.integer "role", default: 0, null: false
     t.integer "status", default: 0, null: false
     t.datetime "updated_at", null: false
     t.index ["approved_at"], name: "index_users_on_approved_at"
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.index ["phone_number"], name: "index_users_on_phone_number"
     t.index ["role"], name: "index_users_on_role"
     t.index ["status"], name: "index_users_on_status"
   end
@@ -139,8 +164,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_10_222049) do
   add_foreign_key "bookings", "users", column: "changed_by_id"
   add_foreign_key "class_schedules", "class_types"
   add_foreign_key "class_schedules", "users", column: "instructor_id"
+  add_foreign_key "drop_in_tickets", "bookings"
+  add_foreign_key "drop_in_tickets", "users"
   add_foreign_key "membership_package_class_types", "class_types"
   add_foreign_key "membership_package_class_types", "membership_packages"
+  add_foreign_key "membership_pricings", "membership_packages"
+  add_foreign_key "membership_pricings", "membership_plans"
   add_foreign_key "memberships", "membership_packages"
   add_foreign_key "memberships", "membership_plans"
   add_foreign_key "memberships", "users"

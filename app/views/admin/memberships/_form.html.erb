@@ -1,7 +1,5 @@
-<%# app/views/admin/memberships/_form.html.erb %>
-
 <div data-controller="membership-preview">
-  <%= form_with model: [:admin, membership], 
+  <%= form_with model: [:admin, membership],
                 id: "membership_form",
                 data: { membership_preview_target: "form" },
                 class: "space-y-8" do |f| %>
@@ -9,25 +7,23 @@
     <section class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
       <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
         <span class="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-100 text-indigo-700 text-sm italic font-black">1</span>
-        Seleccionar Alumno
+        <%= t("admin.memberships.form.step_student") %>
       </h3>
-      
+
       <%= f.collection_select :user_id, User.order(:first_name), :id, :first_name,
-          { prompt: "Buscar alumno..." }, 
-          { 
-            class: "block w-full rounded-xl border-slate-300 py-3 px-4 focus:ring-indigo-600",
-          } %>
+          { prompt: t("admin.memberships.form.search_student_prompt") },
+          { class: "block w-full rounded-xl border-slate-300 py-3 px-4 focus:ring-indigo-600" } %>
     </section>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       <section class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-        <h3 class="text-lg font-bold text-slate-900 mb-6 italic">2. Configuración</h3>
-        
+        <h3 class="text-lg font-bold text-slate-900 mb-6 italic">2. <%= t("admin.memberships.form.step_config") %></h3>
+
         <div class="space-y-8">
           <div>
-            <label class="block text-xs font-black uppercase text-slate-400 mb-4 text-center tracking-widest">Deporte / Paquete</label>
+            <label class="block text-xs font-black uppercase text-slate-400 mb-4 text-center tracking-widest"><%= t("admin.memberships.form.package_label") %></label>
             <div class="grid grid-cols-2 gap-3">
-              <% MembershipPackage.active.each do |pkg| %> <%# <--- AQUÍ DECLARAMOS 'pkg' %>
+              <% MembershipPackage.active.each do |pkg| %>
                 <label class="group cursor-pointer">
                   <%= f.radio_button :membership_package_id, pkg.id, 
                       class: "peer sr-only", 
@@ -41,7 +37,7 @@
           </div>
 
           <div>
-            <label class="block text-xs font-black uppercase text-slate-400 mb-4 text-center tracking-widest">Duración del Plan</label>
+            <label class="block text-xs font-black uppercase text-slate-400 mb-4 text-center tracking-widest"><%= t("admin.memberships.form.plan_duration_label") %></label>
             <div class="flex flex-wrap justify-center gap-2">
 
               <% MembershipPlan.active.each do |plan| %>
@@ -59,16 +55,15 @@
         </div>
       </section>
 
-      <!-- Blue card section -->
       <section class="bg-indigo-950 p-8 rounded-3xl text-white shadow-2xl relative overflow-hidden flex flex-col justify-between min-h-[420px]">
         <div>
           <div class="flex justify-between items-start mb-10 border-b border-indigo-800/50 pb-4">
             <h3 class="text-xl font-black italic tracking-tighter leading-none">PUERTO BJJ</h3>
-            <span class="bg-indigo-500/20 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest italic">Preview</span>
+            <span class="bg-indigo-500/20 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest italic"><%= t("admin.memberships.form.preview_badge") %></span>
           </div>
 
           <div class="space-y-1">
-            <p class="text-indigo-400 text-[10px] font-black uppercase tracking-widest">Total Neto</p>
+            <p class="text-indigo-400 text-[10px] font-black uppercase tracking-widest"><%= t("admin.memberships.form.total_net") %></p>
             <div class="flex items-baseline gap-2">
               <span class="text-7xl font-black tabular-nums tracking-tighter italic leading-none" 
                     data-membership-preview-target="amount">
@@ -81,17 +76,16 @@
 
         <div class="space-y-6">
           <div class="border-t border-indigo-800/50 pt-6">
-            <p class="text-indigo-400 text-[10px] font-black uppercase tracking-widest mb-1">Vencimiento</p>
+            <p class="text-indigo-400 text-[10px] font-black uppercase tracking-widest mb-1"><%= t("admin.memberships.form.due_date") %></p>
             <p class="font-bold italic text-sm" data-membership-preview-target="endDate">
               <%= membership.end_date ? l(membership.end_date, format: :long) : "---" %>
             </p>
           </div>
 
-          <%= f.submit "CONFIRMAR REGISTRO ⚡", 
+          <%= f.submit t("admin.memberships.form.confirm_button"), 
               class: "w-full rounded-2xl bg-white py-5 text-indigo-950 font-black text-lg hover:bg-indigo-50 transition-all shadow-xl cursor-pointer disabled:opacity-20 disabled:cursor-not-allowed" %>
         </div>
       </section>
-      <!-- Blue card section -->
     </div>
   <% end %>
 </div>

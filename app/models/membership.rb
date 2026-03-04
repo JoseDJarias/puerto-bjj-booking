@@ -33,10 +33,9 @@ class Membership < ApplicationRecord
   private
 
   def calculate_end_date
-    return if end_date.present? # No sobreescribir si ya se puso manualmente
+    return if end_date.present?
     return unless start_date && membership_plan
 
-    # Los planes ahora siempre tienen duration_months (mínimo 1)
     self.end_date = start_date + membership_plan.duration_months.months
   end
 
@@ -55,8 +54,7 @@ class Membership < ApplicationRecord
   
     if final_price.positive? && user.present?
       name = membership_package.name.downcase
-      
-      # Lógica simple y directa de Cross-Promotion
+
       if name.include?("boxeo") && user&.active_on?("jiujitsu")
         final_price *= 0.5
       elsif (name.include?("jiujitsu") || name.include?("mma")) && user&.active_on?("boxeo")

@@ -20,11 +20,11 @@
         <%= l(membership.end_date, format: :short) %>
       </span>
       <% if membership.current? %>
-        <span class="text-[10px] text-green-600 font-bold">Quedan <%= membership.days_remaining %> días</span>
+        <span class="text-[10px] text-green-600 font-bold"><%= t("admin.memberships.index.days_left", count: membership.days_remaining) %></span>
       <% end %>
     </div>
   </td>
   <td class="px-4 py-4 text-right">
-    <%= link_to "Editar", edit_admin_membership_path(membership), class: "text-indigo-600 hover:text-indigo-900 font-bold text-sm" %>
+    <%= link_to t("admin.common.edit"), edit_admin_membership_path(membership), class: "text-indigo-600 hover:text-indigo-900 font-bold text-sm" %>
   </td>
 </tr>

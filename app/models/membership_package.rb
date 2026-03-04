@@ -23,13 +23,11 @@ class MembershipPackage < ApplicationRecord
     membership_pricings.find_by(membership_plan: plan)&.price
   end
 
-  # ¿Este plan aplica a este paquete? (ej. paquetes drop-in solo con planes duration_months == 0)
   def valid_plan?(plan)
     return plan.duration_months == 0 if drop_in_package?
     true
   end
 
-  # Precio mínimo entre los planes que aplican a este paquete (para la UI "desde X")
   def lowest_price(plans)
     valid = plans.select { |p| valid_plan?(p) }
     return nil if valid.empty?

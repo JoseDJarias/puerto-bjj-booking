@@ -44,13 +44,14 @@ module MembershipValidator
     drop_in_tickets.unused.exists?
   end
 
-  def ticket_available_for?(class_type)
-    package_ids = class_type.membership_packages.pluck(:id)
-    drop_in_tickets.unused.where(membership_package_id: package_ids).exists?
+  # Universal drop-ins: one unused ticket = access to any class. Package param kept for API compatibility.
+  def ticket_available_for?(_class_type = nil)
+    drop_in_tickets.unused.exists?
   end
 
-  def available_ticket_for(package)
-    drop_in_tickets.unused.where(membership_package: package).first
+  # Universal drop-ins: returns first unused ticket. Package param kept for API compatibility.
+  def available_ticket_for(_package = nil)
+    drop_in_tickets.unused.first
   end
 
   def needs_membership_renewal?

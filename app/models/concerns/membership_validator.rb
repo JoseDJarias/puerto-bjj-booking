@@ -80,5 +80,4 @@ module MembershipValidator
     current_memberships.flat_map { |m| m.membership_package.class_types }.uniq
   end
 
-  def first_available_ticket = drop_in_tickets.unused.first
 end

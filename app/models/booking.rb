@@ -102,7 +102,7 @@ class Booking < ApplicationRecord
     return if user.drop_in_active_today?
 
     # 3. Si no hay membresía ni ticket activo hoy, intentamos activar uno nuevo
-    ticket = user.first_available_ticket
+    ticket = user.available_ticket_for(class_schedule.class_type)
 
     if ticket
       ticket.activate!(self)

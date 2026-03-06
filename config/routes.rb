@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "dog_fights/show"
   get "contact/show"
   resource :registration, only: %i[new create]
   resource :session
@@ -11,6 +12,7 @@ Rails.application.routes.draw do
   end
   resources :bookings, only: [:create]
   get "contacto", to: "contact#show", as: :contact
+  get "dog-fights", to: "dog_fights#show", as: :dog_fights
   root "dashboard#show"
 
 

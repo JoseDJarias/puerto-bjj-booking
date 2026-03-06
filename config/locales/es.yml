@@ -4,7 +4,7 @@ es:
     bookings: "Reservar Clase"
     close_menu: "Cerrar menú"
     contact: "Contacto"
-
+    dog_fights: "Dog Fights"
   date:
     formats:
       default: "%d/%m/%Y"
@@ -25,6 +25,23 @@ es:
     subtitle: "¿Necesitas información? Escríbenos o llámanos."
     phone_title: "Teléfono"
     email_title: "Correo electrónico"
+  dog_fights:
+    title: "Dog Fights"
+    name: "Puerto Jiu Jitsu Dog Fights"
+    badge: "Torneo local"
+    tagline: "Entra quien quiera. Cuota única. El ganador o ganadora se lleva todo."
+    everyone_can_enter: "Todos pueden entrar"
+    everyone_can_enter_desc: "Cualquiera puede participar, sin restricción de cinturón o peso para esta edición."
+    pay_fee: "Cuota única"
+    pay_fee_desc: "Todos pagan una cuota de inscripción; el pozo es para el ganador."
+    winner_takes_all: "El ganador se lleva todo"
+    winner_takes_all_desc: "Modalidad winner takes all: quien gana se lleva el premio."
+    no_rules: "No rules"
+    no_rules_desc: "Sin reglas especiales: vale lo que vale en el tatami."
+    adcc_style: "Estilo ADCC"
+    adcc_style_desc: "Competencia al estilo ADCC, submission grappling."
+    coming_soon: "Próximamente"
+    coming_soon_desc: "Inscripciones y fecha se anunciarán pronto. Estate atento."
   # === AUTHENTICATION ===
   auth:
     branding:

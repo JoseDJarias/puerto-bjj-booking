@@ -23,13 +23,60 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <div id="flash" class="fixed top-5 right-5 z-50 flex flex-col gap-2 w-full max-w-sm pointer-events-none">
-      <%= render "layouts/flash" %>
-    </div>  
 
-    <main class="container mx-auto mt-8 px-5 flex">
-      <%= yield %>
-    </main>
+  <body class="min-h-screen bg-slate-50 font-sans text-slate-900">
+    <div class="flex min-h-screen relative" data-controller="sidebar">
+
+      <aside data-sidebar-target="sidebar"
+             class="fixed inset-y-0 left-0 z-50 w-64 transform bg-white shadow-xl transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 -translate-x-full flex flex-col">
+
+        <div class="flex h-16 items-center justify-between border-b border-slate-100 px-6">
+          <span class="text-lg font-bold text-slate-900"><%= t("auth.branding.title") %></span>
+          <button type="button" data-action="click->sidebar#close" class="lg:hidden text-slate-500 hover:text-slate-700" aria-label="<%= t('nav.close_menu') %>">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto px-4 py-6 space-y-1">
+          <%= link_to root_path, class: "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium #{current_page?(root_path) ? 'bg-indigo-50 text-indigo-700' : 'text-slate-700 hover:bg-slate-100'}" do %>
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            <span><%= t("nav.home") %></span>
+          <% end %>
+
+          <%= link_to class_schedules_path, class: "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium #{current_page?(class_schedules_path) ? 'bg-indigo-50 text-indigo-700' : 'text-slate-700 hover:bg-slate-100'}" do %>
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+            <span><%= t("nav.bookings") %></span>
+          <% end %>
+
+          <%= link_to week_class_schedules_path, class: "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium #{current_page?(week_class_schedules_path) ? 'bg-indigo-50 text-indigo-700' : 'text-slate-700 hover:bg-slate-100'}" do %>
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+            <span><%= t("class_schedules.week.title") %></span>
+          <% end %>
+        </nav>
+      </aside>
+
+      <div data-sidebar-target="overlay"
+           data-action="click->sidebar#close"
+           class="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden">
+      </div>
+
+      <div class="flex flex-1 flex-col overflow-hidden">
+        <header class="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-slate-200 bg-white px-4 lg:hidden">
+          <button type="button" data-action="click->sidebar#open" class="-ml-2 p-2 text-slate-500 hover:bg-slate-100 rounded-md" aria-label="<%= t('nav.close_menu') %>">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+          </button>
+          <h1 class="text-lg font-semibold text-slate-900"><%= content_for(:page_title) || t("auth.branding.title") %></h1>
+        </header>
+
+        <main class="flex-1 overflow-auto bg-slate-50 p-4 sm:p-6 lg:p-8">
+          <div class="mx-auto max-w-6xl">
+            <div id="flash" class="fixed top-4 right-4 z-50 flex flex-col gap-2 w-full max-w-sm pointer-events-none">
+              <%= render "layouts/flash" %>
+            </div>
+            <%= yield %>
+          </div>
+        </main>
+      </div>
+    </div>
   </body>
 </html>

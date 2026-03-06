@@ -3,7 +3,11 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
-  resources :class_schedules, only: [:index] 
+  resources :class_schedules, only: [:index] do
+    collection do
+      get :week
+    end
+  end
   resources :bookings, only: [:create]
   root "dashboard#show"
 

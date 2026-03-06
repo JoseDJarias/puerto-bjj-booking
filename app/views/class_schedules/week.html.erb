@@ -1,0 +1,75 @@
+<% content_for :page_title, t('class_schedules.week.title') %>
+
+<div class="min-h-0">
+  <header class="mb-8">
+    <h1 class="text-2xl font-bold text-slate-900 mb-6"><%= t('class_schedules.week.title') %></h1>
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
+      <p class="text-base text-slate-600 order-2 sm:order-1">
+        <span class="font-medium"><%= l(@week_start, format: :long) %></span>
+        <span class="mx-1.5">–</span>
+        <span><%= l(@week_end, format: :long) %></span>
+      </p>
+      <nav class="flex items-center gap-3 order-1 sm:order-2 flex-shrink-0">
+        <%= link_to week_class_schedules_path(week: @week_start - 7.days), class: "rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-100 active:bg-slate-200 transition-colors" do %>
+          <span class="sr-only"><%= t('simple_calendar.previous') %></span>
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+        <% end %>
+        <%= link_to week_class_schedules_path(week: Date.current.beginning_of_week(:monday)), class: "rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-100 active:bg-slate-200 transition-colors" do %>
+          <%= t('simple_calendar.today') %>
+        <% end %>
+        <%= link_to week_class_schedules_path(week: @week_start + 7.days), class: "rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-100 active:bg-slate-200 transition-colors" do %>
+          <span class="sr-only"><%= t('simple_calendar.next') %></span>
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+        <% end %>
+      </nav>
+    </div>
+  </header>
+
+  <%# Mobile: scroll vertical — una sección por día, más espaciado %>
+  <div class="md:hidden space-y-8">
+    <% @days.each do |day| %>
+      <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="bg-slate-100 border-b border-slate-200 px-5 py-4">
+          <span class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1"><%= t('date.abbr_day_names')[day.wday] %></span>
+          <p class="text-2xl font-bold text-slate-900"> <%= l(day, format: :short) %></p>
+        </div>
+        <div class="p-5 space-y-4">
+          <% ( @schedules_by_date[day] || [] ).each do |schedule| %>
+            <div class="rounded-xl border border-slate-200 bg-slate-50/80 p-4">
+              <p class="font-semibold text-slate-900 text-base"><%= schedule.class_type.name %></p>
+              <p class="text-sm text-slate-600 mt-1.5"><%= schedule.starts_at.strftime("%H:%M") %> – <%= schedule.ends_at.strftime("%H:%M") %></p>
+              <p class="text-sm text-indigo-600 font-medium mt-1.5"><%= schedule.instructor.first_name %></p>
+            </div>
+          <% end %>
+          <% if ( @schedules_by_date[day] || [] ).empty? %>
+            <p class="text-sm text-slate-400 py-3"><%= t('class_schedules.week.no_classes') %></p>
+          <% end %>
+        </div>
+      </section>
+    <% end %>
+  </div>
+
+  <%# Desktop: scroll horizontal, columnas más anchas y más espaciado %>
+  <div class="hidden md:block overflow-x-auto pb-4 -mx-1 px-1">
+    <div class="flex gap-6 min-w-max">
+      <% @days.each do |day| %>
+        <div class="w-56 flex-shrink-0 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+          <div class="bg-slate-100 border-b border-slate-200 px-4 py-5 text-center flex-shrink-0">
+            <span class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1"><%= t('date.abbr_day_names')[day.wday] %></span>
+            <p class="text-2xl font-bold text-slate-900 leading-tight"><%= day.day %></p>
+            <p class="text-sm text-slate-500 mt-1"><%= l(day, format: :short) %></p>
+          </div>
+          <div class="p-4 space-y-4 flex-1 min-h-[140px]">
+            <% ( @schedules_by_date[day] || [] ).each do |schedule| %>
+              <div class="rounded-xl border border-slate-200 bg-slate-50/80 p-4">
+                <p class="font-semibold text-slate-900 truncate" title="<%= schedule.class_type.name %>"><%= schedule.class_type.name %></p>
+                <p class="text-sm text-slate-600 mt-1.5"><%= schedule.starts_at.strftime("%H:%M") %> – <%= schedule.ends_at.strftime("%H:%M") %></p>
+                <p class="text-sm text-indigo-600 font-medium mt-1 truncate" title="<%= schedule.instructor.first_name %>"><%= schedule.instructor.first_name %></p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

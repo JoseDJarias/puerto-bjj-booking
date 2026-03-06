@@ -1,4 +1,17 @@
 es:
+  nav:
+    home: "Inicio"
+    bookings: "Reservar Clase"
+    close_menu: "Cerrar menú"
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      short: "%d %b"
+      long: "%d de %B de %Y"
+    month_names: [~, enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre]
+    abbr_month_names: [~, ene, feb, mar, abr, may, jun, jul, ago, sep, oct, nov, dic]
+    day_names: [domingo, lunes, martes, miércoles, jueves, viernes, sábado]
+    abbr_day_names: [Dom, Lun, Mar, Mié, Jue, Vie, Sáb]
   simple_calendar:
       previous: "Anterior"
       next: "Siguiente"
@@ -78,6 +91,8 @@ es:
       error: "No se pudo procesar la reserva."
 
   class_schedules:
+    week:
+      title: "Horario de la semana"
     spots:
       full_badge: "Clase Llena"
       available_suffix: "lugares libres"
@@ -105,6 +120,7 @@ es:
       plans: "Planes"
       disciplines: "Disciplinas"
       packages: "Paquetes"
+      packages_and_pricing: "Paquetes y precios"
 
     # --- Common CRUD Actions ---
     common:
@@ -182,16 +198,90 @@ es:
         memberships_title: "Historial de Membresías"
         new_membership: "+ Nueva Membresía"
         no_memberships: "Este usuario no tiene membresías activas ni historial."
+        no_history: "Sin historial"
+        validity: "Vigencia"
+        days_remaining: "%{count} días restantes"
+        credits_wallet: "Billetera de Créditos"
+      drop_in_management:
+        title: "Gestión de Drop-ins"
+        subtitle: "Control de créditos y accesos diarios"
+        quantity_label: "CANT."
+        sell: "+ VENDER"
+        id: "ID"
+        status: "Estado"
+        purchase: "Compra"
+        activation: "Activación"
+        actions: "Acciones"
+        status_unused: "Disponible"
+        status_used: "Activo Hoy"
+        status_voided: "Anulado"
+        access_revoked: "Acceso revocado"
+        unused: "Sin usar"
+        reset_title: "Devolver a disponible"
+        void_title: "Anular (Negar acceso)"
+        destroy_title: "Eliminar definitivamente"
+        destroy_confirm: "¿Borrar este registro definitivamente?"
+        empty: "No hay historial de tickets registrado."
       flash:
         updated: "Usuario actualizado correctamente."
         deleted: "Usuario eliminado."
         approved: "Usuario aprobado y activado."
 
+    drop_in_tickets:
+      flash:
+        added: "Se agregaron %{count} créditos correctamente."
+        voided: "Ticket #%{id} anulado."
+        reset: "Ticket #%{id} vuelve a estar disponible."
+        destroyed: "Ticket eliminado del historial."
+
+    membership_pricings:
+      index:
+        title: "Matriz de Precios"
+        new_price: "Definir Nuevo Precio"
+        package: "Paquete"
+        plan_duration: "Plan (Duración)"
+        price_configured: "Precio Configurado"
+        actions: "Acciones"
+        edit: "Editar"
+      form:
+        package: "Paquete"
+        package_prompt: "Elegir paquete..."
+        plan: "Plan"
+        plan_prompt: "Elegir plan..."
+        price_label: "Precio Final Configurado"
+        price_placeholder: "0"
+        price_hint: "Este será el valor base antes de aplicar descuentos por multi-disciplina."
+        submit_create: "Crear Configuración"
+        submit_update: "Actualizar Precio"
+      edit:
+        back: "Volver a la matriz"
+        title: "Editar Precio"
+        subtitle: "Modificando la relación entre %{package} y el plan %{plan}."
+        destroy: "Eliminar esta configuración de precio"
+        destroy_confirm: "¿Estás seguro? Esto podría afectar los cálculos de nuevas membresías."
+      new:
+        back: "Volver a la matriz"
+        title: "Definir Precio"
+        subtitle: "Asigna un costo específico a una combinación de deporte y duración."
+      flash:
+        created: "Precio asignado correctamente."
+        updated: "Precio actualizado."
+        destroyed: "Configuración de precio eliminada."
+
     memberships:
       index:
         title: "Control de Membresías"
-        new: "Vender Membresía"
+        new: "Nueva Membresía"
         user_column: "Alumno"
+        search_placeholder: "Buscar alumno..."
+        filter_all: "Todas"
+        filter_active: "Activas"
+        filter_expired: "Vencidas"
+        table_plan: "Plan"
+        table_due: "Vence"
+        load_more: "Cargar más"
+        days_left: "Quedan %{count} días"
+        tabs_aria: "Filtros de listado"
         table:
           plan_details: "Detalles del Plan"
           validity: "Vigencia"
@@ -206,6 +296,16 @@ es:
         select_user: "Seleccionar alumno..."
         select_plan: "Seleccionar plan..."
         select_package: "Seleccionar paquete..."
+        search_student_prompt: "Buscar alumno..."
+        step_student: "Seleccionar Alumno"
+        step_config: "Configuración"
+        package_label: "Deporte / Paquete"
+        plan_duration_label: "Duración del Plan"
+        preview_badge: "Preview"
+        total_net: "Total Neto"
+        due_date: "Vencimiento"
+        confirm_button: "CONFIRMAR REGISTRO ⚡"
+        select_plan_package: "Selecciona plan y deporte"
       flash:
         created: "Membresía creada. Cobro registrado: %{amount}"
         updated: "Membresía actualizada correctamente."
@@ -298,6 +398,7 @@ es:
     alerts:
       access_denied: "Acceso denegado."
       admin_required: "Se requieren privilegios de administrador."
+      booking_access_required: "Necesitas una membresía activa o un ticket válido para ver los horarios y reservar."
       active_membership_required: "Por favor activa tu membresía para reservar clases."
       try_again_later: "Intenta de nuevo más tarde."
       invalid_credentials: "Prueba con otro correo o contraseña."
@@ -329,6 +430,19 @@ es:
       subtitle: "Tu membresía está activa. Puedes reservar tus clases."
       cta: "Ver clases disponibles"
     sign_out: "Cerrar sesión"
+    membership_expired:
+      title: "Membresía Vencida"
+      message: "Consulta nuestros planes disponibles a continuación."
+    plans:
+      price_list: "Lista de Precios"
+      prices_from: "Ver precios desde %{price}"
+      single_access: "Pase diario"
+      months_count:
+        one: "1 Mes"
+        other: "%{count} Meses"
+      payment_info: "Pagos presenciales en recepción"
+      recurring_title: "Planes Regulares"
+      drop_in_title: "Pases Individuales"
 
   # === MODELS (ActiveRecord) ===
   activerecord:

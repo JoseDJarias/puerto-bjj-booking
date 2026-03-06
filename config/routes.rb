@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "membership_info/show"
   get "dog_fights/show"
   get "contact/show"
   resource :registration, only: %i[new create]
@@ -11,6 +12,8 @@ Rails.application.routes.draw do
     end
   end
   resources :bookings, only: [:create]
+  get "mi-membresia/historial", to: "membership_info#history", as: :my_membership_history
+  get "mi-membresia", to: "membership_info#show", as: :my_membership
   get "contacto", to: "contact#show", as: :contact
   get "dog-fights", to: "dog_fights#show", as: :dog_fights
   root "dashboard#show"

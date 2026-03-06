@@ -12,7 +12,8 @@ class Membership < ApplicationRecord
   # We use the modern syntax for infinite ranges (Date.current..)
   scope :current, -> { active.where(end_date: Date.current..) }
   scope :expired_listing, -> { expired.or(where(end_date: ..Date.yesterday)) }
-
+  scope :past, -> { where(end_date: ..Date.yesterday).or(where(status: [:expired, :cancelled])) }
+  
   before_validation :calculate_end_date, on: :create
   before_validation :calculate_amount_paid, on: :create
 

@@ -3,6 +3,8 @@ es:
     home: "Inicio"
     bookings: "Reservar Clase"
     close_menu: "Cerrar menú"
+    contact: "Contacto"
+
   date:
     formats:
       default: "%d/%m/%Y"
@@ -18,6 +20,11 @@ es:
       today: "Hoy"
       week: "Semana"
       month: "Mes"
+  contact:
+    title: "Contacto"
+    subtitle: "¿Necesitas información? Escríbenos o llámanos."
+    phone_title: "Teléfono"
+    email_title: "Correo electrónico"
   # === AUTHENTICATION ===
   auth:
     branding:

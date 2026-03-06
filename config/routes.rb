@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "contact/show"
   resource :registration, only: %i[new create]
   resource :session
   resources :passwords, param: :token
@@ -9,6 +10,7 @@ Rails.application.routes.draw do
     end
   end
   resources :bookings, only: [:create]
+  get "contacto", to: "contact#show", as: :contact
   root "dashboard#show"
 
 

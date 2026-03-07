@@ -5,10 +5,6 @@
     <h1 class="text-2xl font-bold text-slate-900">
       <%= t('auth.branding.title') %>
     </h1>
-    <%= button_to t('dashboard.sign_out'),
-          session_path,
-          method: :delete,
-          class: "rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" %>
   </header>
 
   <% if @user.pending_approval? %>

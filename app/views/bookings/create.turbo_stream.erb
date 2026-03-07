@@ -1,0 +1,9 @@
+<%= turbo_stream.update "flash", partial: "layouts/flash" %>
+
+<%= turbo_stream.replace "action_button_schedule_#{@schedule.id}", 
+                         partial: "class_schedules/action_button", 
+                         locals: { schedule: @schedule, user: current_user } %>
+
+<%= turbo_stream.replace "spots_schedule_#{@schedule.id}", 
+                         partial: "class_schedules/spots", 
+                         locals: { schedule: @schedule } %>

@@ -24,6 +24,8 @@ class Booking < ApplicationRecord
   scope :active, -> { where(status: [:confirmed, :attended]) }
 
   # --- VALIDATIONS (Business Logic) ---
+
+  MAX_SUBMISSION_LIMIT = 3
   
   # 1. Capacity: Only validates if the booking is active and not an Admin who forces it
   validate :ensure_capacity, if: -> { active_status? && status_changed? && !admin_override? }
@@ -53,6 +55,21 @@ class Booking < ApplicationRecord
   end
 
   # THE MASTER METHOD: Handles all transitions
+  # Handles the initial creation or toggle, with locks and validations.
+  def handle_user_action!(actor)
+    class_schedule.with_lock do
+      if new_record?
+        self.status = :confirmed
+        self.changed_by = actor
+        save
+      else
+        toggle_by_user!
+      end
+    end
+  rescue ActiveRecord::RecordInvalid
+    false
+  end
+  
   def update_status!(new_status, actor)
     self.changed_by = actor
     
@@ -76,6 +93,10 @@ class Booking < ApplicationRecord
     end
   end
 
+  def limit_reached?
+    submission_count >= MAX_SUBMISSION_LIMIT
+  end
+
   private
 
   def ensure_capacity
@@ -87,8 +108,8 @@ class Booking < ApplicationRecord
 
   def check_submission_limit
     # Submission limit policy: Maximum 3 attempts allowed
-    if submission_count > 3
-      errors.add(:base, "You have exceeded the allowed number of changes.")
+    if limit_reached? && status_changed?
+      errors.add(:base, t('bookings.messages.limit_reached'))
     end
   end
 

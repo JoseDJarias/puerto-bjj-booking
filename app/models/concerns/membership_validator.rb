@@ -63,8 +63,6 @@ module MembershipValidator
 
   # Class types the user can book: from memberships, or all if drop-in active today / has unused tickets.
   def bookable_class_types
-    return ClassType.all if admin?
-    return ClassType.all if drop_in_active_today? || unused_tickets?
     all_accessible_class_types
   end
 

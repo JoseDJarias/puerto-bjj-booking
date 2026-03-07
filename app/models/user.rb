@@ -9,8 +9,12 @@ class User < ApplicationRecord
 
   validates :email_address, presence: true, uniqueness: true
   normalizes :email_address, with: ->(e) { e.strip.downcase }
-  validates :identification, presence: true, uniqueness: true, on: :update # Opcional: obligatorio solo al completar perfil
-  validates :nickname, uniqueness: true, allow_blank: true
+  validates :identification, presence: true, on: :create
+  validates :identification,
+            uniqueness: { allow_blank: true },
+            format: { with: /\A[0-9]+\z/, message: :only_numbers, allow_blank: true }
+  validates :nickname, uniqueness: { allow_blank: true }
+  validates :password, length: { minimum: 4 }, allow_nil: true, on: :update
 
   def display_name
     nickname.presence || first_name

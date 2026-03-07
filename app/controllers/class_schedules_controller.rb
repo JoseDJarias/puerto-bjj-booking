@@ -3,7 +3,7 @@ class ClassSchedulesController < ApplicationController
 
   def index
     @class_schedules = ClassSchedule.for_booking_today
-                                    .where(class_type: Current.user.bookable_class_types)
+                                    .visible_for(Current.user)
                                     .includes(:class_type, :instructor)
   end
 

@@ -145,7 +145,11 @@ es:
       reserve: "Reservar Lugar"
       cancel: "Cancelar Reserva"
       full: "Sin Cupo"
+      locked_confirmed: "Reserva Confirmada"
+      locked_out: "No disponible"
       waitlist: "Unirse a Lista de Espera" # Por si lo usas a futuro
+      success: "¡Lugar reservado con éxito!"
+      released: "Has liberado tu lugar"
     
     status:
       confirmed: "Confirmada"
@@ -471,6 +475,7 @@ es:
       admin_required: "Se requieren privilegios de administrador."
       booking_access_required: "Necesitas una membresía activa o un ticket válido para ver los horarios y reservar."
       active_membership_required: "Por favor activa tu membresía para reservar clases."
+      membership_required: "No tienes una membresía activa para esta clase."
       try_again_later: "Intenta de nuevo más tarde."
       invalid_credentials: "Prueba con otro correo o contraseña."
       membership_not_included: "Tu membresía no incluye clases de %{class_type}."

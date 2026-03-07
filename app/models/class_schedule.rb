@@ -15,10 +15,16 @@ class ClassSchedule < ApplicationRecord
   # Booking day rolls at 23:00: after 11 PM user sees next calendar day's classes.
   scope :for_booking_today, -> {
     booking_date = Time.current.hour >= 23 ? Date.current + 1.day : Date.current
-    start_bound = [Time.current, booking_date.beginning_of_day].max
+    active_window_start = Time.current - 60.minutes
+    start_bound = [active_window_start, booking_date.beginning_of_day].max
     where(starts_at: start_bound..booking_date.end_of_day).order(:starts_at)
   }
+  scope :visible_for, ->(user) {
+    return all if user.admin?
+    return all if user.try(:drop_in_active_today?) || user.try(:unused_tickets?)
 
+    where(class_type: user.bookable_class_types)
+  }
   scope :for_range, ->(start_date, end_date) {
     where(starts_at: start_date.beginning_of_day..end_date.end_of_day)
   }

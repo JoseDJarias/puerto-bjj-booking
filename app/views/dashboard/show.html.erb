@@ -1,12 +1,6 @@
 <%# app/views/dashboard/show.html.erb %>
 <% content_for :page_title, t("nav.home") %>
 <article class="mx-auto w-full max-w-2xl px-4 py-2 overflow-x-hidden">
-  <header class="mb-8 flex flex-wrap items-center justify-between gap-4">
-    <h1 class="text-2xl font-bold text-slate-900">
-      <%= t('auth.branding.title') %>
-    </h1>
-  </header>
-
   <% if @user.pending_approval? %>
     <%= render "dashboard/states/pending" %>
   <% elsif @user.approved? && !@user.has_booking_access? %>

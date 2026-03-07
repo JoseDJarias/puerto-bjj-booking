@@ -10,6 +10,9 @@ Rails.application.routes.draw do
     collection do
       get :week
     end
+    member do
+      get :participants 
+    end
   end
   resources :bookings, only: [:create]
   resource :user, only: [:show, :edit, :update], controller: 'users'

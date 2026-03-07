@@ -42,6 +42,8 @@ class Booking < ApplicationRecord
   # B. Update the private button of the user (Book vs Cancel)
   after_commit :broadcast_user_button
 
+  after_commit :broadcast_participants_update
+
   after_update :process_attendance_payment, if: -> { attended? && saved_change_to_status? }
 
   # --- BUSINESS LOGIC METHODS ---
@@ -111,6 +113,14 @@ class Booking < ApplicationRecord
     if limit_reached? && status_changed?
       errors.add(:base, t('bookings.messages.limit_reached'))
     end
+  end
+
+  def broadcast_participants_update
+    # Esto actualizará el contenido de la lista para TODOS los que tengan el "details" abierto
+    broadcast_replace_to "schedule_#{class_schedule.id}",
+                         target: "participants_schedule_#{class_schedule.id}",
+                         partial: "class_schedules/participants_list",
+                         locals: { schedule: class_schedule }
   end
 
   def process_attendance_payment

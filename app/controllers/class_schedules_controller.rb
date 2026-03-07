@@ -20,6 +20,13 @@ class ClassSchedulesController < ApplicationController
     @schedules_by_date = schedules.group_by(&:date)
   end
 
+  def participants
+    @schedule = ClassSchedule.find(params[:id])
+    @active_bookings = @schedule.active_bookings.includes(:user)
+    
+    render layout: false
+  end
+
   private
 
   def week_param

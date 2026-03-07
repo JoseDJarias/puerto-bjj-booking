@@ -1,0 +1,20 @@
+<div id="participants_schedule_<%= schedule.id %>" class="space-y-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
+  <% active_bookings = schedule.active_bookings.includes(:user) %>
+  <% if active_bookings.any? %>
+    <% active_bookings.each do |booking| %>
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-500 border border-slate-200">
+          <%= booking.user.display_name[0].upcase %>
+        </div>
+        <span class="text-sm text-slate-700 font-medium">
+          <%= booking.user.display_name %>
+          <% if booking.user == current_user %>
+            <span class="text-[9px] bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded-full ml-1 font-bold uppercase">Tú</span>
+          <% end %>
+        </span>
+      </div>
+    <% end %>
+  <% else %>
+    <p class="text-xs text-slate-400 italic py-1"><%= t('class_schedules.index.no_participants') %></p>
+  <% end %>
+</div>

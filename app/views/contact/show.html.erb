@@ -1,38 +1,97 @@
 <% content_for :page_title, t('contact.title') %>
 
-<div class="min-h-[60vh] flex flex-col">
-  <header class="mb-12 sm:mb-16">
-    <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-4"><%= t('contact.title') %></h1>
-    <p class="text-lg text-slate-600 max-w-2xl"><%= t('contact.subtitle') %></p>
-  </header>
-
-  <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 max-w-5xl">
-    <%# Teléfono %>
-    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
-      <div class="px-8 sm:px-10 pt-10 sm:pt-12 pb-6">
-        <span class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-slate-100 text-slate-600 mb-6">
-          <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+<div class="min-h-[60vh] flex flex-col max-w-5xl mx-auto w-full">
+    <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-8">
+      <%= t('contact.direct_title') %>
+    </h3>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-4">
+    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col hover:border-indigo-200 transition-colors duration-300 group">
+      <div class="p-8 sm:p-10 flex-1">
+        <span class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-slate-50 text-slate-600 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors mb-6">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
         </span>
-        <h2 class="text-xl font-semibold text-slate-900 mb-3"><%= t('contact.phone_title') %></h2>
-        <p class="text-slate-500 text-base">Aquí va el número de teléfono.</p>
-      </div>
-      <div class="flex-1 px-8 sm:px-10 pb-10 sm:pb-12 pt-2">
-        <p class="text-2xl sm:text-3xl font-medium text-slate-900 tracking-tight">+00 000 000 0000</p>
+        <h2 class="text-lg font-semibold text-slate-900 mb-2"><%= t('contact.phone_title') %></h2>
+        <a href="tel:+50688223344" class="text-2xl font-bold text-slate-900 tracking-tight hover:text-indigo-600 transition-colors">
+          <%= t('contact.phone_number') %>
+        </a>
+        <p class="text-slate-500 text-sm mt-2"><%= t('contact.phone_desc') %></p>
       </div>
     </section>
 
-    <%# Correo %>
-    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
-      <div class="px-8 sm:px-10 pt-10 sm:pt-12 pb-6">
-        <span class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-slate-100 text-slate-600 mb-6">
-          <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col hover:border-indigo-200 transition-colors duration-300 group">
+      <div class="p-8 sm:p-10 flex-1">
+        <span class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-slate-50 text-slate-600 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors mb-6">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
         </span>
-        <h2 class="text-xl font-semibold text-slate-900 mb-3"><%= t('contact.email_title') %></h2>
-        <p class="text-slate-500 text-base">Aquí va el correo de contacto.</p>
-      </div>
-      <div class="flex-1 px-8 sm:px-10 pb-10 sm:pb-12 pt-2">
-        <p class="text-xl sm:text-2xl font-medium text-indigo-600 break-all">contacto@ejemplo.com</p>
+        <h2 class="text-lg font-semibold text-slate-900 mb-2"><%= t('contact.email_title') %></h2>
+        <a href="mailto:info@puertobjj.com" class="text-2xl font-bold text-slate-900 tracking-tight hover:text-indigo-600 transition-colors break-all">
+          <%= t('contact.email_address') %>
+        </a>
+        <p class="text-slate-500 text-sm mt-2"><%= t('contact.email_desc') %></p>
       </div>
     </section>
+  </div>
+  <div class="border-t border-slate-100 pt-8 pb-10">
+    <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-8"><%= t('contact.social_title') %></h3>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      
+      <a href="https://www.youtube.com/watch?v=xBpTI4sTRS4" target="_blank" class="relative overflow-hidden rounded-2xl group sm:col-span-2 lg:col-span-2 min-h-[160px] flex items-center justify-center border border-slate-200">
+        <div class="absolute inset-0 bg-[url('https://img.youtube.com/vi/xBpTI4sTRS4/hqdefault.jpg')] bg-cover bg-center opacity-90 group-hover:scale-105 transition-transform duration-500"></div>
+        <div class="absolute inset-0 bg-slate-900/60 group-hover:bg-slate-900/50 transition-colors"></div>
+        
+        <div class="relative z-10 flex flex-col items-center text-center p-4">
+          <div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white mb-2 group-hover:scale-110 group-hover:bg-red-600 transition-all">
+            <svg class="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <span class="font-bold text-white text-lg tracking-tight">Ver Highlight Reel</span>
+          <span class="text-xs text-slate-300 font-medium mt-1">Puerto Jiu Jitsu en acción</span>
+        </div>
+      </a>
+
+      <a href="https://smoothcomp.com/es/club/25466/statistics" target="_blank" class="rounded-2xl border border-slate-200 bg-white p-6 flex flex-col justify-between hover:border-amber-300 hover:shadow-lg hover:shadow-amber-100/50 transition-all group">
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
+          </div>
+          <span class="px-2 py-1 rounded-md bg-amber-100 text-[10px] font-bold text-amber-800 uppercase tracking-wide">Ranking</span>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 text-base mb-1">Smoothcomp Stats</h4>
+          <p class="text-xs text-slate-500 leading-relaxed">Mira nuestro medallero oficial y estadísticas de competencia.</p>
+        </div>
+      </a>
+
+      <a href="https://www.instagram.com/puertojiujitsu/?hl=en" target="_blank" class="rounded-2xl border border-slate-200 bg-white p-5 flex items-center gap-4 hover:border-pink-300 hover:bg-pink-50/30 transition-all group">
+        <div class="w-10 h-10 rounded-full bg-pink-50 text-pink-600 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 text-sm">Instagram</h4>
+          <p class="text-xs text-slate-500">@puertojiujitsu</p>
+        </div>
+      </a>
+
+      <a href="http://facebook.com/puertojiujitsu/" target="_blank" class="rounded-2xl border border-slate-200 bg-white p-5 flex items-center gap-4 hover:border-blue-300 hover:bg-blue-50/30 transition-all group">
+        <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.791-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 text-sm">Facebook</h4>
+          <p class="text-xs text-slate-500">Noticias y Eventos</p>
+        </div>
+      </a>
+
+      <a href="https://www.puertojiujitsu.com/" target="_blank" class="rounded-2xl border border-slate-200 bg-white p-5 flex items-center gap-4 hover:border-indigo-300 hover:bg-indigo-50/30 transition-all group">
+        <div class="w-10 h-10 rounded-full bg-slate-50 text-slate-500 flex items-center justify-center group-hover:text-indigo-600 group-hover:scale-110 transition-transform flex-shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 text-sm">Sitio Web Oficial</h4>
+          <p class="text-xs text-slate-500">puertojiujitsu.com</p>
+        </div>
+      </a>
+
+    </div>
   </div>
 </div>

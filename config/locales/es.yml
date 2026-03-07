@@ -6,6 +6,10 @@ es:
     my_membership: "Mi membresía"
     contact: "Contacto"
     dog_fights: "Dog Fights"
+    sections:
+      general: "General"
+      tatami: "Tatami"
+      account: "Mi Cuenta"
   date:
     formats:
       default: "%d/%m/%Y"

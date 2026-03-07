@@ -2,6 +2,10 @@
 
 <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
   <h2 class="text-xl font-semibold text-slate-900"><%= t('admin.users.index.title') %></h2>
+  <%= link_to new_admin_user_path, class: "inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700" do %>
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+    <%= t('admin.users.index.new') %>
+  <% end %>
 </div>
 
 <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">

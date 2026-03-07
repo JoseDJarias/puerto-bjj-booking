@@ -1,0 +1,88 @@
+<%= form_with model: [:admin, user], class: "space-y-6" do |f| %>
+ <% if user.errors.any? %>
+    <div class="rounded-2xl bg-red-50 p-4 border-2 border-red-100 mb-6 w-full overflow-hidden">
+        <div class="flex items-start gap-3 mb-3">
+        <div class="h-6 w-6 rounded-full bg-red-100 flex-shrink-0 flex items-center justify-center text-red-600 mt-0.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>
+        </div>
+        <h3 class="text-sm font-black text-red-800 uppercase tracking-tight leading-tight">
+            <%= t('auth.sign_up.errors.title') %>
+        </h3>
+        </div>
+        
+        <ul class="space-y-2 ml-9 break-words">
+        <% user.errors.full_messages.each do |msg| %>
+            <li class="text-xs sm:text-sm text-red-700 font-medium leading-relaxed">
+            <span class="font-black italic mr-1 text-red-400">•</span> 
+            <%= msg %>
+            </li>
+        <% end %>
+        </ul>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <%= f.label :first_name, t('activerecord.attributes.user.first_name'), class: "mb-1 block text-sm font-medium text-slate-700" %>
+      <%= f.text_field :first_name, class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" %>
+    </div>
+    <div>
+      <%= f.label :last_name, t('activerecord.attributes.user.last_name'), class: "mb-1 block text-sm font-medium text-slate-700" %>
+      <%= f.text_field :last_name, class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <%= f.label :identification, t('activerecord.attributes.user.identification'), class: "mb-1 block text-sm font-medium text-slate-700" %>
+      <%= f.text_field :identification, placeholder: "Ej: 1234567890", class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" %>
+    </div>
+    <div>
+      <%= f.label :nickname, t('activerecord.attributes.user.nickname'), class: "mb-1 block text-sm font-medium text-slate-700" %>
+      <%= f.text_field :nickname, placeholder: "Ej: conejitsu", class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <%= f.label :email_address, t('activerecord.attributes.user.email_address'), class: "mb-1 block text-sm font-medium text-slate-700" %>
+      <%= f.email_field :email_address, placeholder: "Ej: usuario@ejemplo.com", class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" %>
+    </div>
+    <div>
+      <%= f.label :phone_number, t('activerecord.attributes.user.phone_number'), class: "mb-1 block text-sm font-medium text-slate-700" %>
+      <%= f.telephone_field :phone_number, placeholder: "Ej: 88223344", class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" %>
+    </div>
+  </div>
+
+  <div class="pt-4 border-t border-slate-100">
+    <h3 class="text-sm font-medium text-slate-900 mb-3"><%= t('admin.users.edit.admin_section') %></h3>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <%= f.label :role, t('admin.users.index.role'), class: "mb-1 block text-sm font-medium text-slate-700" %>
+        <%= f.select :role, User.roles.keys.map { |r| [t("enums.user.role.#{r}"), r] }, {}, class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" %>
+      </div>
+      <div>
+        <%= f.label :status, t('admin.common.active'), class: "mb-1 block text-sm font-medium text-slate-700" %>
+        <%= f.select :status, User.statuses.keys.map { |s| [t("enums.user.status.#{s}"), s] }, {}, class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="pt-4 border-t border-slate-100">
+    <h3 class="text-sm font-medium text-slate-900 mb-1">Seguridad</h3>
+    <p class="text-[10px] text-slate-500 mb-3 italic">Si se deja vacío en creación, el default es: Puerto123!</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <%= f.password_field :password, placeholder: "Nueva contraseña", class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" %>
+      </div>
+      <div>
+        <%= f.password_field :password_confirmation, placeholder: "Confirmar contraseña", class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex gap-3 pt-6">
+    <%= f.submit t("admin.common.#{user.new_record? ? 'create' : 'update'}"), class: "rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 cursor-pointer" %>
+    <%= link_to t('admin.common.cancel'), admin_users_path, class: "rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50" %>
+  </div>
+<% end %>

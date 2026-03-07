@@ -1,0 +1,10 @@
+<div class="mx-auto max-w-lg">
+  <div class="mb-6">
+    <h2 class="text-xl font-bold text-slate-900"><%= t('admin.users.new.title') %></h2>
+    <p class="mt-1 text-sm text-slate-500"><%= t('admin.users.new.subtitle') %></p>
+  </div>
+
+  <div class="bg-white p-6 shadow-sm rounded-xl border border-slate-200">
+    <%= render "form", user: @user %>
+  </div>
+</div>

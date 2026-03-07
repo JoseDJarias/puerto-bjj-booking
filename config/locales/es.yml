@@ -260,6 +260,9 @@ es:
         validity: "Vigencia"
         days_remaining: "%{count} días restantes"
         credits_wallet: "Billetera de Créditos"
+      new:
+        title: Registrar Nuevo Alumno
+        subtitle: Completa los datos para dar de alta al usuario.  
       drop_in_management:
         title: "Gestión de Drop-ins"
         subtitle: "Control de créditos y accesos diarios"
@@ -501,8 +504,8 @@ es:
       payment_info: "Pagos presenciales en recepción"
       recurring_title: "Planes Regulares"
       drop_in_title: "Pases Individuales"
-
-  # === MODELS (ActiveRecord) ===
+      
+# === MODELS (ActiveRecord) ===
   activerecord:
     models:
       user: "Usuario"
@@ -514,12 +517,14 @@ es:
     
     attributes:
       user:
+        identification: "Cédula o Identificación"
+        first_name: "Nombre"
+        last_name: "Apellido"
+        phone_number: "Teléfono"
+        nickname: "Nombre de usuario"
         email_address: "Correo electrónico"
         password: "Contraseña"
         password_confirmation: "Confirmación de contraseña"
-        first_name: "Nombre"
-        last_name: "Apellido"
-        phone: "Teléfono"
         role: "Rol"
         status: "Estado"
       
@@ -554,3 +559,35 @@ es:
         duration_minutes: "Duración (min)"
         capacity: "Cupo Máximo"
         cancelled: "Cancelada"
+
+    # === VALIDACIONES ESPECÍFICAS ===
+    errors:
+      messages:
+        confirmation: "no coincide con la confirmación"
+        blank: "no puede estar en blanco"
+        taken: "ya está en uso o registrado"
+        too_short: "es demasiado corto (mínimo %{count} caracteres)"
+        invalid: "no tiene un formato válido"
+      models:
+        user:
+          attributes:
+            identification:
+              blank: "es obligatoria para el registro"
+              taken: "ya existe un usuario con esta identificación"
+              only_numbers: "debe contener únicamente números (sin guiones ni letras)"
+            email_address:
+              taken: "ya está registrado en el sistema"
+            password:
+              confirmation: "no coincide con la contraseña"
+            password_confirmation:
+              confirmation: "no coincide con la contraseña"
+            nickname:
+              taken: "este nombre de usuario ya está en uso por otro alumno"
+
+  # === FORMATOS DE ERROR GLOBALES ===
+  errors:
+    format: "%{attribute} %{message}"
+    messages:
+      blank: "no puede estar en blanco"
+      taken: "ya está en uso"
+      confirmation: "no coincide con la confirmación"

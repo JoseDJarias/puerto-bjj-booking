@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     end
   end
   resources :bookings, only: [:create]
+  resource :user, only: [:show, :edit, :update], controller: 'users'
   get "mi-membresia/historial", to: "membership_info#history", as: :my_membership_history
   get "mi-membresia", to: "membership_info#show", as: :my_membership
   get "contacto", to: "contact#show", as: :contact

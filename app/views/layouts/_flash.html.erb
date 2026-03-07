@@ -1,5 +1,24 @@
 <% flash.each do |key, value| %>
-  <div class="mb-2 p-4 rounded shadow bg-white border-l-4 <%= key == 'notice' ? 'border-green-500 text-green-700' : 'border-red-500 text-red-700' %>">
-    <%= value %>
+  <% 
+    border_class = key.to_s == 'notice' ? "border-green-500" : "border-red-500"
+    text_class = key.to_s == 'notice' ? "text-green-800" : "text-red-800"
+    bg_class = "bg-white"
+  %>
+
+  <div data-controller="flash"
+       class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black/5 border-l-4 <%= border_class %> p-4 flex items-start gap-4">
+    
+    <div class="flex-1">
+      <p class="text-sm font-medium text-slate-900">
+        <%= value %>
+      </p>
+    </div>
+
+    <button type="button" data-action="click->flash#dismiss" class="ml-4 inline-flex flex-shrink-0 rounded-md bg-white text-slate-400 hover:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+      <span class="sr-only">Close</span>
+      <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+      </svg>
+    </button>
   </div>
 <% end %>

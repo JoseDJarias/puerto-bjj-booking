@@ -1,7 +1,4 @@
 Rails.application.routes.draw do
-  get "membership_info/show"
-  get "dog_fights/show"
-  get "contact/show"
   resource :registration, only: %i[new create]
   resource :session
   resources :passwords, param: :token
@@ -21,7 +18,6 @@ Rails.application.routes.draw do
   get "contacto", to: "contact#show", as: :contact
   get "dog-fights", to: "dog_fights#show", as: :dog_fights
   root "dashboard#show"
-
 
   namespace :admin do
     get "membership_pricings/index"

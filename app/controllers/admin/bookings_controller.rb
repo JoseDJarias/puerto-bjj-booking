@@ -1,5 +1,7 @@
 module Admin
   class BookingsController < BaseController
+    before_action :set_booking, only: [:check_in, :destroy]
+
     def create
       @schedule = ClassSchedule.find(params[:booking][:class_schedule_id])
       user = User.find(params[:booking][:user_id])
@@ -16,22 +18,43 @@ module Admin
       end
     end
 
-    def destroy
-      @booking = Booking.find(params[:id])
-      # State: Cancelled by Admin
-      @booking.update_status!(:cancelled_admin, current_user)
-      redirect_back fallback_location: admin_root_path, notice: "Reserva cancelada."
-    end
-
     def check_in
       @booking = Booking.find(params[:id])
-      @booking.update_status!(:attended, current_user)
+      target_status = (params[:attended] == "false") ? :confirmed : :attended
       
-      # Response Turbo to be instant without reloading
+      if @booking.update_status!(target_status, current_user)
+        respond_to do |format|
+          format.turbo_stream { render turbo_stream: [] } 
+          format.html { redirect_back fallback_location: root_path }
+        end
+      else
+        head :unprocessable_entity
+      end
+    end
+
+    def destroy
+      @schedule = @booking.class_schedule
+      # En lugar de borrar el registro (destroy físico), cambiamos el estado
+      # Esto permite que el broadcast del modelo actualice la UI
+      @booking.update_status!(:cancelled_admin, current_user)
+      
       respond_to do |format|
-        format.turbo_stream
+        format.turbo_stream { render_flash("Reserva removida") }
         format.html { redirect_back fallback_location: admin_root_path }
       end
     end
+  
+
+    private
+    
+    def set_booking
+      @booking = Booking.find(params[:id])
+    end
+
+    def render_flash(msg)
+      flash.now[:notice] = msg
+      render turbo_stream: turbo_stream.update("flash", partial: "layouts/flash")
+    end
+
   end
 end

@@ -2,8 +2,10 @@ class ClassSchedule < ApplicationRecord
   belongs_to :class_type
   belongs_to :instructor, class_name: "User"
   has_many :bookings
-
   has_many :active_bookings, -> { active }, class_name: "Booking"
+
+  GRACE_PERIOD_MINUTES = 20
+  BOOKING_OPEN_HOUR = 23
 
   validates :starts_at, presence: true
   validates :duration_minutes, numericality: { greater_than: 0 }
@@ -13,11 +15,8 @@ class ClassSchedule < ApplicationRecord
   scope :past, -> { where("starts_at < ?", Time.current).order(starts_at: :desc) }
   scope :active, -> { where(cancelled: false) }
   # Booking day rolls at 23:00: after 11 PM user sees next calendar day's classes.
-  scope :for_booking_today, -> {
-    booking_date = Time.current.hour >= 23 ? Date.current + 1.day : Date.current
-    active_window_start = Time.current - 60.minutes
-    start_bound = [active_window_start, booking_date.beginning_of_day].max
-    where(starts_at: start_bound..booking_date.end_of_day).order(:starts_at)
+ scope :for_date, ->(date) {
+    where(starts_at: date.beginning_of_day..date.end_of_day).order(:starts_at)
   }
   scope :visible_for, ->(user) {
     return all if user.admin?
@@ -36,6 +35,23 @@ class ClassSchedule < ApplicationRecord
 
   def date
     starts_at.to_date
+  end
+
+  def booking_opens_at
+    (starts_at.to_date - 1.day).in_time_zone.change(hour: BOOKING_OPEN_HOUR, min: 0, sec: 0)
+  end
+
+  def booking_window_open?
+    Time.current >= booking_opens_at
+  end
+
+  def in_grace_period?
+    now = Time.current
+    now >= starts_at && now <= (starts_at + GRACE_PERIOD_MINUTES.minutes)
+  end
+
+  def past_grace_period?
+    Time.current > (starts_at + GRACE_PERIOD_MINUTES.minutes)
   end
 
 # --- SPOTS LOGIC ---

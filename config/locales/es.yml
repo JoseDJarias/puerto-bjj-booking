@@ -10,6 +10,10 @@ es:
       general: "General"
       tatami: "Tatami"
       account: "Mi Cuenta"
+  time:
+    am: "AM"
+    pm: "PM"
+
   date:
     formats:
       default: "%d/%m/%Y"
@@ -150,6 +154,10 @@ es:
       waitlist: "Unirse a Lista de Espera" # Por si lo usas a futuro
       success: "¡Lugar reservado con éxito!"
       released: "Has liberado tu lugar"
+      last_opportunity: "⚠️ Última oportunidad: Si cancelas ahora, no podrás volver a registrarte a esta clase."
+      cancelled_by_instructor: "REMOVIDO POR INSTRUCTOR"
+      cancelled_by_admin: "REMOVIDO POR ADMIN"
+      removed_from_session: "Has sido removido de esta sesión."
     
     status:
       confirmed: "Confirmada"
@@ -174,6 +182,7 @@ es:
       public_title: "Próximas Clases"
       public_subtitle: "Reserva tu lugar en el tatami"
       instructor_prefix: "Prof."
+      view_participants: "Ver participantes"
 
   # === ADMIN PANEL ===
   admin:
@@ -408,6 +417,12 @@ es:
         submit_batch: "Generar Horario"
         capacity_help: "Máximo de alumnos en el tatami."
         cancelled_label: "Clase cancelada (no visible para reservas)"
+      flash:
+        created_batch: "¡Éxito! Se programaron %{count} clases en el calendario."
+        error_batch: "Error al generar: %{message}"
+        created: "Clase creada correctamente."
+        updated: "Clase actualizada correctamente."
+        deleted: "Clase eliminada del calendario."
     show:
       page_title: "Gestionar Clase"
       spots_label: "Cupos"

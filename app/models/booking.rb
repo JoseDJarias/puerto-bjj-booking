@@ -23,8 +23,6 @@
     # Defines which states "occupy space" on the tatami
     scope :active, -> { where(status: [:confirmed, :attended]) }
 
-    # --- VALIDATIONS (Business Logic) ---
-
     MAX_SUBMISSION_LIMIT = 3
     
     # 1. Capacity: Only validates if the booking is active and not an Admin who forces it
@@ -33,17 +31,10 @@
     # 2. Change Limit: Only validates if not an Admin
     validate :check_submission_limit, on: :update, unless: :admin_override?
 
-    # --- REACTIVIDAD (Turbo Streams) ---
-    # Run after saving (commit) to ensure integrity
-    
+    # --- REALTIME UPDATES (Turbo Streams) ---
     after_commit :broadcast_realtime_updates_for_users
-    # after_commit :broadcast_participants_update
-
     after_update :process_attendance_payment, if: -> { attended? && saved_change_to_status? }
     
-
-    # --- BUSINESS LOGIC METHODS ---
-
     def active_status?
       confirmed? || attended?
     end

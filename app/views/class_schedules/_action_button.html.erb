@@ -3,36 +3,68 @@
   
   <% if my_booking&.limit_reached? && !user.admin? %>   
     <div class="flex flex-col gap-2">
-      <button disabled class="w-full rounded-lg bg-slate-100 px-3 py-2 text-sm font-medium text-slate-400 cursor-not-allowed border border-slate-200 flex justify-center items-center gap-2 opacity-75">
-        <% if my_booking.active_status? %>
-          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-          <%= t('bookings.actions.locked_confirmed') %> <% else %>
-           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg>
-           <%= t('bookings.actions.locked_out') %> <% end %>
-      </button>
-      
-      <p class="text-[10px] text-center text-red-500 font-medium bg-red-50 p-1 rounded border border-red-100">
-        <%= t('bookings.messages.limit_reached') %>  
-      </p>
+      <% if my_booking.active_status? %>
+        <%# CASE A: Trapped inside (Can cancel, but it's his last action) %>
+        <%= button_to bookings_path(class_schedule_id: schedule.id), 
+            class: "group w-full rounded-lg border border-red-200 bg-white px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 hover:border-red-300 transition-all shadow-sm flex items-center justify-center gap-2",
+            params: { booking: { status: 'cancelled_user' } },
+            form: { data: { turbo_submits_with: "Cancelando..." } } do %>
+          <svg class="w-4 h-4 text-red-400 group-hover:text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+          <%= t('bookings.actions.cancel') %>
+        <% end %>
+
+        <p class="text-[10px] text-center text-orange-600 font-bold bg-orange-50 p-2 rounded border border-orange-100 leading-tight">
+          <%= t('bookings.actions.last_opportunity') %>
+        </p>
+
+      <% else %>
+      <%# SUB-CASE B: Already outside (We differentiate who kicked him out) %>
+        
+        <% if my_booking.cancelled_admin? %>
+          <button disabled type="button" class="w-full rounded-lg bg-red-50 px-3 py-2 text-sm font-bold text-red-500 cursor-not-allowed border border-red-100 flex justify-center items-center gap-2">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg>
+            <%= t('bookings.actions.cancelled_by_instructor') %>
+          </button>
+          <p class="text-[10px] text-center text-red-400 font-medium mt-1">
+            <%= t('bookings.actions.removed_from_session') %>
+          </p>
+
+        <% else %>
+          <%# CASE B: Blocked by indecision (Cancelled User) --- %>
+          <button disabled type="button" class="w-full rounded-lg bg-gray-100 px-3 py-2 text-sm font-bold text-gray-400 cursor-not-allowed border border-gray-200 flex justify-center items-center gap-2 shadow-inner">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+            <%= t('bookings.actions.locked_out', default: "ACCESO BLOQUEADO") %>
+          </button>
+          <p class="text-[10px] text-center text-gray-500 font-medium bg-gray-50 p-1.5 rounded border border-gray-100 mt-1">
+            <%= t('bookings.messages.limit_reached', default: "Límite de cambios alcanzado") %>
+          </p>
+        <% end %>
+      <% end %>
     </div>
 
+  <%# CASE 2: Has an active reservation (Normal) --- %>
   <% elsif my_booking&.active_status? %>
     <%= button_to bookings_path(class_schedule_id: schedule.id), 
-        class: "group w-full rounded-lg border border-red-200 bg-white px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 hover:border-red-300 transition-all shadow-sm flex items-center justify-center gap-2" do %>
-        <svg class="w-4 h-4 text-red-400 group-hover:text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-        <%= t('bookings.actions.cancel') %>
+        class: "group w-full rounded-lg border border-red-200 bg-white px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 hover:border-red-300 transition-all shadow-sm flex items-center justify-center gap-2",
+        params: { booking: { status: 'cancelled_user' } },
+        form: { data: { turbo_submits_with: "Cancelando..." } } do %>
+      <svg class="w-4 h-4 text-red-400 group-hover:text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+      <%= t('bookings.actions.cancel') %>
     <% end %>
 
+  <%# CASE 3: Class is full --- %>
   <% elsif schedule.full? && !user.admin? %> 
-    <button disabled class="w-full rounded-lg bg-slate-100 px-3 py-2 text-sm font-medium text-slate-400 cursor-not-allowed border border-slate-200 flex justify-center items-center gap-2">
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-        <%= t('bookings.actions.full') %>
+    <button disabled type="button" class="w-full rounded-lg bg-slate-100 px-3 py-2 text-sm font-medium text-slate-400 cursor-not-allowed border border-slate-200 flex justify-center items-center gap-2">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+      <%= t('bookings.actions.full') %>
     </button>
 
+  <%# CASE 4: Reserve --- %>
   <% else %>
     <%= button_to bookings_path(class_schedule_id: schedule.id), 
-        class: "w-full rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 hover:shadow-md transition-all flex items-center justify-center gap-2" do %>
-        <%= t('bookings.actions.reserve') %>
+        class: "w-full rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 hover:shadow-md transition-all flex items-center justify-center gap-2",
+        form: { data: { turbo_submits_with: "Reservando..." } } do %>
+      <%= t('bookings.actions.reserve') %>
     <% end %>
   <% end %>
 </div>

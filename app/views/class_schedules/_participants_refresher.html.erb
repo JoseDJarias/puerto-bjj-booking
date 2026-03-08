@@ -1,0 +1,7 @@
+<%# app/views/class_schedules/_participants_refresher.html.erb %>
+<%# Change: Use 'frame_participants_' to match the list and index %>
+<%= turbo_frame_tag "frame_participants_#{schedule.id}", src: participants_class_schedule_path(schedule), loading: :eager do %>
+  <div class="flex justify-center py-2 opacity-50">
+    <div class="animate-spin h-4 w-4 border-2 border-indigo-200 border-t-indigo-500 rounded-full"></div>
+  </div>
+<% end %>

@@ -22,9 +22,18 @@ class ClassSchedulesController < ApplicationController
 
   def participants
     @schedule = ClassSchedule.find(params[:id])
-    @active_bookings = @schedule.active_bookings.includes(:user)
     
-    render layout: false
+    respond_to do |format|
+      format.html do
+        if turbo_frame_request?
+          render partial: "class_schedules/participants_list", 
+                 locals: { schedule: @schedule },
+                 layout: false
+        else
+          render partial: "class_schedules/participants_list", locals: { schedule: @schedule }
+        end
+      end
+    end
   end
 
   private

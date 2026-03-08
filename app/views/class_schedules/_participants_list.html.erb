@@ -1,20 +1,34 @@
-<div id="participants_schedule_<%= schedule.id %>" class="space-y-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
-  <% active_bookings = schedule.active_bookings.includes(:user) %>
-  <% if active_bookings.any? %>
-    <% active_bookings.each do |booking| %>
-      <div class="flex items-center gap-2">
-        <div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-500 border border-slate-200">
-          <%= booking.user.display_name[0].upcase %>
+<%# app/views/class_schedules/_participants_list.html.erb %>
+
+<%# 1. The Outer Frame: To match the lazy initial load from the controller %>
+<%= turbo_frame_tag "frame_participants_#{schedule.id}" do %>
+  
+  <%# 2. The Container Div: For styles and scroll %>
+  <div id="participants_schedule_<%= schedule.id %>" class="space-y-1 max-h-48 overflow-y-auto pr-2 custom-scrollbar py-2">
+    
+    <% participants = schedule.bookings.where(status: [:confirmed, :attended]).includes(:user).order(:created_at) %>
+
+    <% if participants.any? %>
+      <% participants.each do |booking| %>
+        
+        <%# Simple Row: Only Avatar and Name %>
+        <div class="flex items-center gap-3 py-2 border-b border-slate-50 last:border-0 transition-all duration-500 group">
+          
+          <%# Avatar: Only the first letter of the user's name %>
+          <div class="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold border transition-all duration-500
+               <%= booking.attended? ? 'bg-green-50 border-green-200 text-green-600' : 'bg-slate-50 border-slate-200 text-slate-400' %>">
+            <%= booking.user.display_name[0].upcase %>
+          </div>
+          
+          <span class="text-sm font-bold truncate transition-all duration-500 <%= booking.attended? ? 'text-slate-300 line-through opacity-70' : 'text-slate-700' %>">
+            <%= booking.user.display_name %>
+          </span>
+
         </div>
-        <span class="text-sm text-slate-700 font-medium">
-          <%= booking.user.display_name %>
-          <% if booking.user == current_user %>
-            <span class="text-[9px] bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded-full ml-1 font-bold uppercase">Tú</span>
-          <% end %>
-        </span>
-      </div>
+      <% end %>
+
+    <% else %>
+      <p class="text-xs text-slate-400 italic py-6 text-center">No hay participantes aún</p>
     <% end %>
-  <% else %>
-    <p class="text-xs text-slate-400 italic py-1"><%= t('class_schedules.index.no_participants') %></p>
-  <% end %>
-</div>
+  </div>
+<% end %>

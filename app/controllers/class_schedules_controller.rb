@@ -2,9 +2,11 @@ class ClassSchedulesController < ApplicationController
   before_action :require_booking_access
 
   def index
-    @class_schedules = ClassSchedule.for_booking_today
+    @date = params[:date] ? Date.parse(params[:date]) : Date.current
+    @class_schedules = ClassSchedule.for_date(@date)
                                     .visible_for(Current.user)
-                                    .includes(:class_type, :instructor)
+                                    .active
+                                    .includes(:class_type, :instructor, :bookings)
   end
 
   def week

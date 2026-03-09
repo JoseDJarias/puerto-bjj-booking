@@ -145,7 +145,17 @@ es:
 
   # === BOOKINGS & SCHEDULES (Public View) ===
   bookings:
+    index:
+      title: "Mi Panel"
     actions:
+      ended: "Finalizada"
+      cancelling: "Cancelando..."
+      opens_today: "Abre hoy"
+      unavailable: "No disponible"
+      blocked: "Bloqueado"
+      coming_soon: "Próximamente"
+      enter_now: "¡Entrar Ya!"
+      reserving: "Reservando..."
       reserve: "Reservar Lugar"
       cancel: "Cancelar Reserva"
       full: "Sin Cupo"
@@ -173,6 +183,7 @@ es:
   class_schedules:
     week:
       title: "Horario de la semana"
+      no_classes: "No hay clases programadas para este día"
     spots:
       full_badge: "Clase Llena"
       available_suffix: "lugares libres"
@@ -183,6 +194,8 @@ es:
       public_subtitle: "Reserva tu lugar en el tatami"
       instructor_prefix: "Prof."
       view_participants: "Ver participantes"
+      free_day: "Día Libre"
+      free_day_description: "No hay clases programadas para este dío."
 
   # === ADMIN PANEL ===
   admin:
@@ -515,6 +528,15 @@ es:
       title: "Mensualidad vencida"
       message: "No tienes una membresía activa. Activa o renueva tu membresía para reservar clases."
       cta: "Ver opciones de membresía"
+    membership_info:
+      title: "Mis Accesos"
+      scroll_more: "Desliza para ver más"
+      active: "Activa"
+      expires_in: "Vence en"
+      until: "Hasta"
+      tickets_drop_in: "Tickets / Drop-in"
+      available_passes: "Pases Disponibles"
+      valid_for_any_class: "Válidos por todas las clases del día"
     welcome:
       title: "Bienvenido"
       greeting: "Hola, %{name}"
@@ -534,6 +556,20 @@ es:
       payment_info: "Pagos presenciales en recepción"
       recurring_title: "Planes Regulares"
       drop_in_title: "Pases Individuales"
+    stats:
+      total_classes: "Total de Clases"
+      this_month: "Este Mes"
+      next_in: "Próxima En"
+    tabs:
+      upcoming: "Próximas"
+      history: "Historial"
+      cancel_reservation: "Cancelar Reserva"
+      no_classes_scheduled: "No tienes clases agendadas."
+      attended: "ASISTIÓ"
+      not_attended: "Sin Asistencia"
+      confirmed: "Asistencia Confirmada"
+      view_schedule: "Ver Horario"
+      your_progress_will_appear_here: "Tu historial de progreso aparecerá aquí."
       
 # === MODELS (ActiveRecord) ===
   activerecord:

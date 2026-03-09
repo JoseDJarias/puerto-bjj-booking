@@ -1,6 +1,8 @@
 <%# app/views/class_schedules/index.html.erb %>
 
 <div class="max-w-7xl mx-auto px-4 py-6">
+  <%# Private channel for updates of the user's booking button (Book/Cancel) %>
+  <%= turbo_stream_from current_user, "bookings" %>
 
   <div class="flex items-center justify-between mb-8 bg-white p-3 rounded-2xl shadow-sm border border-slate-100 sticky top-2 z-10 backdrop-blur-md bg-white/90">
   <%# Necesitamos mejorar la idea de navegación temporal%>
@@ -22,95 +24,14 @@
     <% end %>
   </div>
 
-  <%# Private channel for updates of the user's booking button (Book/Cancel) %>
-  <%= turbo_stream_from current_user, "bookings" %>
-
 <% if @class_schedules.any? %>
-    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+   <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       <% @class_schedules.each do |schedule| %>
-        <%# Public channel for updates of this class (Spots and Participants) %>
-        <%= turbo_stream_from "schedule_#{schedule.id}" %>
-
-        <%# VISUAL LOGIC: If the grace period has passed, the card is "grayed out" %>
-        <% card_opacity = schedule.past_grace_period? ? "opacity-60 grayscale bg-slate-50" : "bg-white hover:shadow-xl hover:border-indigo-100" %>
-
-        <div class="group rounded-2xl shadow-sm border border-slate-200/60 p-6 transition-all duration-300 flex flex-col justify-between <%= card_opacity %>">          
-          <div class="space-y-5">
-            <%# --- Header: Badge + Time + Spots --- %>
-            <div class="flex justify-between items-start">
-              <div class="flex flex-col">
-                <div class="mb-2">
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 uppercase tracking-wider">
-                    <%= schedule.class_type.name %>
-                  </span>
-                </div>
-                <h3 class="text-3xl font-black text-slate-900 leading-tight tracking-tight">
-                  <%= l(schedule.starts_at, format: "%l:%M %P") %>    
-                </h3>
-              </div>
-              <%# ID to update the spots in real time %>
-              <div id="spots_schedule_<%= schedule.id %>" class="shrink-0">
-                <%= render "class_schedules/spots", schedule: schedule %>
-              </div>
-            </div>
-
-            <%# --- Details: Day and Instructor --- %>
-            <div class="space-y-3">
-              <div class="flex items-center text-slate-500 text-sm font-semibold">
-                <svg class="w-4 h-4 mr-2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <%= l(schedule.starts_at, format: "%A %d").capitalize %>
-              </div> 
-
-              <div class="flex items-center pt-2 border-t border-slate-50">
-                <div class="h-9 w-9 rounded-full bg-slate-100 flex items-center justify-center mr-3 border border-slate-200 shadow-sm">
-                  <svg class="w-5 h-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                </div>
-                <div class="flex flex-col">
-                  <span class="text-[9px] text-slate-400 uppercase font-black tracking-widest mb-0.5">Profesor</span>
-                  <span class="text-sm font-bold text-slate-700 leading-none"><%= schedule.instructor.first_name %></span>
-                </div>
-              </div>
-            </div>
-
-            <%# --- Class Schedule Participants --- %>
-            <div class="pt-1">
-              <details class="group/details">
-                <summary class="list-none cursor-pointer">
-                  <div class="flex items-center justify-between py-2.5 px-4 rounded-xl bg-slate-50 text-[11px] font-bold text-slate-500 uppercase tracking-widest group-hover/details:bg-indigo-50 group-hover/details:text-indigo-600 transition-all border border-transparent group-hover/details:border-indigo-100">
-                    <span class="flex items-center gap-2">
-                      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                      <%= t('class_schedules.index.view_participants') %>
-                    </span>
-                    <svg class="w-4 h-4 transition-transform group-open/details:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" /></svg>
-                  </div>
-                </summary>
-
-                <div class="mt-3 px-1">
-                  <%# Anchor div: This ID is the one that the model replaces to update the entire list %>
-                  <div id="participants_schedule_<%= schedule.id %>">
-                    <%# Internal frame: We change the ID to avoid conflict with the div above %>
-                    <%= turbo_frame_tag "frame_participants_#{schedule.id}", src: participants_class_schedule_path(schedule), loading: :lazy do %>
-                      <div class="flex justify-center py-4">
-                        <div class="animate-spin h-5 w-5 border-2 border-indigo-500 border-t-transparent rounded-full"></div>
-                      </div>
-                    <% end %>
-                  </div>
-                </div>
-              </details>
-            </div>
-          </div>
-      
-          <div class="mt-6">
-            <%# ID to update the user's booking button %>
-            <div id="action_button_schedule_<%= schedule.id %>">
-              <%= render "class_schedules/action_button", schedule: schedule, user: current_user %>
-            </div>
-          </div>
-        </div>
+      <%= turbo_stream_from "schedule_#{schedule.id}" %>
+        <%= render "class_schedules/partials/class_card_universal", 
+                   schedule: schedule, 
+                   user: current_user, 
+                   context: :schedule %>
       <% end %>
     </div>
   <% else %>

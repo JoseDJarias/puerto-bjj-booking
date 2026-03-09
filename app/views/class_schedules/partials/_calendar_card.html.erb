@@ -1,0 +1,94 @@
+<%# app/views/class_schedules/partials/_calendar_card.html.erb %>
+<%# Variables: schedule, user (que es current_user) %>
+
+<% 
+  can_access = user.authorized_for?(schedule.class_type)
+  is_past = schedule.past_grace_period?
+  is_upcoming = !schedule.booking_window_open?
+  is_booked = schedule.bookings.exists?(user: user, status: [:confirmed, :attended])
+  is_full = schedule.full? && !user.admin?
+%>
+
+<%= turbo_stream_from "schedule_#{schedule.id}" %>
+<%= turbo_stream_from [user, "bookings"] %>
+
+<%= turbo_frame_tag "universal_card_#{schedule.id}" do %>
+  <% 
+    card_classes = if is_past
+                     "bg-slate-50 border-slate-100 opacity-60 grayscale"
+                   elsif !can_access
+                     "bg-slate-100/50 border-slate-200 opacity-75"
+                   elsif is_upcoming
+                     "bg-slate-50/80 border-dashed border-slate-300 opacity-80"
+                   elsif is_booked
+                     "bg-indigo-50/40 border-indigo-200 shadow-sm"
+                   else
+                     "bg-white border-slate-200 hover:border-indigo-300 shadow-sm"
+                   end
+  %>
+
+  <div class="relative rounded-xl border p-3 my-1 transition-all duration-300 <%= card_classes %>">
+    
+    <div class="mb-2 flex items-center justify-between">
+      <span class="text-[8px] font-black uppercase tracking-tighter px-1.5 py-0.5 rounded-md border
+        <%= if is_past then "bg-slate-200 text-slate-500 border-slate-300"
+            elsif is_booked then "bg-indigo-600 text-white border-transparent"
+            elsif !can_access then "bg-slate-200 text-slate-500 border-slate-300"
+            elsif is_upcoming then "bg-amber-50 text-amber-600 border-amber-100"
+            elsif is_full then "bg-red-50 text-red-600 border-red-100"
+            else "bg-green-50 text-green-700 border-green-100"
+            end %>">
+        
+        <% if is_booked %> RESERVADO
+        <% elsif is_past %> Finalizada
+        <% elsif !can_access %> Sin Acceso
+        <% elsif is_upcoming %> Próximamente
+        <% elsif is_full %> Llena
+        <% else %> Disponible
+        <% end %>
+      </span>
+
+      <% if is_upcoming && !is_past %>
+        <span class="text-[9px] text-amber-500 font-bold animate-pulse">
+          <%= schedule.booking_opens_at.strftime("%-I:%M %P") %>
+        </span>
+      <% end %>
+    </div>
+
+    <% if can_access && (!is_upcoming || user.admin?) %>
+      <%= link_to class_schedule_path(schedule), data: { turbo_frame: "modal_detail" }, class: "block group" do %>
+        <p class="font-black text-slate-800 text-sm leading-tight truncate group-hover:text-indigo-600 transition-colors">
+          <%= schedule.class_type.name %>
+        </p>
+        
+        <p class="text-[10px] text-slate-500 font-bold mt-1 lowercase">
+          <%= l(schedule.starts_at, format: "%-I:%M %P") %>
+        </p>
+        
+        <div class="flex items-center justify-between mt-3 pt-2 border-t border-slate-100/50">
+          <div id="spots_schedule_<%= schedule.id %>" class="text-[10px]">
+             <%= render "class_schedules/spots", schedule: schedule %>
+          </div>
+          <span class="text-[9px] font-black text-slate-400 uppercase tracking-tighter">
+            <%= schedule.instructor.first_name %>
+          </span>
+        </div>
+      <% end %>
+
+    <% else %>
+      <div class="cursor-not-allowed">
+        <p class="font-bold text-slate-400 text-sm truncate"><%= schedule.class_type.name %></p>
+        
+        <p class="text-[10px] text-slate-400 font-bold mt-1 lowercase">
+          <%= l(schedule.starts_at, format: "%-I:%M %P") %>
+        </p>
+        
+        <div class="mt-3 pt-2 border-t border-slate-100/30 flex justify-between items-center">
+           <span class="text-[9px] font-bold text-slate-300 italic">
+             <%= is_upcoming ? "Abre hoy #{schedule.booking_opens_at.strftime("%-I:%M %P")}" : "No disponible" %>
+           </span>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>

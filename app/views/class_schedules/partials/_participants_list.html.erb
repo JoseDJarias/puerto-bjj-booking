@@ -1,10 +1,10 @@
-<%# app/views/class_schedules/_participants_list.html.erb %>
+<%# app/views/class_schedules/partials/_participants_list.html.erb %>
 
 <%# 1. The Outer Frame: To match the lazy initial load from the controller %>
 <%= turbo_frame_tag "frame_participants_#{schedule.id}" do %>
   
   <%# 2. The Container Div: For styles and scroll %>
-  <div id="participants_schedule_<%= schedule.id %>" class="space-y-1 max-h-48 overflow-y-auto pr-2 custom-scrollbar py-2">
+  <div id="participants_container_<%= schedule.id %>" class="space-y-1 max-h-48 overflow-y-auto pr-2 custom-scrollbar py-2">
     
     <% participants = schedule.bookings.where(status: [:confirmed, :attended]).includes(:user).order(:created_at) %>
 

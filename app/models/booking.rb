@@ -43,6 +43,15 @@
       changed_by&.admin? || changed_by&.instructor?
     end
 
+    def handle_admin_insertion!(student_id, actor)
+      self.user_id = student_id
+      self.changed_by = actor
+      self.status = :confirmed
+      
+      # We save without validating membership but maintaining data integrity
+      save(validate: false) 
+    end
+
     # THE MASTER METHOD: Handles all transitions
     # Handles the initial creation or toggle, with locks and validations.
     def handle_user_action!(actor)

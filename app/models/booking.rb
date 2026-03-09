@@ -133,6 +133,7 @@
 
       # 3. Update Participants List (Public)
       broadcast_participants_list_update
+
     end
 
     def broadcast_spots_update
@@ -149,15 +150,15 @@
       # Update: <div id="action_button_schedule_1">
       broadcast_replace_to [user, "bookings"],
                           target: "action_button_schedule_#{class_schedule.id}",
-                          partial: "class_schedules/action_button",
+                          partial: "class_schedules/partials/action_button",
                           locals: { schedule: class_schedule, user: user }
     end
 
     def broadcast_participants_list_update
       broadcast_replace_to "schedule_#{class_schedule_id}",
-                            target: "frame_participants_#{class_schedule_id}",
-                            partial: "class_schedules/participants_list",
+                            target: "participants_container_#{class_schedule_id}",
+                            partial: "class_schedules/partials/participants_list",
                             locals: { schedule: class_schedule }
     end
-    # --- BROADCASTS --- END ---
+
   end

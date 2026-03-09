@@ -65,7 +65,7 @@
       # Indecision counter logic:
       # If it's the same user changing their status, we add to the counter.
       # If it's the admin, we don't penalize the user by adding to the counter.
-      if status != new_status.to_s && actor == user && !actor.admin? && !actor.instructor? 
+      if new_status.to_s == 'confirmed' && actor == user && !actor.admin? && !actor.instructor? 
         self.submission_count += 1
       end
 
@@ -83,7 +83,7 @@
     end
 
     def limit_reached?
-      submission_count >= MAX_SUBMISSION_LIMIT
+      submission_count > MAX_SUBMISSION_LIMIT
     end
 
     private

@@ -34,30 +34,11 @@
   <div data-tabs-target="panel" class="animate-in fade-in duration-300">
     <% if upcoming.any? %>
       <div class="grid gap-3">
-        <% upcoming.each do |booking| %>
-          <% schedule = booking.class_schedule %>
-          <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col gap-4">
-            <div class="flex items-center gap-4">
-              <div class="shrink-0 bg-indigo-50 border border-indigo-100 rounded-xl p-3 text-center min-w-[65px]">
-                <div class="text-[10px] text-indigo-500 font-bold uppercase"><%= l(schedule.starts_at, format: "%b") %></div>
-                <div class="text-xl font-black text-indigo-700 leading-none"><%= schedule.starts_at.day %></div>
-              </div>
-              <div>
-                <h3 class="font-bold text-slate-900 text-base leading-tight"><%= schedule.class_type.name %></h3>
-                <div class="text-xs text-slate-500 font-medium mt-1">
-                  <%= l(schedule.starts_at, format: "%H:%M") %> • Prof. <%= schedule.instructor.first_name %>
-                </div>
-              </div>
-            </div>
-
-            <%# Quick cancelation button %>
-            <%= button_to bookings_path(class_schedule_id: schedule.id, booking: { status: 'cancelled_user' }), 
-                class: "w-full py-2.5 rounded-xl bg-red-50 text-red-600 text-xs font-bold border border-red-100 flex items-center justify-center gap-2 hover:bg-red-100 transition-colors",
-                form: { data: { turbo_confirm: "¿Estás seguro de cancelar tu reserva?" } } do %>
-              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-              <%= t('dashboard.tabs.cancel_reservation') %>
-            <% end %>
-          </div>
+        <% upcoming.each do |schedule| %>
+          <%= render "class_schedules/partials/class_card_universal", 
+                     schedule: schedule, 
+                     user: @user, 
+                     context: :dashboard %>
         <% end %>
       </div>
     <% else %>
@@ -86,7 +67,7 @@
                     <% if booking.attended? %>
                       <span class="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-black bg-green-100 text-green-700 border border-green-200"><%= t('dashboard.tabs.attended') %></span>
                     <% elsif booking.confirmed? %>
-                       <span class="text-[9px] font-bold text-slate-300 italic tracking-widest"><%= t('dashboard.tabs.ok') %></span>
+                       <span class="text-[9px] font-bold text-slate-300 italic tracking-widest"><%= t('dashboard.tabs.confirmed') %></span>
                     <% else %>
                       <span class="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-black bg-red-50 text-red-600 border border-red-100"><%= t('dashboard.tabs.not_attended') %></span>
                     <% end %>

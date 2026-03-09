@@ -10,14 +10,21 @@ class ClassSchedule < ApplicationRecord
   validates :starts_at, presence: true
   validates :duration_minutes, numericality: { greater_than: 0 }
   validates :capacity, numericality: { greater_than: 0 }
-
-  scope :upcoming, -> { where("starts_at >= ?", Time.current).order(:starts_at) }
-  scope :past, -> { where("starts_at < ?", Time.current).order(starts_at: :desc) }
   scope :active, -> { where(cancelled: false) }
   # Booking day rolls at 23:00: after 11 PM user sees next calendar day's classes.
- scope :for_date, ->(date) {
-    where(starts_at: date.beginning_of_day..date.end_of_day).order(:starts_at)
+  def self.operative_date
+    Time.zone.now.hour >= BOOKING_OPEN_HOUR ? Date.tomorrow : Date.current
+  end
+  scope :for_date, ->(date) {
+      where(starts_at: date.beginning_of_day..date.end_of_day).order(:starts_at)
+    }
+  scope :upcoming_logical, -> {
+    where("datetime(starts_at, 'localtime') >= ?", Time.zone.now.strftime("%Y-%m-%d %H:%M:%S")).order(starts_at: :asc)
   }
+  scope :past_logical, -> { 
+    where("starts_at < ?", operative_date.beginning_of_day).order(starts_at: :desc) 
+  }
+
   scope :visible_for, ->(user) {
     return all if user.admin?
     return all if user.try(:drop_in_active_today?) || user.try(:unused_tickets?)
@@ -52,6 +59,22 @@ class ClassSchedule < ApplicationRecord
 
   def past_grace_period?
     Time.current > (starts_at + GRACE_PERIOD_MINUTES.minutes)
+  end
+
+  def upcoming_lock?
+    !past? && !booking_window_open?
+  end
+  
+  def status_for(user)
+    return :past if past?
+    return :unauthorized unless user.authorized_for?(class_type)
+    return :full if full? && !user.admin?
+    return :open if booking_window_open?
+    :upcoming
+  end
+
+  def self.logical_today
+    Time.current.hour >= BOOKING_OPEN_HOUR ? Date.tomorrow : Date.current
   end
 
 # --- SPOTS LOGIC ---

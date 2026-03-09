@@ -1,0 +1,71 @@
+<%# app/views/dashboard/_membership_info.html.erb %>
+
+<div class="mb-8">
+  <div class="flex items-center justify-between px-1 mb-3">
+    <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-400"><%= t('dashboard.membership_info.title') %></h3>
+    <% if @active_memberships.count > 1 %>
+      <span class="text-[9px] font-bold text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded-full"><%= t('dashboard.membership_info.scroll_more') %></span>
+    <% end %>
+  </div>
+
+  <%# HORIZONTAL SCROLL CONTAINER %>
+  <div class="flex overflow-x-auto pb-4 gap-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4">
+    
+    <%# 1. MEMBERSHIP CARDS %>
+    <% @active_memberships.each do |membership| %>
+      <div class="snap-center shrink-0 w-[85%] sm:w-[300px] bg-slate-900 rounded-3xl p-5 text-white shadow-xl border border-slate-800 relative overflow-hidden">
+        <%# Sport Indicator / Package %>
+        <div class="relative z-10 flex flex-col h-full justify-between">
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
+              <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider"><%= t('dashboard.membership_info.active') %></span>
+            </div>
+            <h4 class="text-lg font-black leading-tight mb-1 truncate">
+              <%= membership.membership_package.name %>
+            </h4>
+            <p class="text-[11px] text-slate-400 font-medium">
+              <%= membership.membership_plan.name %>
+            </p>
+          </div>
+
+          <div class="mt-6 flex items-end justify-between">
+            <div>
+              <div class="text-[9px] font-bold text-slate-500 uppercase"><%= t('dashboard.membership_info.expires_in') %></div>
+              <div class="text-xl font-black italic"><%= membership.days_remaining %> días</div>
+            </div>
+            <div class="text-right">
+              <div class="text-[9px] font-bold text-slate-500 uppercase"><%= t('dashboard.membership_info.until') %></div>
+              <div class="text-xs font-bold text-slate-300"><%= l(membership.end_date, format: "%d/%m") %></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="absolute -right-4 -bottom-4 text-slate-800/50">
+           <svg class="w-20 h-20" fill="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+      </div>
+    <% end %>
+
+    <%# 2. TICKET CARD (If you have) %>
+    <% if @unused_tickets_count > 0 %>
+      <div class="snap-center shrink-0 w-[85%] sm:w-[300px] bg-indigo-600 rounded-3xl p-5 text-white shadow-xl relative overflow-hidden">
+        <div class="relative z-10">
+          <div class="flex items-center gap-2 mb-3">
+             <span class="w-1.5 h-1.5 rounded-full bg-indigo-300"></span>
+             <span class="text-[9px] font-bold text-indigo-200 uppercase tracking-wider"><%= t('dashboard.membership_info.tickets_drop_in') %></span>
+          </div>
+          <h4 class="text-lg font-black leading-tight mb-1"><%= t('dashboard.membership_info.available_passes') %></h4>
+          <div class="mt-6">
+            <div class="text-4xl font-black italic"><%= @unused_tickets_count %></div>
+            <p class="text-[11px] text-indigo-200 mt-1"><%= t('dashboard.membership_info.valid_for_any_class') %></p>
+          </div>
+        </div>
+        <div class="absolute -right-2 -bottom-2 text-indigo-500/50">
+           <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 24 24"><path d="M15 5v2h-2V5h2m3 0v2h-2V5h2M8 5v2H6V5h2m-3 0v2H3V5h2m14 4h2v10h-2V9M3 9h2v10H3V9m14 2h-2v2h2v-2m-8 0H7v2h2v-2m8 4h-2v2h2v-2m-8 0H7v2h2v-2z"/></svg>
+        </div>
+      </div>
+    <% end %>
+
+  </div>
+</div>

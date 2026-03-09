@@ -1,0 +1,103 @@
+<%# app/views/dashboard/_tabs_and_content.html.erb %>
+<div data-controller="tabs" 
+     data-tabs-active-class="text-indigo-600 border-indigo-600 bg-indigo-50/50" 
+     data-tabs-inactive-class="text-slate-400 border-transparent hover:text-slate-600 hover:border-slate-200">
+  
+  <div class="mb-6">
+    <nav class="grid grid-cols-2 w-full border-b border-slate-200" aria-label="Tabs">
+      <%# Tab 1: Upcoming %>
+      <button type="button" 
+              data-tabs-target="tab" 
+              data-action="click->tabs#switch"
+              class="w-full py-3 border-b-2 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+        <%= t('dashboard.tabs.upcoming') %>
+        <% if upcoming.any? %>
+          <span class="bg-indigo-100 text-indigo-600 px-1.5 py-0.5 rounded-full text-[9px] min-w-[18px] text-center">
+            <%= upcoming.count %>
+          </span>
+        <% end %>
+      </button>
+
+      <%# Tab 2: History %>
+      <button type="button" 
+              data-tabs-target="tab" 
+              data-action="click->tabs#switch"
+              class="w-full py-3 border-b-2 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <%= t('dashboard.tabs.history') %>
+      </button>
+    </nav>
+  </div>
+
+  <%# --- PANEL 1: UPCOMING --- %>
+  <div data-tabs-target="panel" class="animate-in fade-in duration-300">
+    <% if upcoming.any? %>
+      <div class="grid gap-3">
+        <% upcoming.each do |booking| %>
+          <% schedule = booking.class_schedule %>
+          <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col gap-4">
+            <div class="flex items-center gap-4">
+              <div class="shrink-0 bg-indigo-50 border border-indigo-100 rounded-xl p-3 text-center min-w-[65px]">
+                <div class="text-[10px] text-indigo-500 font-bold uppercase"><%= l(schedule.starts_at, format: "%b") %></div>
+                <div class="text-xl font-black text-indigo-700 leading-none"><%= schedule.starts_at.day %></div>
+              </div>
+              <div>
+                <h3 class="font-bold text-slate-900 text-base leading-tight"><%= schedule.class_type.name %></h3>
+                <div class="text-xs text-slate-500 font-medium mt-1">
+                  <%= l(schedule.starts_at, format: "%H:%M") %> • Prof. <%= schedule.instructor.first_name %>
+                </div>
+              </div>
+            </div>
+
+            <%# Quick cancelation button %>
+            <%= button_to bookings_path(class_schedule_id: schedule.id, booking: { status: 'cancelled_user' }), 
+                class: "w-full py-2.5 rounded-xl bg-red-50 text-red-600 text-xs font-bold border border-red-100 flex items-center justify-center gap-2 hover:bg-red-100 transition-colors",
+                form: { data: { turbo_confirm: "¿Estás seguro de cancelar tu reserva?" } } do %>
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+              <%= t('dashboard.tabs.cancel_reservation') %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="bg-slate-50 border border-dashed border-slate-200 rounded-2xl p-8 text-center mt-4">
+         <p class="text-slate-500 text-sm mb-3"><%= t('dashboard.tabs.no_classes_scheduled') %></p>
+         <%= link_to t('dashboard.tabs.view_schedule'), class_schedules_path, class: "text-indigo-600 font-bold text-sm hover:underline" %>
+      </div>
+    <% end %>
+  </div>
+
+  <%# --- PANEL 2: HISTORY --- %>
+  <div data-tabs-target="panel" class="hidden animate-in fade-in duration-300">
+    <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm">
+      <% if past.any? %>
+        <table class="min-w-full divide-y divide-slate-100">
+           <tbody class="divide-y divide-slate-50">
+             <% past.each do |booking| %>
+               <tr class="hover:bg-slate-50">
+                  <td class="px-4 py-3 text-xs text-slate-500 whitespace-nowrap font-medium">
+                    <%= booking.class_schedule.starts_at.strftime("%d/%m") %>
+                  </td>
+                  <td class="px-4 py-3 text-xs font-bold text-slate-700 w-full">
+                    <%= booking.class_schedule.class_type.name %>
+                  </td>
+                  <td class="px-4 py-3 text-right whitespace-nowrap">
+                    <% if booking.attended? %>
+                      <span class="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-black bg-green-100 text-green-700 border border-green-200"><%= t('dashboard.tabs.attended') %></span>
+                    <% elsif booking.confirmed? %>
+                       <span class="text-[9px] font-bold text-slate-300 italic tracking-widest"><%= t('dashboard.tabs.ok') %></span>
+                    <% else %>
+                      <span class="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-black bg-red-50 text-red-600 border border-red-100"><%= t('dashboard.tabs.not_attended') %></span>
+                    <% end %>
+                  </td>
+               </tr>
+             <% end %>
+           </tbody>
+        </table>
+      <% else %>
+         <div class="p-10 text-center text-xs text-slate-400"><%= t('dashboard.tabs.your_progress_will_appear_here') %></div>
+      <% end %>
+    </div>
+  </div>
+</div>

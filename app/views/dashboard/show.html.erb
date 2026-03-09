@@ -1,11 +1,62 @@
-<%# app/views/dashboard/show.html.erb %>
-<% content_for :page_title, t("nav.home") %>
-<article class="mx-auto w-full max-w-2xl px-4 py-2 overflow-x-hidden">
+<div class="max-w-3xl mx-auto px-4 py-6">
+
   <% if @user.pending_approval? %>
+    <%# --- Waiting for Admin approval --- %>
     <%= render "dashboard/states/pending" %>
+
   <% elsif @user.approved? && !@user.has_booking_access? %>
-    <%= render "dashboard/states/pricing_options", packages: @packages, plans: @plans %>
+    <%# --- Selection of Plan (Sales) --- %>
+    <article class="w-full">
+       <%= render "dashboard/states/pricing_options", packages: @packages, plans: @plans %>
+    </article>
+
   <% else %>
-    <%= render "dashboard/states/active_member", user: @user %>
+    <%# --- Dashboard Pro (Your new Root) --- %>
+    
+    <%# 1. Welcome Card %>
+    <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm mb-6 relative overflow-hidden">
+      <div class="relative z-10">
+        <h2 class="text-xl font-black text-slate-900 mb-1 tracking-tight"><%= t('dashboard.welcome.title') %></h2>
+        <p class="text-slate-500 font-medium mb-4 text-sm"><%= t('dashboard.welcome.greeting', name: @user.first_name) %></p>
+        <p class="text-sm text-slate-600 mb-6 leading-relaxed"><%= t('dashboard.welcome.subtitle') %></p>
+        
+        <%= link_to class_schedules_path, class: "inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white text-sm font-bold rounded-2xl shadow-lg shadow-indigo-100 active:scale-95 transition-all" do %>
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+          <%= t('dashboard.welcome.cta') %>
+        <% end %>
+      </div>
+    </div>
+
+    <%# 2. Stats Cards (KPIs) %>
+    <div class="grid grid-cols-3 gap-2 sm:gap-4 mb-8">
+      <%# Total Classes %>
+      <div class="bg-white py-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col items-center">
+        <span class="text-[10px] text-slate-400 font-bold uppercase mb-1"><%= t('dashboard.stats.total_classes') %></span>
+        <span class="text-2xl font-black text-slate-800"><%= @total_attended %></span>
+      </div>
+
+      <%# This Month %>
+      <div class="bg-indigo-50 py-4 rounded-3xl border border-indigo-100 shadow-sm flex flex-col items-center">
+        <span class="text-[10px] text-indigo-500 font-bold uppercase mb-1"><%= t('dashboard.stats.this_month') %></span>
+        <span class="text-2xl font-black text-indigo-600"><%= @month_attended %></span>
+      </div>
+
+      <%# Smart Counter (Helper) %>
+      <div class="bg-white py-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col items-center">
+        <span class="text-[10px] text-slate-400 font-bold uppercase mb-1"><%= t('dashboard.stats.next_in') %></span>
+        <span class="text-lg font-black text-slate-800 leading-none h-[28px] flex items-center">
+          <%= smart_countdown(@upcoming_bookings.first&.class_schedule) %>
+        </span>
+      </div>
+    </div>
+
+    <%# --- 3. NEW PARTIAL OF MEMBERSHIPS (HERE WE ADD IT) --- %>
+    <%# This is the horizontal carousel that we designed %>
+    <%= render "dashboard/partials/membership_info" %>
+
+    <%# 4. List of Reservations (Tabs) %>
+    <%# Moveremos esto a un partial para que el dashboard no sea eterno %>
+    <%= render "dashboard/partials/tabs_and_content", upcoming: @upcoming_bookings, past: @past_bookings %>
+
   <% end %>
-</article>
+</div>

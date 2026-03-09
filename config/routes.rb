@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
-  resources :class_schedules, only: [:index] do
+  resources :class_schedules, only: [:index, :show] do
     collection do
       get :week
     end
@@ -11,7 +11,7 @@ Rails.application.routes.draw do
       get :participants 
     end
   end
-  resources :bookings, only: [:create]
+  resources :bookings, only: [:create, :index]
   resource :user, only: [:show, :edit, :update], controller: 'users'
   get "mi-membresia/historial", to: "membership_info#history", as: :my_membership_history
   get "mi-membresia", to: "membership_info#show", as: :my_membership

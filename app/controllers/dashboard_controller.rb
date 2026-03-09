@@ -5,16 +5,15 @@ class DashboardController < ApplicationController
     @user = Current.user
 
     if @user.has_booking_access?
-      my_bookings = @user.bookings.active.includes(class_schedule: [:class_type, :instructor])
+      my_bookings = @user.bookings.includes(class_schedule: [:class_type, :instructor])
 
-      @upcoming_bookings = my_bookings.where("class_schedules.starts_at >= ?", Time.current)
-                                      .references(:class_schedules)
-                                      .order("class_schedules.starts_at ASC")
-
-      @past_bookings = my_bookings.where("class_schedules.starts_at < ?", Time.current)
-                                  .references(:class_schedules)
-                                  .order("class_schedules.starts_at DESC")
-                                  .limit(20)
+      @upcoming_bookings = ClassSchedule.upcoming_logical
+                                        .visible_for(@user)
+                                        .includes(:class_type, :instructor, :bookings)
+                                        .limit(20)   
+      @past_bookings = @user.bookings.includes(class_schedule: [:class_type, :instructor])
+                                      .merge(ClassSchedule.past_logical)
+                                      .limit(20)
 
       # Statistics for the Stats Cards
       @total_attended = @user.bookings.attended.count

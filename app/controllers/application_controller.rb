@@ -28,7 +28,7 @@ class ApplicationController < ActionController::Base
   end
 
   def require_instructor_or_admin
-    unless Current.user&.can_check_in_students?
+    unless Current.user&.check_in_students?
       redirect_to root_path, alert: t('flash.alerts.access_denied')
     end
   end

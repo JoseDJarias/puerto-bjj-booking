@@ -1,6 +1,7 @@
 module Admin
-  class ClassSchedulesController < BaseController
-    before_action :set_class_schedule, only: %i[show edit update destroy]
+  class ClassSchedulesController < OperationsController
+    before_action :require_admin, only: %i[new create edit update destroy batch_new batch_create]
+    before_action :set_class_schedule, only: %i[show edit update destroy attendance]
     before_action :set_collections, only: %i[new edit batch_new]
 
     def index
@@ -42,6 +43,15 @@ module Admin
         set_collections
         render :edit, status: :unprocessable_entity
       end
+    end
+
+    def attendance
+      @schedule = ClassSchedule.find(params[:id])
+      # Only students with active reservation, ordered for quick search
+      @bookings = @schedule.bookings.active
+                           .includes(:user)
+                           .joins(:user)
+                           .order("users.first_name ASC")
     end
 
     def destroy

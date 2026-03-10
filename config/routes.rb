@@ -48,6 +48,9 @@ Rails.application.routes.draw do
         get :batch_new    # The "Generate Schedule" form
         post :batch_create # The action that creates the records
       end
+      member do
+        get :attendance
+      end
     end
     resources :membership_pricings, path: 'precios'
       # Controller dedicated to the management of reservations by the admin

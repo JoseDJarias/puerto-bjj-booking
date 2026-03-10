@@ -23,6 +23,13 @@ es:
     abbr_month_names: [~, ene, feb, mar, abr, may, jun, jul, ago, sep, oct, nov, dic]
     day_names: [domingo, lunes, martes, miércoles, jueves, viernes, sábado]
     abbr_day_names: [Dom, Lun, Mar, Mié, Jue, Vie, Sáb]
+
+  topbar:
+    active_session: "Sesión activa"
+    view_as_student: "Ver como Alumno"
+    management_mode: "Modo Gestión"
+    sign_out: "Cerrar sesión"
+
   simple_calendar:
       previous: "Anterior"
       next: "Siguiente"
@@ -207,6 +214,12 @@ es:
         management_section: "Gestión"
         config_section: "Configuración"
       close_menu: "Salir al Sitio Público"
+      sidebar:
+        brand_room: "Sala"
+        brand_control: "De Control"
+        operations: "Operaciones"
+        dashboard: "Dashboard"
+        academy_management: "Gestión de Academia"
       # Sidebar links
       users: "Usuarios"
       memberships: "Membresías"
@@ -436,6 +449,19 @@ es:
         created: "Clase creada correctamente."
         updated: "Clase actualizada correctamente."
         deleted: "Clase eliminada del calendario."
+      attendance:
+        enrolled_label: "INSCRITOS"
+        status_active: "● ACTIVO"
+        status_no_payment: "● SIN PAGO"
+        no_students: "No hay alumnos en lista<br>para esta clase"
+        add_manual: "Añadir Manual"
+      add_student_modal:
+        title: "Añadir Alumno"
+        search_placeholder: "Escribe un nombre o apodo..."
+        show_without_membership: "Mostrar alumnos sin membresía activa"
+        access_ok: "Acceso OK"
+        no_membership: "Sin Membresía / Bloqueado"
+        submit: "CONFIRMAR INSCRIPCIÓN"
     show:
       page_title: "Gestionar Clase"
       spots_label: "Cupos"

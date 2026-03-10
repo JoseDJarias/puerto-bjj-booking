@@ -45,13 +45,17 @@ module Admin
       end
     end
 
+    # app/controllers/admin/class_schedules_controller.rb
     def attendance
       @schedule = ClassSchedule.find(params[:id])
-      # Only students with active reservation, ordered for quick search
-      @bookings = @schedule.bookings.active
-                           .includes(:user)
-                           .joins(:user)
-                           .order("users.first_name ASC")
+      @bookings = @schedule.bookings.active.includes(:user).joins(:user).order("users.first_name ASC")
+
+      enrolled_user_ids = @bookings.pluck(:user_id)
+      
+      # Get all active users that are not enrolled
+      @available_users = User.active
+                            .where.not(id: enrolled_user_ids)
+                            .order(:first_name)
     end
 
     def destroy

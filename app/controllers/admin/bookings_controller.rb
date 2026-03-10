@@ -1,6 +1,6 @@
 module Admin
-  class BookingsController < BaseController
-    before_action :set_booking, only: [:check_in, :destroy]
+  class BookingsController < OperationsController
+    before_action :set_booking, only: [:update, :destroy]
 
     def create
       @schedule = ClassSchedule.find(params[:booking][:class_schedule_id])
@@ -12,20 +12,21 @@ module Admin
       # MAGIC: Since we are Admin, we use update_status! passing 'current_user' (which is admin)
       # The model will detect that it is admin and skip the capacity/limit validations.
       if @booking.update_status!(:confirmed, current_user)
-        redirect_to admin_class_schedule_path(@schedule), notice: "#{user.first_name} agregado a la clase."
+        redirect_to attendance_admin_class_schedule_path(@schedule), notice: "#{user.first_name} agregado a la clase."
       else
-        redirect_to admin_class_schedule_path(@schedule), alert: "No se pudo agregar."
+        redirect_to attendance_admin_class_schedule_path(@schedule), alert: "No se pudo agregar."
       end
     end
 
-    def check_in
-      @booking = Booking.find(params[:id])
-      target_status = (params[:attended] == "false") ? :confirmed : :attended
+    def update
+      # If we pass the 'attended' parameter, we toggle the status
+      target_status = (params[:attended] == "true") ? :attended : :confirmed
       
       if @booking.update_status!(target_status, current_user)
         respond_to do |format|
-          format.turbo_stream { render turbo_stream: [] } 
-          format.html { redirect_back fallback_location: root_path }
+          # We search the partial of the button to update it with Turbo
+          format.turbo_stream
+          format.html { redirect_back fallback_location: admin_root_path }
         end
       else
         head :unprocessable_entity
@@ -34,8 +35,8 @@ module Admin
 
     def destroy
       @schedule = @booking.class_schedule
-      # En lugar de borrar el registro (destroy físico), cambiamos el estado
-      # Esto permite que el broadcast del modelo actualice la UI
+      # Instead of deleting the record (destroy physically), we change the status
+      # This allows the model broadcast to update the UI
       @booking.update_status!(:cancelled_admin, current_user)
       
       respond_to do |format|
@@ -43,8 +44,7 @@ module Admin
         format.html { redirect_back fallback_location: admin_root_path }
       end
     end
-  
-
+    
     private
     
     def set_booking

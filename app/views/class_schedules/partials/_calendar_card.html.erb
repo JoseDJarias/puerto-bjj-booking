@@ -9,8 +9,6 @@
   is_full = schedule.full? && !user.admin?
 %>
 
-<%= turbo_stream_from "schedule_#{schedule.id}" %>
-<%= turbo_stream_from [user, "bookings"] %>
 
 <%= turbo_frame_tag "universal_card_#{schedule.id}" do %>
   <% 

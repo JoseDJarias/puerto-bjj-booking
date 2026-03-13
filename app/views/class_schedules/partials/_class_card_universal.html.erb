@@ -1,9 +1,5 @@
 <%# app/views/class_schedules/_class_card_universal.html.erb %>
 
-<%# --- 1. LAS ANTENAS (Turbo Streams) --- %>
-<%# Public channel for public changes of this class (Spots and Participants) %>
-<%= turbo_stream_from "schedule_#{schedule.id}" %>
-
 <%# --- 2. EL CONTENEDOR UNIVERSAL (Turbo Frame) --- %>
 <%# This ID allows the model to replace the entire card if necessary %>
 <%= turbo_frame_tag "universal_card_#{schedule.id}" do %>

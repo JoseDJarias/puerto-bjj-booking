@@ -11,3 +11,5 @@ test:
 production:
   adapter: solid_cable
 
+staging:
+  adapter: solid_cable

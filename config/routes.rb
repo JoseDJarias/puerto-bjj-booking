@@ -56,7 +56,7 @@ Rails.application.routes.draw do
       # Controller dedicated to the management of reservations by the admin
     resources :bookings, only: [:create, :update, :destroy] do
       member do
-        patch :check_in # Route to mark attendance quickly
+        patch :toggle_attendance
       end
     end
     resources :drop_in_tickets, only: [:create] do

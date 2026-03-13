@@ -9,23 +9,29 @@ default: &default
   max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
 
+# Definimos un "template" para no repetir código
+staging_config: &staging_config
+  <<: *default
+  database: /rails/storage/staging.sqlite3
+  migrations_paths: db/cache_migrate # Esto se ajustará según el rol, pero lo importante es la DB
+
 staging:
   primary:
-    <<: *default
-    database: /rails/storage/staging.sqlite3
+    <<: *staging_config
   cache:
-    <<: *default
-    database: /rails/storage/staging.sqlite3
+    <<: *staging_config
     migrations_paths: db/cache_migrate
   queue:
-    <<: *default
-    database: /rails/storage/staging.sqlite3
+    <<: *staging_config
     migrations_paths: db/queue_migrate
   cable:
-    <<: *default
-    database: /rails/storage/staging.sqlite3
+    <<: *staging_config
     migrations_paths: db/cable_migrate
-    
+
+# DUPLICADO DE SEGURIDAD PARA KAMAL
+puerto_bjj_booking_staging:
+  <<: *staging
+  
 development:
   <<: *default
   database: storage/development.sqlite3

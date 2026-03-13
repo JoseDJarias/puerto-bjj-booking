@@ -37,13 +37,20 @@ en:
       title: "Pending approval"
       message: "Your account is pending review. We will notify you when an administrator has approved it."
       hint: "If you have questions, contact us."
-    membership_expired:
-      title: "Membership expired"
-      message: "You don't have an active membership. Activate or renew your membership to book classes."
-      cta: "View membership options"
     welcome:
       title: "Welcome"
       greeting: "Hello, %{name}"
       subtitle: "Your membership is active. You can book your classes."
       cta: "View available classes"
     sign_out: "Sign out"
+    pricing_options:
+      first_time_title: "Account approved!"
+      first_time_lead: "Welcome to the team!"
+      first_time_body: "You can now check our plans. To activate your access, pay at the academy or contact the administrator."
+      expired_title: "Membership expired"
+      expired_message: "Your plan has expired. Check updated prices and visit us to renew your subscription and keep training."
+    plans:
+      prices_from: "From %{price}"
+      payment_info: "Payment at reception"
+      recurring_title: "Regular plans"
+      drop_in_title: "Drop-in tickets"

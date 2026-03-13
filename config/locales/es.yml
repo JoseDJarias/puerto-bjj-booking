@@ -77,19 +77,19 @@ es:
     includes_classes: "Incluye clases"
     no_active: "No tienes una membresía activa."
     no_active_hint: "Si acabas de renovar o tienes dudas, escribe al encargado."
-    drop_in_title: "Pases de drop-in"
-    drop_in_count: "Tienes %{count} pase(s) disponible(s) para usar en cualquier clase."
-    drop_in_active_today: "Hoy tienes un pase activo: ya usaste un pase y tienes acceso a clases hoy."
+    drop_in_title: "Tickets drop-in"
+    drop_in_count: "Tienes %{count} ticket(s) disponible(s) para usar en cualquier clase."
+    drop_in_active_today: "Hoy tienes un ticket activo: ya usaste un ticket y tienes acceso a clases hoy."
     view_history: "Ver historial"
     history:
-      title: "Historial de membresías y pases"
-      subtitle: "Membresías vencidas o canceladas y pases drop-in usados o anulados."
+      title: "Historial de membresías y tickets"
+      subtitle: "Membresías vencidas o canceladas y tickets drop-in usados o anulados."
       back: "Volver a Mi membresía"
       memberships_heading: "Membresías anteriores"
       no_memberships: "No tienes membresías anteriores."
       amount_paid: "Monto pagado"
-      drop_in_heading: "Pases drop-in (usados o anulados)"
-      no_drop_ins: "No tienes pases usados o anulados en el historial."
+      drop_in_heading: "Tickets drop-in (usados o anulados)"
+      no_drop_ins: "No tienes tickets usados o anulados en el historial."
       membership_status:
         active: "Activa"
         expired: "Vencida"
@@ -272,12 +272,13 @@ es:
       index:
         title: "Planes de Precios"
         new: "Nuevo Plan"
+      drop_in: "Ticket diario (Drop-in)"
       new:
         title: "Crear Plan de Precios"
       edit:
         title: "Editar Plan"
       form:
-        duration_help: "Usa 0 para pases diarios (Drop-in). Usa 1, 3, 6, 12 para meses."
+        duration_help: "Usa 0 para tickets diarios (Drop-in). Usa 1, 3, 6, 12 para meses."
       flash:
         created: "Plan creado correctamente."
         updated: "Plan actualizado correctamente."
@@ -596,7 +597,7 @@ es:
       expires_in: "Vence en"
       until: "Hasta"
       tickets_drop_in: "Tickets / Drop-in"
-      available_passes: "Pases Disponibles"
+      available_passes: "Tickets disponibles"
       valid_for_any_class: "Válidos por todas las clases del día"
     welcome:
       title: "Bienvenido"
@@ -607,16 +608,22 @@ es:
     membership_expired:
       title: "Membresía Vencida"
       message: "Consulta nuestros planes disponibles a continuación."
+    pricing_options:
+      first_time_title: "¡Cuenta Aprobada!"
+      first_time_lead: "¡Bienvenido al equipo!"
+      first_time_body: "Ya puedes revisar nuestros planes. Para activar tu acceso, realiza el pago directamente en la academia o contacta al administrador."
+      expired_title: "Membresía Vencida"
+      expired_message: "Tu plan ha expirado. Consulta los precios actualizados y visítanos para renovar tu suscripción y seguir entrenando."
     plans:
       price_list: "Lista de Precios"
       prices_from: "Ver precios desde %{price}"
-      single_access: "Pase diario"
+      single_access: "Ticket diario"
       months_count:
         one: "1 Mes"
         other: "%{count} Meses"
       payment_info: "Pagos presenciales en recepción"
       recurring_title: "Planes Regulares"
-      drop_in_title: "Pases Individuales"
+      drop_in_title: "Tickets individuales"
     stats:
       total_classes: "Total de Clases"
       this_month: "Este Mes"
@@ -704,6 +711,7 @@ es:
               only_numbers: "debe contener únicamente números (sin guiones ni letras)"
             email_address:
               taken: "ya está registrado en el sistema"
+              invalid: "no tiene un formato válido (debe incluir @ y un dominio)"
             password:
               confirmation: "no coincide con la contraseña"
             password_confirmation:

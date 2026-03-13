@@ -40,7 +40,7 @@
               <span class="inline-flex items-center gap-1.5">
                 <% if plan.duration_months.zero? %>
                   <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                  <%= t('admin.plans.drop_in', default: "Pase Diario (Drop-in)") %>
+                  <%= t('admin.plans.drop_in', default: "Ticket diario (Drop-in)") %>
                 <% else %>
                   <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                   <%= pluralize(plan.duration_months, 'mes', 'meses') rescue "#{plan.duration_months} meses" %>

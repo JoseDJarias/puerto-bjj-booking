@@ -86,7 +86,7 @@ users_data.each do |data|
   end
 end
 
-ts "   ✓ Users created with identification"
+puts "   ✓ Users created with identification"
 
 
 # 7. Horarios de Clase

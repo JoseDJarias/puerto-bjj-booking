@@ -1,33 +1,54 @@
 <% content_for :page_title, t('admin.class_schedules.index.title') %>
 
-<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-  <h2 class="text-xl font-semibold text-slate-900"><%= t('admin.class_schedules.index.subtitle') %></h2>
+<%# 1. Panel de Debug %>
+<details class="bg-slate-800 text-slate-300 mb-6 overflow-hidden rounded-lg shadow-inner">
+  <summary class="cursor-pointer px-4 py-2 text-[10px] font-mono uppercase tracking-widest hover:bg-slate-700 transition-colors">
+    Developer Console (Debug Info)
+  </summary>
+  <div class="p-4 text-xs font-mono space-y-1 bg-slate-900/50">
+    <p><span class="text-indigo-400">Usuario:</span> <%= Current.user.email_address %> (ID: <%= Current.user.id %>)</p>
+    <p><span class="text-indigo-400">Admin:</span> <span class="<%= Current.user.admin? ? 'text-green-400' : 'text-red-400' %>"><%= Current.user.admin? %></span></p>
+  </div>
+</details>
+
+<%# 2. Header with Main Actions %>
+<div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between border-b border-slate-200 pb-6">
+  <div>
+    <h1 class="text-3xl font-black text-slate-900 uppercase italic leading-none">Management Hub</h1>
+    <p class="text-slate-500 font-medium mt-1"><%= t('admin.class_schedules.index.subtitle') %></p>
+  </div>
   
-  <div class="flex gap-2">
-    <%= link_to t('admin.class_schedules.index.new_single'), new_admin_class_schedule_path, class: "rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50" %>
+  <div class="flex gap-3">
+    <%= link_to t('admin.class_schedules.index.new_single'), new_admin_class_schedule_path, class: "rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-all shadow-sm" %>
     
-    <%= link_to batch_new_admin_class_schedules_path, class: "inline-flex justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 items-center gap-2" do %>
+    <%= link_to batch_new_admin_class_schedules_path, class: "inline-flex justify-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-indigo-700 items-center gap-2 transition-all shadow-lg shadow-indigo-100" do %>
       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
       <%= t('admin.class_schedules.index.program_batch') %>
     <% end %>
   </div>
 </div>
 
-<div class="calendar-wrapper">
-  <%= month_calendar(events: @class_schedules, attribute: :starts_at) do |date, classes| %>
-    
-    <div class="flex flex-col gap-1">
-      <% classes.each do |schedule| %>
-        <%= link_to edit_admin_class_schedule_path(schedule), class: "group flex flex-col rounded px-2 py-1 text-xs leading-tight transition-colors hover:bg-indigo-50 border-l-2 #{schedule.cancelled? ? 'border-red-400 bg-red-50 opacity-60' : 'border-indigo-500 bg-slate-50'}" do %>
-          <span class="font-semibold <%= schedule.cancelled? ? 'text-red-700 line-through' : 'text-indigo-700' %>">
-            <%= schedule.starts_at.strftime("%l:%M%P") %>
-          </span>
-          <span class="truncate text-slate-600 group-hover:text-indigo-900">
-            <%= schedule.class_type.name %>
-          </span>
-        <% end %>
-      <% end %>
+<div class="w-full">
+    <div class="bg-white rounded-[2.5rem] border border-slate-200 shadow-sm overflow-hidden w-full">
+      <div class="p-8">
+        <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6">Vista de Calendario</h3>
+        
+        <div class="calendar-wrapper-custom">
+          <%= month_calendar(events: @class_schedules, attribute: :starts_at) do |date, classes| %>
+            <div class="min-h-[100px] w-full">        
+              <div class="flex flex-col gap-1">
+                <% classes.each do |schedule| %>
+                  <%= link_to admin_class_schedule_path(schedule), class: "group flex items-center gap-1 rounded-xl px-2 py-1.5 text-[10px] leading-tight transition-all border-l-4 hover:translate-x-1 shadow-sm #{schedule.cancelled? ? 'border-red-400 bg-red-50 opacity-60' : 'border-indigo-500 bg-indigo-50 hover:bg-white'}" do %>
+                    <span class="font-black text-indigo-700">
+                      <%= schedule.starts_at.strftime("%-I:%M") %>
+                    </span>
+                    <span class="truncate text-slate-900 font-bold uppercase italic tracking-tighter"><%= schedule.class_type.name %></span>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
     </div>
-
-  <% end %>
-</div>
+  </div>

@@ -5,7 +5,6 @@
   <%= turbo_stream_from current_user, "bookings" %>
 
   <div class="flex items-center justify-between mb-8 bg-white p-3 rounded-2xl shadow-sm border border-slate-100 sticky top-2 z-10 backdrop-blur-md bg-white/90">
-  <%# Necesitamos mejorar la idea de navegación temporal%>
     <%= link_to class_schedules_path(date: @date - 1.day), class: "p-2 hover:bg-slate-50 rounded-xl text-slate-400 hover:text-indigo-600 transition-colors" do %>
       <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
     <% end %>
@@ -35,7 +34,6 @@
       <% end %>
     </div>
   <% else %>
-  <%# --- EMPTY STATE (If you navigate to a day without classes) --- %>
     <div class="text-center py-12 bg-white rounded-2xl border border-slate-100 shadow-sm mt-4">
       <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-50 mb-4">
         <svg class="w-8 h-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>

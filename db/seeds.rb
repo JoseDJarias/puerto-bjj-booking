@@ -64,53 +64,55 @@ puts "   ✓ Created 3 packages"
   MembershipPricing.create!(membership_package: pkg, membership_plan: trimestre, price: price_base * 2.5)
 end
 
-# 6. Usuarios (Ajustado a phone_number y email_address según Rails 8 Authentication)
+# 6. Usuarios corregidos con identificación
 puts "👥 Creating Users (Admin, Instructor, Member)..."
 
 # ADMIN
-admin = User.create!(
-  email_address: "admin@puertobjj.com", 
-  password: "password123", 
-  role: :admin, 
-  first_name: "Daniel", 
-  last_name: "Admin",
-  phone_number: "88880001",
-  approved_at: Time.current
-)
+User.find_or_create_by!(email_address: "admin@puertobjj.com") do |u|
+  u.password = "password123"
+  u.role = :admin
+  u.first_name = "Daniel"
+  u.last_name = "Admin"
+  u.identification = "1-1111-1111" # Agregado
+  u.phone_number = "88880001"
+  u.approved_at = Time.current
+end
 
 # INSTRUCTOR
-instructor = User.create!(
-  email_address: "instructor@puertobjj.com", 
-  password: "password123", 
-  role: :instructor, 
-  first_name: "Carlos", 
-  last_name: "Gracie",
-  phone_number: "88880002",
-  approved_at: Time.current
-)
+User.find_or_create_by!(email_address: "instructor@puertobjj.com") do |u|
+  u.password = "password123"
+  u.role = :instructor
+  u.first_name = "Carlos"
+  u.last_name = "Gracie"
+  u.identification = "2-2222-2222" # Agregado
+  u.phone_number = "88880002"
+  u.approved_at = Time.current
+end
 
-# MEMBER (El Daniel original con tickets)
-member = User.create!(
-  email_address: "member@puertobjj.com", 
-  password: "password123", 
-  role: :member, 
-  first_name: "Daniel", 
-  last_name: "Arias",
-  phone_number: "88880003",
-  approved_at: Time.current
-)
+# MEMBER
+User.find_or_create_by!(email_address: "member@puertobjj.com") do |u|
+  u.password = "password123"
+  u.role = :member
+  u.first_name = "Daniel"
+  u.last_name = "Arias"
+  u.identification = "3-3333-3233" # Agregado
+  u.phone_number = "88880003"
+  u.approved_at = Time.current
+end
 3.times { member.drop_in_tickets.create!(price_paid: 5000) }
 
+puts "   ✓ Users created with identification"
+
 # OTRO MIEMBRO (Ana solo con membresía específica)
-member_ana = User.create!(
-  email_address: "ana@puertobjj.com", 
-  password: "password123", 
-  role: :member, 
-  first_name: "Ana", 
-  last_name: "Rodriguez",
-  phone_number: "88880004",
-  approved_at: Time.current
-)
+member_ana = User.find_or_create_by!(email_address: "ana@puertobjj.com") do |u|
+  u.password = "password123"
+  u.role = :member
+  u.first_name = "Ana"
+  u.last_name = "Rodriguez"
+  u.identification = "3-3333-3333" # Agregado
+  u.phone_number = "88880004"
+  u.approved_at = Time.current
+end
 Membership.create!(user: member_ana, membership_plan: mensual, membership_package: jj_pkg, start_date: Date.current)
 
 puts "   ✓ Users and memberships created"

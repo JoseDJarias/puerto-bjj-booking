@@ -3,22 +3,33 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["item"]
-  
-  toggleAll(e) {
-    const showAll = e.target.checked
-    this.itemTargets.forEach(item => {
-      if (item.dataset.hasAccess === "false") {
-        item.classList.toggle("hidden", !showAll)
-      }
-    })
+  itemTargetConnected() {
+    this.applyFilters()
   }
 
-  filter(event) {
-    const query = event.target.value.toLowerCase()
+  toggleAll() {
+    this.applyFilters()
+  }
+
+  filter() {
+    this.applyFilters()
+  }
+
+  applyFilters() {
+    const searchInput = this.element.querySelector('input[type="text"]')
+    const toggleInput = this.element.querySelector('input[type="checkbox"]')
+    
+    const query = searchInput ? searchInput.value.toLowerCase() : ""
+    const showAll = toggleInput ? toggleInput.checked : false
 
     this.itemTargets.forEach(item => {
-      const searchContent = item.dataset.searchName
-      if (searchContent.includes(query)) {
+      const name = item.dataset.searchName || ""
+      const hasAccess = item.dataset.hasAccess === "true"
+
+      const matchesSearch = name.includes(query)
+      const matchesAccess = hasAccess || showAll
+
+      if (matchesSearch && matchesAccess) {
         item.classList.remove("hidden")
       } else {
         item.classList.add("hidden")

@@ -19,7 +19,7 @@ env:
     RAILS_ENV: staging
     RAILS_LOG_TO_STDOUT: true
     SOLID_QUEUE_IN_PUMA: true
-    DATABASE_URL: sqlite3:/rails/db/staging.sqlite3
+    DATABASE_URL: sqlite3:/rails/storage/staging.sqlite3
 
 volumes:
   - "puerto_bjj_staging_storage:/rails/storage"

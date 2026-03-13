@@ -12,18 +12,18 @@ default: &default
 staging:
   primary:
     <<: *default
-    database: storage/staging.sqlite3
+    database: /rails/storage/staging.sqlite3
   cache:
     <<: *default
-    database: storage/staging.sqlite3
+    database: /rails/storage/staging.sqlite3
     migrations_paths: db/cache_migrate
   queue:
     <<: *default
-    database: storage/staging.sqlite3
+    database: /rails/storage/staging.sqlite3
     migrations_paths: db/queue_migrate
   cable:
     <<: *default
-    database: storage/staging.sqlite3
+    database: /rails/storage/staging.sqlite3
     migrations_paths: db/cable_migrate
     
 development:

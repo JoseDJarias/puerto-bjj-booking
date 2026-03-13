@@ -1,35 +1,47 @@
 module Admin
   class BookingsController < OperationsController
-    before_action :set_booking, only: [:update, :destroy]
+    before_action :set_booking, only: [:update, :destroy, :toggle_attendance]
 
-    def create
+    def create    
       @schedule = ClassSchedule.find(params[:booking][:class_schedule_id])
       user = User.find(params[:booking][:user_id])
-
-      # We search or initialize
+    
       @booking = Booking.find_or_initialize_by(user: user, class_schedule: @schedule)
       
-      # MAGIC: Since we are Admin, we use update_status! passing 'current_user' (which is admin)
-      # The model will detect that it is admin and skip the capacity/limit validations.
       if @booking.update_status!(:confirmed, current_user)
-        redirect_to attendance_admin_class_schedule_path(@schedule), notice: "#{user.first_name} agregado a la clase."
+        # 3. reload @schedule.bookings for active_bookings_count and other methods.
+        @schedule.bookings.reload 
+    
+        respond_to do |format|
+          format.turbo_stream 
+          format.html { redirect_to attendance_admin_class_schedule_path(@schedule), notice: "#{user.first_name} agregado." }
+        end
       else
         redirect_to attendance_admin_class_schedule_path(@schedule), alert: "No se pudo agregar."
       end
     end
 
     def update
-      # If we pass the 'attended' parameter, we toggle the status
-      target_status = (params[:attended] == "true") ? :attended : :confirmed
-      
+      target_status = params[:action_type] == "toggle_block" ? 
+                      (@booking.blocked? ? "confirmed" : "blocked") : 
+                      @booking.status
+
       if @booking.update_status!(target_status, current_user)
         respond_to do |format|
-          # We search the partial of the button to update it with Turbo
-          format.turbo_stream
-          format.html { redirect_back fallback_location: admin_root_path }
+          format.turbo_stream { render :update_mastermind }
+          format.html { redirect_back fallback_location: admin_dashboard_path }
         end
-      else
-        head :unprocessable_entity
+      end
+    end
+
+    def toggle_attendance
+      new_status = @booking.attended? ? :confirmed : :attended
+      
+      if @booking.update_status!(new_status, current_user)
+        @class_schedule = @booking.class_schedule
+        respond_to do |format|
+          format.turbo_stream
+        end
       end
     end
 
@@ -38,9 +50,9 @@ module Admin
       # Instead of deleting the record (destroy physically), we change the status
       # This allows the model broadcast to update the UI
       @booking.update_status!(:cancelled_admin, current_user)
-      
+      @schedule.bookings.reload
       respond_to do |format|
-        format.turbo_stream { render_flash("Reserva removida") }
+        format.turbo_stream { render "admin/bookings/destroy" }
         format.html { redirect_back fallback_location: admin_root_path }
       end
     end

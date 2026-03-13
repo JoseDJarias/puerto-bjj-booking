@@ -4,7 +4,7 @@
 <%= turbo_frame_tag "frame_participants_#{schedule.id}" do %>
   
   <%# 2. The Container Div: For styles and scroll %>
-  <div id="participants_container_<%= schedule.id %>" class="space-y-1 max-h-48 overflow-y-auto pr-2 custom-scrollbar py-2">
+  <div id="participants_container_<%= schedule.id %>" class="space-y-1 max-h-52 overflow-y-auto pr-2 custom-scrollbar py-2">
     
     <% participants = schedule.bookings.where(status: [:confirmed, :attended]).includes(:user).order(:created_at) %>
 
@@ -12,29 +12,47 @@
       <% participants.each do |booking| %>
         
         <%# Simple Row: Only Avatar and Name %>
-        <div class="flex items-center gap-3 py-2 border-b border-slate-50 last:border-0 transition-all duration-500 group"
+        <div class="flex items-center gap-3 py-2 px-4 border-b border-slate-50 last:border-0 transition-all duration-500 group"
         data-controller="self-highlighter"
              data-self-highlighter-id-value="<%= booking.user_id %>"
              data-self-highlighter-active-class="bg-indigo-50 border-indigo-100">
           
           <%# Avatar: Only the first letter of the user's name %>
-          <div class="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold border transition-all duration-500
-               <%= booking.attended? ? 'bg-green-50 border-green-200 text-green-600' : 'bg-slate-50 border-slate-200 text-slate-400' %>">
-            <%= booking.user.display_name[0].upcase %>
+          <div class="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold border transition-colors duration-300
+               <%= booking.attended? ? 'bg-green-600 border-green-600 text-white' : 'bg-white border-slate-200 text-slate-500' %>">
+            <% if booking.attended? %>
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            <% else %>
+              <%= booking.user.display_name[0].upcase %>
+            <% end %>
           </div>
-          
-          <span class="text-sm font-bold truncate transition-all duration-500 <%= booking.attended? ? 'text-slate-300 line-through opacity-70' : 'text-slate-700' %>">
-            <%= booking.user.display_name %>
-          </span>
 
-          <span class="me-badge hidden items-center justify-center text-xs font-bold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full border border-blue-200 whitespace-nowrap leading-none h-5">
-        You
-      </span>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm transition-colors duration-300 <%= booking.attended? ? 'font-black text-slate-900' : 'font-medium text-slate-600' %>">
+              <%= booking.user.display_name %>
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <% if booking.attended? %>
+              <span class="text-[9px] font-black text-green-600 uppercase tracking-widest bg-green-50 px-2 py-0.5 rounded-md">
+                <%= t('class_schedules.index.present') %>
+              </span>
+            <% end %>
+
+            <span class="me-badge hidden items-center justify-center text-xs font-bold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full border border-blue-200 whitespace-nowrap leading-none h-5">
+              <%= t('class_schedules.index.badge_you') %>
+            </span>
+          </div>
+
+
         </div>
       <% end %>
 
     <% else %>
-      <p class="text-xs text-slate-400 italic py-6 text-center">No hay participantes aún</p>
+      <p class="text-xs text-slate-400 italic py-6 text-center"><%= t('class_schedules.index.no_participants') %></p>
     <% end %>
   </div>
 <% end %>

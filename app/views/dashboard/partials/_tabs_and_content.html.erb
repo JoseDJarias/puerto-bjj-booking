@@ -35,6 +35,7 @@
     <% if upcoming.any? %>
       <div class="grid gap-3">
         <% upcoming.each do |schedule| %>
+        <%= turbo_stream_from "schedule_#{schedule.id}" %>
           <%= render "class_schedules/partials/class_card_universal", 
                      schedule: schedule, 
                      user: @user, 
@@ -73,6 +74,7 @@
                     <% end %>
                   </td>
                </tr>
+             
              <% end %>
            </tbody>
         </table>

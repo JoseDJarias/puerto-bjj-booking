@@ -1,0 +1,24 @@
+<% has_access = user.has_booking_access? %>
+<label id="user_sidebar_<%= user.id %>" 
+       class="flex items-center gap-3 p-2.5 rounded-xl border border-transparent hover:bg-slate-800 cursor-pointer transition-all group relative <%= 'hidden opacity-50' unless has_access %>" 
+       data-search-list-target="item" 
+       data-has-access="<%= has_access %>"
+       data-search-name="<%= user.full_legal_name.downcase %> <%= user.nickname&.downcase %>">
+  
+  <%= radio_button_tag "booking[user_id]", user.id, false, class: "peer absolute opacity-0" %>
+  
+  <div class="w-8 h-8 rounded-lg bg-slate-800 group-hover:bg-slate-700 flex items-center justify-center font-black text-[10px] <%= has_access ? 'text-indigo-400' : 'text-slate-500' %> transition-colors">
+    <%= user.first_name[0] %>
+  </div>
+
+  <div class="flex-1 min-w-0">
+    <p class="text-[10px] font-black text-white uppercase italic truncate"><%= user.nickname.presence || user.first_name %></p>
+    <p class="text-[7px] font-bold <%= has_access ? 'text-green-500/60' : 'text-red-400/60' %> uppercase tracking-widest leading-none mt-1">
+      <%= has_access ? t('admin.class_schedules.add_student_modal.access_ok') : t('admin.class_schedules.add_student_modal.without_access') %>
+    </p>
+  </div>
+
+  <div class="w-3.5 h-3.5 rounded-full border border-slate-700 peer-checked:border-indigo-500 peer-checked:bg-indigo-500 flex items-center justify-center transition-all">
+    <div class="w-1 h-1 rounded-full bg-white scale-0 peer-checked:scale-100 transition-transform"></div>
+  </div>
+</label>

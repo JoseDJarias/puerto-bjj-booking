@@ -18,7 +18,7 @@
         </p>
         <div class="flex items-center gap-2 mt-0.5">
           <span class="text-[9px] font-black uppercase tracking-tighter <%= @booking.user.has_booking_access? ? 'text-green-500' : 'text-red-500' %>">
-            <%= @booking.user.has_booking_access? ? '● ACTIVO' : '● SIN PAGO' %>
+            <%= @booking.user.has_booking_access? ? t('admin.class_schedules.attendance.status_active') : t('admin.class_schedules.attendance.status_no_payment') %>
           </span>
         </div>
       </div>

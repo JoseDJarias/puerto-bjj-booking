@@ -1,0 +1,31 @@
+<%# app/views/admin/bookings/update.turbo_stream.erb %>
+<%= turbo_stream.replace "check_in_action_#{@booking.id}" do %>
+  <%= render "admin/class_schedules/partials/booking_row", booking: @booking %>
+<% end %>
+
+<%= turbo_stream.replace dom_id(@booking) do %>
+  <div id="<%= dom_id(@booking) %>" 
+       class="flex items-center justify-between p-4 rounded-[2.2rem] border transition-all shadow-sm <%= @booking.attended? ? 'border-green-200 bg-green-50/30' : 'border-slate-100 bg-white' %>">
+    
+    <div class="flex items-center gap-4 min-w-0">
+      <div class="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-black text-sm uppercase shrink-0 shadow-lg shadow-slate-200">
+        <%= @booking.user.first_name[0] %><%= @booking.user.last_name[0] if @booking.user.last_name.present? %>
+      </div>
+      
+      <div class="min-w-0">
+        <p class="font-black text-slate-900 text-lg leading-tight italic uppercase truncate">
+          <%= @booking.user.nickname.presence || @booking.user.first_name %>
+        </p>
+        <div class="flex items-center gap-2 mt-0.5">
+          <span class="text-[9px] font-black uppercase tracking-tighter <%= @booking.user.has_booking_access? ? 'text-green-500' : 'text-red-500' %>">
+            <%= @booking.user.has_booking_access? ? '● ACTIVO' : '● SIN PAGO' %>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div id="check_in_action_<%= @booking.id %>" class="shrink-0">
+      <%= render "admin/class_schedules/partials/booking_row", booking: @booking %>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,4 @@
+<%# app/views/admin/bookings/update_mastermind.turbo_stream.erb %>
+<%= turbo_stream.replace dom_id(@booking) do %>
+  <%= render "admin/class_schedules/partials/booking_row", booking: @booking %>
+<% end %>

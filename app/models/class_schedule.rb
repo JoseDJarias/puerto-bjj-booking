@@ -79,16 +79,37 @@ class ClassSchedule < ApplicationRecord
 
 # --- SPOTS LOGIC ---
   def spots_left
-    capacity - active_bookings.count
+    capacity - active_bookings_count
   end
   
   def full?
+    spots_left=1
     spots_left <= 0
   end
   
   # Helper to show in the UI: "18:30 - 19:30"
   def time_range
     "#{starts_at.strftime('%l:%M %p').strip} - #{ends_at.strftime('%l:%M %p').strip}"
+  end
+
+  def active_bookings_list
+    bookings.to_a.select { |b| b.confirmed? || b.attended? }
+  end
+
+  def fresh_active_bookings
+    bookings.where(status: [:confirmed, :attended]).order(:created_at)
+  end
+
+  def active_bookings_count
+    bookings.to_a.count { |b| b.confirmed? || b.attended? }
+  end
+
+  def attended_bookings_count
+    bookings.to_a.count(&:attended?)
+  end
+
+  def blocked_bookings_count
+    bookings.to_a.count(&:blocked?).size
   end
 
   # --- THE MAGIC: BULK GENERATOR ---

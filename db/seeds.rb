@@ -91,6 +91,7 @@ puts "   ✓ Users created with identification"
 
 # 7. Horarios de Clase
 puts "📅 Creating Class Schedules..."
+instructor = User.find_by!(email_address: "instructor@puertobjj.com")
 base = 1.day.from_now.beginning_of_day
 [
   [jiujitsu, base + 9.hours],

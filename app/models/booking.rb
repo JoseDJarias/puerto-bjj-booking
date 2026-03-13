@@ -16,7 +16,8 @@
       cancelled_user: 1, 
       cancelled_admin: 2, 
       attended: 3, 
-      no_show: 4 
+      no_show: 4,
+      blocked: 5
     }
 
     # --- SCOPES ---
@@ -33,6 +34,7 @@
 
     # --- REALTIME UPDATES (Turbo Streams) ---
     after_commit :broadcast_realtime_updates_for_users
+    
     after_update :process_attendance_payment, if: -> { attended? && saved_change_to_status? }
     
     def active_status?
@@ -56,6 +58,14 @@
     # Handles the initial creation or toggle, with locks and validations.
     def handle_user_action!(actor)
       class_schedule.with_lock do
+
+        if !active_status?
+          unless actor.admin? || !class_schedule.full?
+            errors.add(:base, "Lo sentimos, la clase ya no tiene cupos disponibles.")
+            return false
+          end
+        end
+
         if new_record?
           self.status = :confirmed
           self.changed_by = actor
@@ -143,6 +153,9 @@
       # 3. Update Participants List (Public)
       broadcast_participants_list_update
 
+      # 4. Update Admin Sidebar (Private)
+      broadcast_admin_sidebar_update
+
     end
 
     def broadcast_spots_update
@@ -168,6 +181,26 @@
                             target: "participants_container_#{class_schedule_id}",
                             partial: "class_schedules/partials/participants_list",
                             locals: { schedule: class_schedule }
+      # Update Admin Attendance List
+      broadcast_replace_to "schedule_#{class_schedule_id}",
+                       target: "attendance_list_#{class_schedule_id}",
+                       partial: "admin/class_schedules/partials/attendance_list",
+                       locals: { schedule: class_schedule }
+    end
+
+    def broadcast_admin_sidebar_update
+      if cancelled_user? || cancelled_admin?
+        broadcast_append_to "schedule_#{class_schedule_id}",
+                            target: "users_available_list",
+                            partial: "admin/class_schedules/partials/user_sidebar_item",
+                            locals: { user: user }
+      end
+    
+      if confirmed? || attended?
+        # Remove it from the sidebar in all Admin browsers
+        broadcast_remove_to "schedule_#{class_schedule_id}",
+                            target: "user_sidebar_item_#{user.id}"
+      end
     end
 
   end

@@ -73,6 +73,8 @@
           </div>
           <div class="p-4 space-y-4 flex-1 min-h-[140px]">
             <% ( @schedules_by_date[day] || [] ).each do |schedule| %>
+            <%= turbo_stream_from "schedule_#{schedule.id}" %>
+            <%= turbo_stream_from [@user, "bookings"] %>
               <%= render "class_schedules/partials/calendar_card", schedule: schedule, user: @user %>
             <% end %>
           </div>

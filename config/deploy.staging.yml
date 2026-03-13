@@ -1,0 +1,27 @@
+# Staging Configuration - Inherits from deploy.yml with overrides
+service: puerto_bjj_booking_staging
+
+servers:
+  web:
+    hosts:
+      - 5.161.77.124
+
+proxy:
+  ssl: true
+  hosts:
+    - staging.booking.puertojiujitsu.com
+    - www.staging.booking.puertojiujitsu.com
+
+env:
+  secret:
+    - RAILS_MASTER_KEY
+  clear:
+    RAILS_ENV: staging
+    RAILS_LOG_TO_STDOUT: true
+    SOLID_QUEUE_IN_PUMA: true
+    DATABASE_URL: sqlite3:/rails/db/staging.sqlite3
+
+volumes:
+  - "puerto_bjj_staging_storage:/rails/storage"
+  - "puerto_bjj_staging_uploads:/rails/public/uploads"
+

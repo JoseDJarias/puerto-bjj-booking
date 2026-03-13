@@ -2,16 +2,15 @@
 service: puerto_bjj_booking
 
 # Name of the container image (use your-user/app-name on external registries).
-image: puerto_bjj_booking
+image: daniel01ariasjaen/puerto_bjj_booking
 
 # Deploy to these servers.
 servers:
   web:
-    - 192.168.0.1
+    - 5.161.77.124
   # job:
   #   hosts:
   #     - 192.168.0.1
-  #   cmd: bin/jobs
 
 # Enable SSL auto certification via Let's Encrypt and allow for multiple apps on a single web server.
 # If used with Cloudflare, set encryption mode in SSL/TLS setting to "Full" to enable CF-to-app encryption.
@@ -20,17 +19,24 @@ servers:
 #
 # Don't use this when deploying to multiple web servers (then you have to terminate SSL at your load balancer).
 #
-# proxy:
-#   ssl: true
-#   host: app.example.com
+proxy:
+  ssl: true
+  hosts:
+    - booking.puertojiujitsu.com
+    - www.booking.puertojiujitsu.com
 
 # Where you keep your container images.
 registry:
   # Alternatives: hub.docker.com / registry.digitalocean.com / ghcr.io / ...
-  server: localhost:5555
+  # server: localhost:5555
 
   # Needed for authenticated registries.
   # username: your-user
+  username: daniel01ariasjaen
+
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
 
   # Always use an access token rather than real password when possible.
   # password:
@@ -70,6 +76,8 @@ aliases:
 # Recommended to change this to a mounted volume path that is backed up off server.
 volumes:
   - "puerto_bjj_booking_storage:/rails/storage"
+  - "puerto_bjj_public:/rails/public"
+
 
 # Bridge fingerprinted assets, like JS and CSS, between versions to avoid
 # hitting 404 on in-flight requests. Combines all files from new and old
@@ -93,6 +101,8 @@ builder:
 # Use a different ssh user than root
 # ssh:
 #   user: app
+ssh:
+  user: daniel_01
 
 # Use accessory services (secrets come from .kamal/secrets).
 # accessories:

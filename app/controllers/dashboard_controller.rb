@@ -28,6 +28,7 @@ class DashboardController < ApplicationController
     elsif @user.approved?
       @packages = MembershipPackage.active.includes(:class_types)
       @plans = MembershipPlan.active.order(duration_months: :asc)
+      @is_first_time = @user.memberships.none? && @user.drop_in_tickets.none?
     end
     
     # Case 3: If the user is pending_approval, the view will use directly @user.pending_approval?

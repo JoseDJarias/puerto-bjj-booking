@@ -6,17 +6,33 @@ module Admin
 
     def index
       start_date = params.fetch(:start_date, Date.current).to_date
+      
+      # monthly calendar
       @class_schedules = ClassSchedule.for_range(start_date.beginning_of_month, start_date.end_of_month)
                                       .includes(:class_type, :instructor)
     end
 
     def show
-      @bookings = @class_schedule.bookings
-                                 .includes(:user)
-                                 .order(status: :asc, updated_at: :desc)
+      @class_schedule = ClassSchedule.includes(
+        :class_type,
+        :instructor,
+        bookings: { user: [:memberships, :drop_in_tickets] }
+        ).find(params[:id])
+      @bookings = @class_schedule.bookings.order(status: :asc, updated_at: :desc)
       
-      booked_user_ids = @class_schedule.bookings.active.pluck(:user_id)
-      @users_available = User.where.not(id: booked_user_ids).order(:first_name)
+      # modal: manual search
+      booked_user_ids = @class_schedule.active_bookings_list.map(&:user_id)
+      @users_available = User.includes(:memberships, :drop_in_tickets)
+                        .where.not(id: booked_user_ids)
+                        .order(:first_name)
+                        
+      respond_to do |format|
+        format.html { 
+          # If it's a Turbo Frame request, remove the layout
+          layout = turbo_frame_request? ? false : "admin"
+          render layout: layout 
+        }
+      end
     end
 
     def new
@@ -37,25 +53,60 @@ module Admin
     end
 
     def update
-      if @class_schedule.update(class_schedule_params)
-        redirect_to admin_class_schedules_path, notice: t('admin.class_schedules.flash.updated')
+      # 1. If the 'action_type' parameter is present, it's a quick attendance action
+      if params[:action_type].present?
+        # Here you need to find the BOOKING, not the class. 
+        # Make sure to send the booking_id in your attendance buttons.
+        @booking = Booking.find(params[:booking_id]) 
+        
+        target_status = case params[:action_type]
+                        when "check_in"
+                          @booking.attended? ? "confirmed" : "attended"
+                        when "toggle_block"
+                          @booking.blocked? ? "confirmed" : "blocked"
+                        else
+                          @booking.status
+                        end
+    
+        if @booking.update_status!(target_status, current_user)
+          respond_to do |format|
+            format.turbo_stream { render "admin/bookings/update" } # O donde tengas tu stream
+            format.html { redirect_back fallback_location: admin_dashboard_path }
+          end
+        end
+    
+      # 2. If there is no action_type, it's the normal form edit of the class
       else
-        set_collections
-        render :edit, status: :unprocessable_entity
+        if @class_schedule.update(class_schedule_params)
+          redirect_to admin_class_schedule_path(@class_schedule), notice: "Clase actualizada correctamente."
+        else
+          render :edit, status: :unprocessable_entity
+        end
       end
     end
-
     # app/controllers/admin/class_schedules_controller.rb
     def attendance
       @schedule = ClassSchedule.find(params[:id])
-      @bookings = @schedule.bookings.active.includes(:user).joins(:user).order("users.first_name ASC")
-
-      enrolled_user_ids = @bookings.pluck(:user_id)
       
-      # Get all active users that are not enrolled
+      active_statuses = [0, 3] 
+    
+      enrolled_user_ids = @schedule.bookings
+                                   .where(status: active_statuses)
+                                   .pluck(:user_id)
+                                   .compact
+                                   .uniq
+    
+      # Roster list
+      @bookings = @schedule.bookings
+                           .includes(user: [:memberships, :drop_in_tickets])
+                           .where(status: active_statuses)
+                           .order("users.first_name ASC")
+    
+      # Available users (Excluding the ones that have a place and the admin)
       @available_users = User.active
-                            .where.not(id: enrolled_user_ids)
-                            .order(:first_name)
+                             .includes(:memberships, :drop_in_tickets)
+                             .where.not(id: enrolled_user_ids + [1])
+                             .order(:first_name)
     end
 
     def destroy

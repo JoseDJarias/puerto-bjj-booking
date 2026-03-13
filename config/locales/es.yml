@@ -195,7 +195,6 @@ es:
       full_badge: "Clase Llena"
       available_suffix: "lugares libres"
       few_left: "¡Quedan pocos!"
-    
     index:
       public_title: "Próximas Clases"
       public_subtitle: "Reserva tu lugar en el tatami"
@@ -203,6 +202,9 @@ es:
       view_participants: "Ver participantes"
       free_day: "Día Libre"
       free_day_description: "No hay clases programadas para este dío."
+      present: "Presente"
+      badge_you: "Tu"
+      no_participants: "No hay participantes aún"
 
   # === ADMIN PANEL ===
   admin:
@@ -228,6 +230,24 @@ es:
       disciplines: "Disciplinas"
       packages: "Paquetes"
       packages_and_pricing: "Paquetes y precios"
+
+    dashboard:
+      index:
+        badge_command_center: "Centro de Mando"
+        badge_instructor: "Modo Instructor"
+        greeting: "¡OSS"
+        sessions_count: "%{count} Sesiones"
+        section_plan: "Plan Operativo"
+        section_my_classes: "Mis Clases"
+        today_block: "HOY (BLOQUE ACTUAL)"
+        tomorrow: "MAÑANA"
+        yesterday: "AYER"
+        today: "HOY"
+        viewing_block: "Viendo bloque del"
+        instructor_prefix: "Prof:"
+        no_instructor: "---"
+        take_attendance: "Pasar Lista"
+        no_classes: "No hay clases hoy"
 
     # --- Common CRUD Actions ---
     common:
@@ -287,6 +307,10 @@ es:
       flash:
         created: "Paquete creado correctamente."
         updated: "Paquete actualizado correctamente."
+
+    bookings:
+      flash:
+        enrolled: "Atleta inscrito con éxito"
 
     users:
       index:
@@ -433,6 +457,7 @@ es:
         heading: "Generador de Horarios"
         subtitle: "Programa las clases de la academia masivamente (Ej: Fundamentals Lunes y Miércoles 7pm)."
         back: "Volver al Calendario"
+        breadcrumb: "Programación Masiva"
       form:
         select_discipline: "Selecciona disciplina..."
         select_instructor: "Selecciona instructor..."
@@ -441,6 +466,7 @@ es:
         start_date: "Desde fecha"
         end_date: "Hasta fecha"
         submit_batch: "Generar Horario"
+        duration_unit: "min"
         capacity_help: "Máximo de alumnos en el tatami."
         cancelled_label: "Clase cancelada (no visible para reservas)"
       flash:
@@ -454,16 +480,20 @@ es:
         status_active: "● ACTIVO"
         status_no_payment: "● SIN PAGO"
         no_students: "No hay alumnos en lista<br>para esta clase"
+        empty_tatami: "Tatami vacío"
         add_manual: "Añadir Manual"
+        throw_out_confirm: "¿Quitar?"
       add_student_modal:
         title: "Añadir Alumno"
         search_placeholder: "Escribe un nombre o apodo..."
         show_without_membership: "Mostrar alumnos sin membresía activa"
         access_ok: "Acceso OK"
+        without_access: "Sin Acceso"
         no_membership: "Sin Membresía / Bloqueado"
         submit: "CONFIRMAR INSCRIPCIÓN"
     show:
       page_title: "Gestionar Clase"
+      edit_class: "Editar Clase"
       spots_label: "Cupos"
       attended_label: "Asistieron"
       roster_title: "Roster de Alumnos"
@@ -485,6 +515,11 @@ es:
       tips_title: "Tips de Administración"
       tips_text: "Usa el botón \"Check-in\" cuando veas al alumno entrar al tatami. Esto contará oficialmente su asistencia para reportes futuros."
       instructor_prefix: "Prof."
+      instructor: "Instructor"
+      present: "Presente"
+      inscription: "Inscripción"
+      manual: "Manual"
+      submit_enrollment: "Inscribir Atleta"
     edit:
       page_title: "Editar Clase"
       breadcrumb_calendar: "Calendario"

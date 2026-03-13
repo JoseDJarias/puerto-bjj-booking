@@ -1,14 +1,16 @@
 module MembershipValidator
   extend ActiveSupport::Concern
 
-  # Responds: "Do we show active_member or pricing_options?"
   def has_booking_access?
     return true if admin?
-    return false unless eligible?  # Authorizable
+    return false unless eligible?
 
-    current_memberships.exists? ||
-      drop_in_active_today? ||
-      unused_tickets?
+    has_membership = memberships.to_a.any? { |m| m.active? && m.end_date >= Date.current }
+    
+    has_drop_in = drop_in_tickets.to_a.any? { |t| t.covers_date?(Date.current) }
+    has_unused_ticket = drop_in_tickets.to_a.any?(&:unused?)
+
+    has_membership || has_drop_in || has_unused_ticket
   end
 
   # Responds: "Does the user have access to this class?"

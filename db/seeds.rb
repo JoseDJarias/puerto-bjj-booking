@@ -64,58 +64,30 @@ puts "   ✓ Created 3 packages"
   MembershipPricing.create!(membership_package: pkg, membership_plan: trimestre, price: price_base * 2.5)
 end
 
-# 6. Usuarios corregidos con identificación
-puts "👥 Creating Users (Admin, Instructor, Member)..."
+puts "👥 Creating Users..."
 
-# ADMIN
-User.find_or_create_by!(email_address: "admin@puertobjj.com") do |u|
-  u.password = "password123"
-  u.role = :admin
-  u.first_name = "Daniel"
-  u.last_name = "Admin"
-  u.identification = "1-1111-1111" # Agregado
-  u.phone_number = "88880001"
-  u.approved_at = Time.current
+# 6. Usuarios (Usando una forma más robusta)
+users_data = [
+  { email_address: "admin@puertobjj.com", password: "password123", role: "admin", first_name: "Daniel", last_name: "Admin", identification: "111", phone_number: "88880001" },
+  { email_address: "instructor@puertobjj.com", password: "password123", role: "instructor", first_name: "Carlos", last_name: "Gracie", identification: "222", phone_number: "88880002" },
+  { email_address: "member@puertobjj.com", password: "password123", role: "member", first_name: "Daniel", last_name: "Arias", identification: "333", phone_number: "88880003" }
+]
+
+users_data.each do |data|
+  user = User.find_or_initialize_by(email_address: data[:email_address])
+  user.assign_attributes(data)
+  user.approved_at = Time.current
+  
+  if user.save
+    puts "   ✓ User #{data[:email_address]} created/updated"
+  else
+    puts "   ❌ Error creating #{data[:email_address]}: #{user.errors.full_messages.join(', ')}"
+    # Esto evitará que el bin/rails aborted! nos oculte el error
+  end
 end
 
-# INSTRUCTOR
-User.find_or_create_by!(email_address: "instructor@puertobjj.com") do |u|
-  u.password = "password123"
-  u.role = :instructor
-  u.first_name = "Carlos"
-  u.last_name = "Gracie"
-  u.identification = "2-2222-2222" # Agregado
-  u.phone_number = "88880002"
-  u.approved_at = Time.current
-end
+ts "   ✓ Users created with identification"
 
-# MEMBER
-User.find_or_create_by!(email_address: "member@puertobjj.com") do |u|
-  u.password = "password123"
-  u.role = :member
-  u.first_name = "Daniel"
-  u.last_name = "Arias"
-  u.identification = "3-3333-3233" # Agregado
-  u.phone_number = "88880003"
-  u.approved_at = Time.current
-end
-3.times { member.drop_in_tickets.create!(price_paid: 5000) }
-
-puts "   ✓ Users created with identification"
-
-# OTRO MIEMBRO (Ana solo con membresía específica)
-member_ana = User.find_or_create_by!(email_address: "ana@puertobjj.com") do |u|
-  u.password = "password123"
-  u.role = :member
-  u.first_name = "Ana"
-  u.last_name = "Rodriguez"
-  u.identification = "3-3333-3333" # Agregado
-  u.phone_number = "88880004"
-  u.approved_at = Time.current
-end
-Membership.create!(user: member_ana, membership_plan: mensual, membership_package: jj_pkg, start_date: Date.current)
-
-puts "   ✓ Users and memberships created"
 
 # 7. Horarios de Clase
 puts "📅 Creating Class Schedules..."

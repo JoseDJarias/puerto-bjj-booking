@@ -1,0 +1,14 @@
+<%# app/views/admin/class_schedules/partials/_attendance_list.html.erb %>
+<div id="attendance_list_<%= schedule.id %>" class="divide-y divide-slate-50">
+  <% active_list = schedule.fresh_active_bookings %>
+  
+  <% if active_list.empty? %>
+    <div id="empty_tatami_msg" class="p-16 text-center italic text-slate-300 uppercase text-xs font-black tracking-widest">
+      <%= t('admin.class_schedules.attendance.empty_tatami') %>
+    </div>
+  <% else %>
+    <% active_list.each do |booking| %>
+      <%= render "admin/class_schedules/partials/booking_row", booking: booking %>
+    <% end %>
+  <% end %>
+</div>

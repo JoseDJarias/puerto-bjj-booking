@@ -25,7 +25,7 @@ class ClassSchedule < ApplicationRecord
       where(starts_at: date.beginning_of_day..date.end_of_day).order(:starts_at)
     }
   scope :upcoming_logical, -> {
-    where("datetime(starts_at, 'localtime') >= ?", Time.zone.now.strftime("%Y-%m-%d %H:%M:%S")).order(starts_at: :asc)
+    where("starts_at >= ?", Time.zone.now).order(starts_at: :asc)
   }
   scope :past_logical, -> { 
     where("starts_at < ?", operative_date.beginning_of_day).order(starts_at: :desc) 

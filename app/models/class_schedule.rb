@@ -1,7 +1,7 @@
 class ClassSchedule < ApplicationRecord
   belongs_to :class_type
   belongs_to :instructor, class_name: "User"
-  has_many :bookings
+  has_many :bookings, dependent: :destroy
   has_many :active_bookings, -> { active }, class_name: "Booking"
 
   GRACE_PERIOD_MINUTES = 20

@@ -5,12 +5,18 @@ class ClassSchedule < ApplicationRecord
   has_many :active_bookings, -> { active }, class_name: "Booking"
 
   GRACE_PERIOD_MINUTES = 20
-  BOOKING_OPEN_HOUR = 23
+  BOOKING_OPEN_HOUR = 20
 
   validates :starts_at, presence: true
   validates :duration_minutes, numericality: { greater_than: 0 }
   validates :capacity, numericality: { greater_than: 0 }
   scope :active, -> { where(cancelled: false) }
+  # app/models/class_schedule.rb
+  scope :matching_schedule, ->(days, time_string) {
+    # Añadimos 'localtime' para que SQLite convierta de UTC a tu hora antes de comparar
+    where("strftime('%w', starts_at, 'localtime') IN (?)", days.map(&:to_s))
+      .where("strftime('%H:%M', starts_at, 'localtime') = ?", time_string)
+  }
   # Booking day rolls at 23:00: after 11 PM user sees next calendar day's classes.
   def self.operative_date
     Time.zone.now.hour >= BOOKING_OPEN_HOUR ? Date.tomorrow : Date.current

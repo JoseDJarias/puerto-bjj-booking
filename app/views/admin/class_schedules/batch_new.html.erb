@@ -23,24 +23,44 @@
       <%= form_with url: batch_create_admin_class_schedules_path, method: :post, scope: :class_schedule, class: "space-y-10" do |f| %>
         
         <%# 1. Discipline and Instructor %>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div class="space-y-2">
-            <%= f.label :class_type_id, class: "text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1" %>
-            <div class="relative group">
-              <%= f.collection_select :class_type_id, @class_types, :id, :name, { prompt: t('admin.class_schedules.form.select_discipline') }, { class: "appearance-none block w-full bg-slate-800 border-slate-700 rounded-2xl py-4 pl-5 pr-12 text-sm font-bold text-white focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer" } %>
-              <div class="absolute inset-y-0 right-5 flex items-center pointer-events-none text-slate-500 group-hover:text-indigo-400 transition-colors">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M19 9l-7 7-7-7" /></svg>
-              </div>
-            </div>
+        <%# 1. DISCIPLINE SELECTOR (Visual Cards) %>
+        <div class="space-y-4">
+          <label class="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em] ml-1">
+            <%= t('admin.class_schedules.form.select_discipline') %>
+          </label>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <% @class_types.each do |type| %>
+              <label class="group relative cursor-pointer">
+                <input type="radio" name="class_schedule[class_type_id]" value="<%= type.id %>" class="sr-only peer" required>
+                <div class="p-4 rounded-3xl bg-slate-800 border-2 border-slate-700 transition-all duration-300 peer-checked:bg-indigo-600 peer-checked:border-indigo-400 peer-checked:shadow-[0_0_20px_rgba(79,70,229,0.2)] group-hover:border-slate-500 flex flex-col items-center gap-2 text-center h-full justify-center">
+                  <span class="text-xs font-black text-slate-300 peer-checked:text-white uppercase leading-tight">
+                    <%= type.name %>
+                  </span>
+                </div>
+              </label>
+            <% end %>
           </div>
-          <div class="space-y-2">
-            <%= f.label :instructor_id, class: "text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1" %>
-            <div class="relative group">
-              <%= f.collection_select :instructor_id, @instructors, :id, :first_name, { prompt: t('admin.class_schedules.form.select_instructor') }, { class: "appearance-none block w-full bg-slate-800 border-slate-700 rounded-2xl py-4 pl-5 pr-12 text-sm font-bold text-white focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer" } %>
-              <div class="absolute inset-y-0 right-5 flex items-center pointer-events-none text-slate-500 group-hover:text-indigo-400 transition-colors">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M19 9l-7 7-7-7" /></svg>
-              </div>
-            </div>
+        </div>
+
+        <%# 2. INSTRUCTOR SELECTOR (Circular Avatars/Initials) %>
+        <div class="space-y-4 mt-8">
+          <label class="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em] ml-1">
+            <%= t('admin.class_schedules.form.select_instructor') %>
+          </label>
+          <div class="flex flex-wrap gap-4">
+            <% @instructors.each do |instructor| %>
+              <label class="group relative cursor-pointer">
+                <input type="radio" name="class_schedule[instructor_id]" value="<%= instructor.id %>" class="sr-only peer" required>
+                <div class="flex items-center gap-3 px-5 py-3 rounded-2xl bg-slate-800 border-2 border-slate-700 transition-all duration-300 peer-checked:bg-slate-700 peer-checked:border-indigo-500 group-hover:border-slate-500">
+                  <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-[10px] font-black text-white uppercase">
+                    <%= instructor.first_name[0] %><%= instructor.last_name.to_s[0] %>
+                  </div>
+                  <span class="text-xs font-bold text-slate-300 peer-checked:text-white uppercase">
+                    <%= instructor.first_name %>
+                  </span>
+                </div>
+              </label>
+            <% end %>
           </div>
         </div>
 
@@ -95,9 +115,26 @@
           </div>
         </div>
 
-        <div class="flex items-center justify-end pt-10 border-t border-slate-800/50 mt-10">
-          <%= f.submit t('admin.class_schedules.form.submit_batch'), class: "w-full md:w-auto px-12 py-5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-indigo-500/20 transition-all active:scale-95 cursor-pointer" %>
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6 pt-10 border-t border-slate-800/50 mt-10">
+          <%# Botón de ELIMINACIÓN MASIVA (Izquierda) %>
+          <button type="submit" 
+                  name="bulk_action" 
+                  value="destroy" 
+                  data-turbo-confirm="¿ESTÁS SEGURO? Esta acción eliminará TODAS las clases que coincidan con estos días, horas y rango de fechas, incluyendo sus reservas."
+                  class="w-full md:w-auto px-8 py-5 bg-red-500/10 hover:bg-red-600 border border-red-500/20 text-red-500 hover:text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all active:scale-95 flex items-center justify-center gap-3 group">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+              <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            <%= t('admin.class_schedules.form.destroy_batch') %>
+          </button>
+
+          <%# Botón de CREACIÓN MASIVA (Derecha) %>
+          <%= f.submit t('admin.class_schedules.form.submit_batch'), 
+              name: "bulk_action", 
+              value: "create",
+              class: "w-full md:w-auto px-12 py-5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-indigo-500/20 transition-all active:scale-95 cursor-pointer" %>
         </div>
+      
       <% end %>
     </div>
   </div>

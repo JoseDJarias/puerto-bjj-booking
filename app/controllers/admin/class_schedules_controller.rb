@@ -1,6 +1,6 @@
 module Admin
   class ClassSchedulesController < OperationsController
-    before_action :require_admin, only: %i[new create edit update destroy batch_new batch_create]
+    before_action :require_admin, only: %i[new create edit update destroy batch_new process_batch]
     before_action :set_class_schedule, only: %i[show edit update destroy attendance]
     before_action :set_collections, only: %i[new edit batch_new]
 
@@ -121,7 +121,8 @@ module Admin
       @default_end = 3.months.from_now.to_date
     end
 
-    def batch_create
+    def process_batch
+      #Create and batch destroy of classes
       schedule_data = params[:schedule]
       days = schedule_data[:days].select(&:present?).map(&:to_i)
       discipline_id = params[:class_schedule][:class_type_id]

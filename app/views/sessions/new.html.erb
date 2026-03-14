@@ -14,7 +14,7 @@
   </div>
 
   <!-- Password Field -->
-  <div class="mb-6">
+  <div class="mb-5">
     <%= form.label :password, t('auth.sign_in.password_label'), class: "mb-2 block text-sm font-medium text-slate-700" %>
     <%= form.password_field :password,
         required: true,
@@ -22,6 +22,14 @@
         placeholder: t('auth.sign_in.password_placeholder'),
         maxlength: 72,
         class: "block w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/10" %>
+  </div>
+
+  <!-- Remember me -->
+  <div class="mb-6">
+    <label class="flex items-center gap-2 cursor-pointer">
+      <%= form.check_box :remember_me, { class: "rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" }, "1", "0" %>
+      <span class="text-sm text-slate-700"><%= t('auth.sign_in.remember_me') %></span>
+    </label>
   </div>
 
   <!-- Submit Button -->

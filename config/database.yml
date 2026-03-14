@@ -9,49 +9,21 @@ default: &default
   max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
 
-staging:
+staging: &staging_config
   primary:
-    adapter: sqlite3
-    database: /rails/storage/staging.sqlite3
-    max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-    timeout: 5000
+    <<: *default
+    database: storage/staging.sqlite3
   cache:
-    adapter: sqlite3
-    database: /rails/storage/staging.sqlite3
-    migrations_paths: db/cache_migrate
-    max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-    timeout: 5000
-  queue:
-    adapter: sqlite3
-    database: /rails/storage/staging.sqlite3
-    migrations_paths: db/queue_migrate
-    max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-    timeout: 5000
-  cable:
-    adapter: sqlite3
-    database: /rails/storage/staging.sqlite3
-    migrations_paths: db/cable_migrate
-    max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-    timeout: 5000
-
-# Esta es la sección que Kamal busca específicamente
-puerto_bjj_booking_staging:
-  primary:
-    adapter: sqlite3
-    database: /rails/storage/staging.sqlite3
-    max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-    timeout: 5000
-  cache:
-    adapter: sqlite3
-    database: /rails/storage/staging.sqlite3
+    <<: *default
+    database: storage/staging_cache.sqlite3
     migrations_paths: db/cache_migrate
   queue:
-    adapter: sqlite3
-    database: /rails/storage/staging.sqlite3
+    <<: *default
+    database: storage/staging_queue.sqlite3
     migrations_paths: db/queue_migrate
   cable:
-    adapter: sqlite3
-    database: /rails/storage/staging.sqlite3
+    <<: *default
+    database: storage/staging_cable.sqlite3
     migrations_paths: db/cable_migrate
 
 development:

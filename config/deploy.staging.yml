@@ -21,6 +21,5 @@ env:
     SOLID_QUEUE_IN_PUMA: true
 
 volumes:
-  - "puerto_bjj_staging_storage:/rails/storage"
-  - "puerto_bjj_staging_uploads:/rails/public/uploads"
-
+  - "puerto_bjj_booking_staging_storage:/rails/storage"
+  - "puerto_bjj_booking_staging_uploads:/rails/public/uploads"

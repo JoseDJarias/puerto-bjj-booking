@@ -11,8 +11,36 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   test "create with valid credentials" do
     post session_path, params: { email_address: @user.email_address, password: "password" }
 
-    assert_redirected_to root_path
+    assert_redirected_to admin_dashboard_path
     assert cookies[:session_id]
+  end
+
+  test "create with remember_me sets permanent cookie" do
+    post session_path, params: {
+      email_address: @user.email_address,
+      password: "password",
+      remember_me: "1"
+    }
+
+    assert_redirected_to admin_dashboard_path
+    set_cookies = Array(response.headers["Set-Cookie"])
+    session_id_cookie = set_cookies.find { |c| c.start_with?("session_id=") }
+    assert session_id_cookie, "Expected Set-Cookie for session_id"
+    assert_includes session_id_cookie, "expires=", "Remember me should set permanent cookie with expiry"
+  end
+
+  test "create without remember_me sets session cookie" do
+    post session_path, params: {
+      email_address: @user.email_address,
+      password: "password",
+      remember_me: "0"
+    }
+
+    assert_redirected_to admin_dashboard_path
+    set_cookies = Array(response.headers["Set-Cookie"])
+    session_id_cookie = set_cookies.find { |c| c.start_with?("session_id=") }
+    assert session_id_cookie, "Expected Set-Cookie for session_id"
+    assert_not_includes session_id_cookie, "expires=", "Without remember me should set session cookie without expiry"
   end
 
   test "create with invalid credentials" do

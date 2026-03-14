@@ -1,11 +1,8 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
-  description: MyText
-  active: false
+bjj_gi:
+  name: "BJJ Gi"
+  active: true
+  updated_at: <%= Time.current %>
+  created_at: <%= Time.current %>
 
-two:
-  name: MyString
-  description: MyText
-  active: false

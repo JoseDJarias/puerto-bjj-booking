@@ -1,11 +1,6 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  membership_package: one
-  membership_plan: one
-  price: 9.99
-
-two:
-  membership_package: two
-  membership_plan: two
-  price: 9.99
+  membership_package: unlimited
+  membership_plan: monthly
+  price: 100.0

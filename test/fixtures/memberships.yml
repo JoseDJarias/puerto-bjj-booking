@@ -1,17 +1,10 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  user: one
-  membership_plan: one
-  membership_package: one
-  start_date: 2026-02-05
-  end_date: 2026-02-05
-  status: 1
-
-two:
-  user: two
-  membership_plan: two
-  membership_package: two
-  start_date: 2026-02-05
-  end_date: 2026-02-05
-  status: 1
+  user: admin                   # Debe existir en users.yml
+  membership_package: unlimited
+  membership_plan: monthly # Debe existir en membership_plans.yml
+  start_date: <%= Date.current %>
+  end_date: <%= 1.month.from_now %>
+  status: 0
+  amount_paid: 100.0

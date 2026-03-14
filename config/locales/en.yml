@@ -54,3 +54,7 @@ en:
       payment_info: "Payment at reception"
       recurring_title: "Regular plans"
       drop_in_title: "Drop-in tickets"
+
+  auth:
+    sign_in:
+      remember_me: "Keep me signed in"

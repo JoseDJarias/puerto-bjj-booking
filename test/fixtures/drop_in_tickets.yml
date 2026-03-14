@@ -4,8 +4,12 @@
 # model remove the "{}" from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one: {}
-# column: value
-#
-two: {}
-# column: value
+ticket_one:
+  user: admin  # Debe coincidir con el nombre que tengas en users.yml
+  status: 0
+  price_paid: 15.0
+
+ticket_two:
+  user: admin
+  status: 0
+  price_paid: 15.0

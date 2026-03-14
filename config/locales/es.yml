@@ -110,6 +110,7 @@ es:
       email_placeholder: "tu@ejemplo.com"
       password_label: "Contraseña"
       password_placeholder: "••••••••"
+      remember_me: "Mantenerme conectado"
       submit_button: "Iniciar sesión"
       forgot_password: "¿Olvidaste tu contraseña?"
       divider: "o"

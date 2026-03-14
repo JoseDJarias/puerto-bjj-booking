@@ -4,8 +4,16 @@
 # model remove the "{}" from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one: {}
-# column: value
+one:
+  starts_at: <%= Time.current + 2.hours %>
+  duration_minutes: 60
+  capacity: 20
+  instructor: admin # O el nombre que tengas en users.yml
+  class_type: bjj_gi # El nombre que tengas en class_types.ymlue
 #
-two: {}
-# column: value
+two:
+  starts_at: <%= Time.current + 4.hours %>
+  duration_minutes: 60
+  capacity: 20
+  instructor: admin # O el nombre que tengas en users.yml
+  class_type: bjj_gi # El nombre que tengas en class_types.yml

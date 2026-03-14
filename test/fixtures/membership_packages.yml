@@ -1,13 +1,6 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
-  description: MyText
-  price_modifier: 9.99
-  active: false
-
-two:
-  name: MyString
-  description: MyText
-  price_modifier: 9.99
-  active: false
+unlimited:
+  name: "Plan Ilimitado"
+  active: true
+  price_modifier: 0.0

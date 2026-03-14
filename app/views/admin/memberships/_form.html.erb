@@ -10,7 +10,7 @@
         <%= t("admin.memberships.form.step_student") %>
       </h3>
 
-      <%= f.collection_select :user_id, User.order(:first_name), :id, :first_name,
+      <%= f.collection_select :user_id, User.order(:first_name), :id, :full_legal_name,
           { prompt: t("admin.memberships.form.search_student_prompt") },
           { class: "block w-full rounded-xl border-slate-300 py-3 px-4 focus:ring-indigo-600" } %>
     </section>

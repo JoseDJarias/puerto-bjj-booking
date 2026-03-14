@@ -46,7 +46,7 @@ Rails.application.routes.draw do
       collection do
         # Routes for the bulk generator
         get :batch_new    # The "Generate Schedule" form
-        post :batch_create # The action that creates the records
+        post :process_batch # The action that creates the records
       end
       member do
         get :attendance

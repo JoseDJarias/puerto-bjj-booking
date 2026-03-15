@@ -15,7 +15,7 @@ class User < ApplicationRecord
   validates :nickname, uniqueness: { allow_blank: true }
   validates :password, length: { minimum: 8 }, allow_nil:true
 
-
+  # Identification validation
   before_validation :normalize_identification
   validates :identification, presence: true, uniqueness: true
   validate :flexible_identification_check

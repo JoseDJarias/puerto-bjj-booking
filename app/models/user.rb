@@ -8,6 +8,8 @@ class User < ApplicationRecord
   has_many :drop_in_tickets, dependent: :destroy
   has_many :bookings, dependent: :destroy
 
+  validates :first_name, presence: true
+  validates :last_name, presence: true
   validates :email_address, presence: true, uniqueness: true,
             format: { with: URI::MailTo::EMAIL_REGEXP, message: :invalid }
   normalizes :email_address, with: ->(e) { e.strip.downcase }

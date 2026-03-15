@@ -16,7 +16,7 @@ class User < ApplicationRecord
             uniqueness: { allow_blank: true },
             format: { with: /\A[0-9]+\z/, message: :only_numbers, allow_blank: true }
   validates :nickname, uniqueness: { allow_blank: true }
-  validates :password, length: { minimum: 4 }, allow_nil: true, on: :update
+  validates :password, length: { minimum: 8 }, allow_nil:true
 
   def display_name
     nickname.presence || first_name

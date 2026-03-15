@@ -7,4 +7,5 @@ admin:
   password_digest: <%= BCrypt::Password.create('password') %>
   role: 2
   status: 1
+  identification: "111111111"
   approved_at: <%= Time.current %>

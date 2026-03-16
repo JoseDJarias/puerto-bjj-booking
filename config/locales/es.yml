@@ -14,6 +14,15 @@ es:
     am: "AM"
     pm: "PM"
 
+  number:
+    currency:
+      format:
+        unit: "₡"
+        precision: 0
+        separator: ","
+        delimiter: "."
+        format: "%u%n"
+
   date:
     formats:
       default: "%d/%m/%Y"

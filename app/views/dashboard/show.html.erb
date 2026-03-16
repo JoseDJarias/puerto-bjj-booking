@@ -20,10 +20,11 @@
         <p class="text-slate-500 font-medium mb-4 text-sm"><%= t('dashboard.welcome.greeting', name: @user.first_name) %></p>
         <p class="text-sm text-slate-600 mb-6 leading-relaxed"><%= t('dashboard.welcome.subtitle') %></p>
         
-        <%= link_to class_schedules_path, class: "inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white text-sm font-bold rounded-2xl shadow-lg shadow-indigo-100 active:scale-95 transition-all" do %>
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-          <%= t('dashboard.welcome.cta') %>
-        <% end %>
+        <button onclick="document.getElementById('classes-section').scrollIntoView({ behavior: 'smooth' })" 
+                class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white text-sm font-bold rounded-2xl shadow-lg shadow-indigo-100 active:scale-95 transition-all">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+          Ver mis próximas clases
+        </button>
       </div>
     </div>
 

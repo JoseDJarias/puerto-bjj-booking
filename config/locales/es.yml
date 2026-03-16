@@ -203,7 +203,7 @@ es:
       instructor_prefix: "Prof."
       view_participants: "Ver participantes"
       free_day: "Día Libre"
-      free_day_description: "No hay clases programadas para este dío."
+      free_day_description: "No hay clases programadas para este día."
       present: "Presente"
       badge_you: "Tu"
       no_participants: "No hay participantes aún"

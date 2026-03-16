@@ -653,7 +653,7 @@ es:
     
     attributes:
       user:
-        identification: "Cédula o Identificación"
+        identification: "Cédula o Pasaporte"
         first_name: "Nombre"
         last_name: "Apellido"
         phone_number: "Teléfono"

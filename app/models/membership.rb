@@ -51,18 +51,6 @@ class Membership < ApplicationRecord
       membership_plan_id: membership_plan_id
     )
     
-    final_price = pricing&.price || 0
-  
-    if final_price.positive? && user.present?
-      name = membership_package.name.downcase
-
-      if name.include?("boxeo") && user&.active_on?("jiujitsu")
-        final_price *= 0.5
-      elsif (name.include?("jiujitsu") || name.include?("mma")) && user&.active_on?("boxeo")
-        final_price *= 0.5
-      end
-    end
-  
-    self.amount_paid = final_price
+    self.amount_paid = pricing&.price || 0
   end 
 end

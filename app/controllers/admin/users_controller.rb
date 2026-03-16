@@ -3,7 +3,32 @@ module Admin
     before_action :set_user, only: %i[show edit update destroy approve]
 
     def index
-      @users = User.order(approved_at: :asc, created_at: :desc)
+      scope = User.includes(memberships: :membership_package).order(created_at: :desc)
+
+      case params[:filter]
+      when "pending"
+        scope = scope.pending
+      when "approved"
+        scope = scope.approved
+      when "inactive"
+        scope = scope.where(status: :inactive)
+      end
+
+      #Package Filtering
+      if params[:package_id].present?
+        scope = scope.joins(:memberships)
+                    .where(memberships: { 
+                      membership_package_id: params[:package_id],
+                      status: :active
+                    }).distinct
+      end
+
+      if params[:query].present?
+        scope = scope.search_by_query(params[:query])
+      end
+
+      @pagy, @users = pagy(:countless, scope, limit: 15)
+
     end
 
     def show
@@ -34,6 +59,8 @@ module Admin
         filtered_params.delete(:password_confirmation)
       end
 
+      @user.admin_editing_password = true
+
       if @user.update(filtered_params)
         redirect_to admin_users_path, notice: t('admin.users.flash.updated')
       else
@@ -47,8 +74,15 @@ module Admin
     end
 
     def approve
-      @user.update(approved_at: Time.current, status: :active)
-      redirect_to admin_users_path, notice: t('admin.users.flash.approved')
+      if @user.update(approved_at: Time.current, status: :active)
+        flash.now[:notice] = "Usuario #{@user.full_legal_name} aprobado correctamente."
+      else
+        flash.now[:alert] = "No se pudo aprobar: #{@user.errors.full_messages.to_sentence}"
+      end
+      respond_to do |format|
+        format.html { redirect_to admin_users_path, notice: flash[:notice] || flash[:alert] }
+        format.turbo_stream
+      end
     end
 
     private

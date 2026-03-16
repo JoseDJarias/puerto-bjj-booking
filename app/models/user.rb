@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   include Authorizable
   include MembershipValidator
+
+  attr_accessor :admin_editing_password
   
   has_secure_password
   has_many :sessions, dependent: :destroy
@@ -8,19 +10,42 @@ class User < ApplicationRecord
   has_many :drop_in_tickets, dependent: :destroy
   has_many :bookings, dependent: :destroy
 
+ #pending how to destroy a instructor user
+
   validates :first_name, presence: true
   validates :last_name, presence: true
   validates :email_address, presence: true, uniqueness: true,
             format: { with: URI::MailTo::EMAIL_REGEXP, message: :invalid }
   normalizes :email_address, with: ->(e) { e.strip.downcase }
-  validates :identification, presence: true, on: :create
   validates :nickname, uniqueness: { allow_blank: true }
   validates :password, length: { minimum: 8 }, allow_nil:true
-
+  
   # Identification validation
   before_validation :normalize_identification
-  validates :identification, presence: true, uniqueness: true
-  validate :flexible_identification_check
+  validates :identification, presence: true, unless: :admin_editing_password
+  validates :identification, uniqueness: true, if: -> { identification.present? && !admin_editing_password }
+  validate :flexible_identification_check, if: -> { identification.present? }
+
+  #Admin scope for accounts management
+  scope :pending, -> { where(approved_at: nil) }
+  scope :approved, -> { where.not(approved_at: nil) }
+  scope :active_status, -> { where(status: :active) }
+  scope :inactive_status, -> { where(status: :inactive) }
+  scope :by_membership_package, ->(package_id) {
+    joins(:memberships)
+      .where(memberships: { 
+        membership_package_id: package_id,
+        status: :active 
+      })
+      # Only memberships where TODAY is between the start and end date
+      .where("memberships.start_date <= ? AND memberships.end_date >= ?", Date.current, Date.current)
+      .distinct
+  }
+  scope :search_by_query, ->(query) {
+    return all if query.blank?
+    q = "%#{ActiveRecord::Base.sanitize_sql_like(query)}%"
+    where("first_name LIKE :q OR last_name LIKE :q OR email_address LIKE :q OR identification LIKE :q OR phone_number LIKE :q", q: q)
+  }
 
   def display_name
     nickname.presence || first_name
@@ -41,15 +66,25 @@ class User < ApplicationRecord
 
   def flexible_identification_check
     return if identification.blank?
-
-    # If it's only numbers and measures 9, it's a CR identification
-    if identification =~ /\A\d+\z/ && identification.length == 9
+  
+    # National (Only numbers)
+    if identification =~ /\A\d+\z/
+      # In CR the identification is sacred: 9 digits. 
+      # If someone puts 7, 8 or 10 numbers, it's a mistake of the finger the 99% of the times.
+      if identification.length == 9
+        return
+      else
+        errors.add(:identification, "debe tener exactamente 9 dígitos (Cédula CR). Si es un pasaporte numérico, verifíquelo con el Admin.")
+      end
       return
-    # If it's alphanumeric (letters/numbers) between 6 and 15 characters, it's a Passport/International identification
-    elsif identification =~ /\A[A-Z0-9]{6,15}\z/
+    end
+  
+    # Foreigner (Alphanumeric)
+    # A real passport almost always has a letter or is a format that we have already validated
+    if identification =~ /\A[A-Z0-9]{6,15}\z/
       return
     else
-      errors.add(:identification, "debe ser una cédula de 9 dígitos o un pasaporte válido (6-15 caracteres)")
+      errors.add(:identification, "formato de pasaporte inválido (debe tener entre 6 y 15 caracteres)")
     end
-  end  
+  end
 end

@@ -1,0 +1,51 @@
+<% if params[:page].to_i > 1 %>
+  <%# 1. ESCENARIO DE PAGINACIÓN: Solo añadimos los nuevos al final de la tabla %>
+  <%= turbo_stream.append "users_table_body" do %>
+    <%= render partial: "admin/users/partials/user", collection: @users, as: :user %>
+  <% end %>
+
+  <%# 2. Actualizamos el botón de "Cargar más" para que apunte a la página siguiente %>
+  <%= turbo_stream.replace "load_more_container" do %>
+    <% if @pagy.next %>
+      <div id="load_more_container" class="p-4 text-center border-t border-slate-100 bg-slate-50">
+        <%= link_to "Cargar más", admin_users_path(page: @pagy.next, query: params[:query], filter: params[:filter], package_id: params[:package_id]), data: { turbo_stream: true }, class: "text-sm font-bold text-indigo-600" %>
+      </div>
+    <% else %>
+      <div id="load_more_container"></div> <%# Se elimina el botón si no hay más páginas %>
+    <% end %>
+  <% end %>
+
+<% else %>
+  <%# 3. ESCENARIO DE FILTRO/BÚSQUEDA: Lo que ya tenías (reemplaza todo) %>
+  <%= turbo_stream.replace "users_list" do %>
+    <%= turbo_frame_tag "users_list" do %>
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-full divide-y divide-slate-200">
+          <%# Recomiendo incluir el thread aquí para que al buscar no se pierdan los títulos %>
+          <thead class="bg-slate-50">
+            <tr>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase text-slate-600">Usuario</th>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase text-slate-600">Rol</th>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase text-slate-600">Programa</th>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase text-slate-600">Estado</th>
+              <th scope="col" class="relative px-4 py-3"><span class="sr-only">Acciones</span></th>
+            </tr>
+          </thead>
+          <tbody id="users_table_body" class="divide-y divide-slate-200 bg-white">
+            <%= render partial: "admin/users/partials/user", collection: @users, as: :user %>
+          </tbody>
+        </table>
+      </div>
+
+      <% if @pagy.next %>
+        <div id="load_more_container" class="p-4 text-center border-t border-slate-100 bg-slate-50">
+          <%= link_to "Cargar más", admin_users_path(page: @pagy.next, query: params[:query], filter: params[:filter], package_id: params[:package_id]), data: { turbo_stream: true }, class: "text-sm font-bold text-indigo-600" %>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+
+   <%= turbo_stream.update "flash" do %>
+        <%= render partial: "layouts/flash", locals: { type: :notice, message: t('admin.users.flash.updated') } %>
+      <% end %>
+<% end %>

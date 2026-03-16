@@ -21,15 +21,28 @@ class ClassSchedule < ApplicationRecord
   def self.operative_date
     Time.zone.now.hour >= BOOKING_OPEN_HOUR ? Date.tomorrow : Date.current
   end
+
   scope :for_date, ->(date) {
       where(starts_at: date.beginning_of_day..date.end_of_day).order(:starts_at)
     }
-  scope :upcoming_logical, -> {
-    where("starts_at >= ?", Time.zone.now).order(starts_at: :asc)
-  }
+
+    scope :dashboard_upcoming, -> {
+      now = Time.zone.now
+      
+      start_time = now
+  
+      end_time = if now.hour >= BOOKING_OPEN_HOUR
+                   (Date.tomorrow + 1.day).beginning_of_day + 12.hours
+                 else
+                   Date.tomorrow.beginning_of_day + 12.hours
+                 end
+  
+      where(starts_at: start_time..end_time).order(starts_at: :asc)
+    }
+  
   scope :past_logical, -> { 
-    where("starts_at < ?", operative_date.beginning_of_day).order(starts_at: :desc) 
-  }
+    where("starts_at < ?", Time.zone.now).order(starts_at: :desc) 
+    }
 
   scope :visible_for, ->(user) {
     return all if user.admin?

@@ -7,7 +7,7 @@ class DashboardController < ApplicationController
     if @user.has_booking_access?
       my_bookings = @user.bookings.includes(class_schedule: [:class_type, :instructor])
 
-      @upcoming_bookings = ClassSchedule.upcoming_logical
+      @upcoming_bookings = ClassSchedule.dashboard_upcoming
                                         .visible_for(@user)
                                         .includes(:class_type, :instructor, :bookings)
                                         .limit(20)   

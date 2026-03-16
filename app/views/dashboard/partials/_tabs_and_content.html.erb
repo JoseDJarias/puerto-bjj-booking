@@ -33,15 +33,28 @@
   <%# --- PANEL 1: UPCOMING --- %>
   <div data-tabs-target="panel" class="animate-in fade-in duration-300">
     <% if upcoming.any? %>
-      <div class="grid gap-3">
-        <% upcoming.each do |schedule| %>
-        <%= turbo_stream_from "schedule_#{schedule.id}" %>
-          <%= render "class_schedules/partials/class_card_universal", 
-                     schedule: schedule, 
-                     user: @user, 
-                     context: :dashboard %>
+    <div class="grid gap-4">
+      <% current_date = nil %>
+      <% upcoming.each do |schedule| %>
+        
+        <%# Visual Day Separator %>
+        <% if schedule.starts_at.to_date != current_date %>
+          <% current_date = schedule.starts_at.to_date %>
+          <div class="flex items-center gap-3 mt-4 mb-2">
+            <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+              <%= current_date == Date.current ? "Hoy" : "Mañana" %>
+            </span>
+            <div class="h-px bg-slate-100 flex-1"></div>
+          </div>
         <% end %>
-      </div>
+
+        <%= turbo_stream_from "schedule_#{schedule.id}" %>
+        <%= render "class_schedules/partials/class_card_universal", 
+                   schedule: schedule, 
+                   user: @user, 
+                   context: :dashboard %>
+      <% end %>
+    </div>
     <% else %>
       <div class="bg-slate-50 border border-dashed border-slate-200 rounded-2xl p-8 text-center mt-4">
          <p class="text-slate-500 text-sm mb-3"><%= t('dashboard.tabs.no_classes_scheduled') %></p>

@@ -10,9 +10,12 @@
         <%= t("admin.memberships.form.step_student") %>
       </h3>
 
-      <%= f.collection_select :user_id, User.order(:first_name), :id, :full_legal_name,
-          { prompt: t("admin.memberships.form.search_student_prompt") },
-          { class: "block w-full rounded-xl border-slate-300 py-3 px-4 focus:ring-indigo-600" } %>
+    <%= f.collection_select :user_id, User.order(:first_name), :id, :full_legal_name,
+        { prompt: t("admin.memberships.form.search_student_prompt") },
+        { 
+          class: "block w-full rounded-xl border-slate-300 py-3 px-4 focus:ring-indigo-600",
+          data: { action: "change->membership-preview#update" } 
+        } %>
     </section>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -38,7 +41,7 @@
 
           <div>
             <label class="block text-xs font-black uppercase text-slate-400 mb-4 text-center tracking-widest"><%= t("admin.memberships.form.plan_duration_label") %></label>
-            <div class="flex flex-wrap justify-center gap-2">
+            <div class="flex flex-wrap justify-center gap-2 mb-4">
 
               <% MembershipPlan.active.each do |plan| %>
                 <label class="cursor-pointer">
@@ -53,6 +56,28 @@
             </div>
           </div>
         </div>
+
+        <section class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+          <h3 class="text-lg font-bold text-slate-900 mb-6 italic leading-none flex items-center gap-2">
+            <span class="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-100 text-indigo-700 text-sm italic font-black">3</span>
+            Fechas de Vigencia
+          </h3>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-[10px] font-black uppercase text-slate-400 mb-2 tracking-widest">Inicio</label>
+              <%= f.date_field :start_date, 
+                  class: "block w-full rounded-xl border-slate-300 py-2 px-3 text-sm focus:ring-indigo-600",
+                  data: { action: "change->membership-preview#update" } %>
+            </div>
+            <div>
+              <label class="block text-[10px] font-black uppercase text-slate-400 mb-2 tracking-widest">Fin (Manual)</label>
+              <%= f.date_field :end_date, 
+                  class: "block w-full rounded-xl border-slate-300 py-2 px-3 text-sm focus:ring-indigo-600",
+                  data: { membership_preview_target: "endDateInput" } %>
+            </div>
+          </div>
+          <p class="text-[9px] text-slate-400 mt-3 italic">* Cambia el inicio para recalcular. El fin es opcional para ajustes manuales.</p>
+        </section>
       </section>
 
       <section class="bg-indigo-950 p-8 rounded-3xl text-white shadow-2xl relative overflow-hidden flex flex-col justify-between min-h-[420px]">
@@ -64,14 +89,24 @@
 
           <div class="space-y-1">
             <p class="text-indigo-400 text-[10px] font-black uppercase tracking-widest"><%= t("admin.memberships.form.total_net") %></p>
-            <div class="flex items-baseline gap-2">
-              <span class="text-7xl font-black tabular-nums tracking-tighter italic leading-none" 
-                    data-membership-preview-target="amount">
-                $<%= membership.amount_paid.to_i %>
-              </span>
-              <span class="text-indigo-400 font-bold uppercase text-xl">USD</span>
+            <div class="flex items-center gap-1">
+              <%# Símbolo de moneda %>
+              <span class="text-indigo-400 font-bold uppercase text-3xl">₡</span>
+              
+              <%# INPUT EDITABLE: nota que usamos f.number_field %>
+              <%= f.number_field :amount_paid, 
+                  step: 1,
+                  class: "bg-transparent border-0 text-7xl font-black tabular-nums tracking-tighter italic leading-none focus:ring-0 w-full p-0 text-white placeholder:text-indigo-800 appearance-none",
+                  data: { membership_preview_target: "amount" },
+                  placeholder: "0" %>
+                  
+              <span class="text-indigo-400 font-bold uppercase text-xl ml-2">CRC</span>
             </div>
-          </div>
+            <p class="text-[9px] text-indigo-400/50 italic mt-2">
+              * El precio se calcula automáticamente, pero puedes editarlo aquí para convenios (ej: poner 0).
+            </p>
+         </div>
+          
         </div>
 
         <div class="space-y-6">

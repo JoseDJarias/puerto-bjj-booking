@@ -42,7 +42,7 @@ class Membership < ApplicationRecord
 
   # === CALCULATIONS ===
   def calculate_amount_paid
-    return if amount_paid.to_f > 0
+    return if amount_paid.present?
 
     return unless membership_plan_id && membership_package_id
   

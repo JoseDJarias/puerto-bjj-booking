@@ -9,3 +9,13 @@ admin:
   status: 1
   identification: "111111111"
   approved_at: <%= Time.current %>
+
+one:
+  first_name: "Juan"
+  last_name: "Perez"
+  email_address: "juan@puertobjj.com"
+  password_digest: <%= BCrypt::Password.create('password') %>
+  role: 0
+  status: 0
+  identification: "111111112"
+  approved_at: <%= Time.current %>

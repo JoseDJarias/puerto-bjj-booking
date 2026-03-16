@@ -3,9 +3,6 @@
 <div class="mb-8">
   <div class="flex items-center justify-between px-1 mb-3">
     <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-400"><%= t('dashboard.membership_info.title') %></h3>
-    <% if @active_memberships.count > 1 %>
-      <span class="text-[9px] font-bold text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded-full"><%= t('dashboard.membership_info.scroll_more') %></span>
-    <% end %>
   </div>
 
   <%# HORIZONTAL SCROLL CONTAINER %>

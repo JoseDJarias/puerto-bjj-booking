@@ -1,7 +1,9 @@
-<div class="mx-auto max-w-lg">
+<div class="mx-auto">
   <div class="mb-6">
-    <h2 class="text-xl font-bold text-slate-900"><%= t('admin.users.new.title') %></h2>
-    <p class="mt-1 text-sm text-slate-500"><%= t('admin.users.new.subtitle') %></p>
+    <%= link_to admin_users_path, class: "order-1 sm:order-none inline-flex items-center justify-center sm:justify-start w-full sm:w-auto min-w-0 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 transition-all flex-shrink-0" do %>
+      <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+      <span class="text-center sm:text-left">Volver a la lista de alumnos</span>
+    <% end %>
   </div>
 
   <div class="bg-white p-6 shadow-sm rounded-xl border border-slate-200">

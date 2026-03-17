@@ -11,7 +11,7 @@ module Admin
       when "approved"
         scope = scope.approved
       when "inactive"
-        scope = scope.where(status: :inactive)
+        scope = scope.where(status: [:inactive, :suspended])
       end
 
       #Package Filtering

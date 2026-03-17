@@ -23,6 +23,8 @@ module Admin
         scope = scope.search_by_query(params[:query])
       end
 
+      @stats = User.stats
+      
       @pagy, @users = pagy(:countless, scope, limit: 10)
       
       respond_to do |format|

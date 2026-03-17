@@ -52,6 +52,18 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  def self.stats
+    counts = group(:status).count
+    # 'status' asumiendo que tienes un enum o columna status (pending, approved, inactive)
+    Struct.new(:total, :pending, :approved, :inactive).new(
+      counts.values.sum,
+      counts["pending"] || 0,
+      counts["approved"] || 0,
+      counts["inactive"] || 0
+    )
+  end
+
+
   private
 
   def normalize_identification

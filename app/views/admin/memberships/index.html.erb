@@ -2,8 +2,24 @@
 
 <div class="flex flex-col gap-6">
   <div class="flex items-center justify-between">
-    <h2 class="text-xl font-bold text-slate-900"><%= t("admin.memberships.index.title") %></h2>
     <%= link_to t("admin.memberships.index.new"), new_admin_membership_path, class: "rounded-lg bg-indigo-600 px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-indigo-700 transition-all" %>
+  </div>
+  <%# Membership Stats %>
+  <div class="grid grid-cols-3 gap-4 mb-6">
+    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total</p>
+      <p class="text-2xl font-black text-slate-900"><%= @stats.total %></p>
+    </div>
+    
+    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm border-l-4 border-l-green-500">
+      <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Activas</p>
+      <p class="text-2xl font-black text-green-600"><%= @stats.active %></p>
+    </div>
+
+    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm border-l-4 border-l-slate-400">
+      <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Vencidas</p>
+      <p class="text-2xl font-black text-slate-500"><%= @stats.expired %></p>
+    </div>
   </div>
 
   <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm sticky top-0 z-20">

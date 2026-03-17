@@ -31,6 +31,16 @@ class Membership < ApplicationRecord
     calculate_amount_paid
   end
 
+  def self.stats
+    counts = group(:status).count
+    
+    Struct.new(:active, :expired, :total).new(
+      counts["active"] || 0,
+      counts["expired"] || 0,
+      counts.values.sum
+    )
+  end
+
   private
 
   def calculate_end_date

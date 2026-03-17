@@ -31,13 +31,30 @@
         </div>
         <%= f.text_field :query, placeholder: t("admin.memberships.index.search_placeholder"), value: params[:query], oninput: "this.form.requestSubmit()", class: "block w-full rounded-lg border-0 py-3 pl-10 ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm shadow-sm" %>
       </div>
+      <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 pt-3 border-t border-slate-100">
+        <label class="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1">
+          Filtrar por Programa
+        </label>
+        
+        <div class="relative w-full sm:w-64">
+          <%= f.select :package_id, 
+              options_from_collection_for_select(MembershipPackage.active, :id, :name, params[:package_id]), 
+              { include_blank: "Todos los programas" }, 
+              { onchange: "this.form.requestSubmit()", 
+                class: "px-4 block w-full rounded-lg border-0 py-2 text-sm font-semibold text-slate-600 bg-white ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-indigo-500 shadow-sm cursor-pointer appearance-none" } %>
+          
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+          </div>
+        </div>
+      </div>
     <% end %>
   </div>
 
   <nav class="flex space-x-2 overflow-x-auto no-scrollbar pb-2" aria-label="<%= t('admin.memberships.index.tabs_aria') %>">
     <% [[nil, t("admin.memberships.index.filter_all")], ["active", t("admin.memberships.index.filter_active")], ["expired", t("admin.memberships.index.filter_expired")]].each do |val, label| %>
       <% active = params[:filter] == val %>
-      <%= link_to admin_memberships_path(filter: val, query: params[:query]),
+      <%= link_to admin_memberships_path(filter: val, query: params[:query], package_id: params[:package_id]), 
           class: "whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition-all #{active ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50'}",
           data: { turbo_action: "advance" } do %>
         <div class="flex items-center gap-2">

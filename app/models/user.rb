@@ -31,16 +31,13 @@ class User < ApplicationRecord
   scope :approved, -> { where.not(approved_at: nil) }
   scope :active_status, -> { where(status: :active) }
   scope :inactive_status, -> { where(status: :inactive) }
+
   scope :by_membership_package, ->(package_id) {
-    joins(:memberships)
-      .where(memberships: { 
-        membership_package_id: package_id,
-        status: :active 
-      })
-      # Only memberships where TODAY is between the start and end date
-      .where("memberships.start_date <= ? AND memberships.end_date >= ?", Date.current, Date.current)
-      .distinct
+    joins(:memberships).merge(Membership.by_package(package_id))
+    .merge(Membership.current)
+    .distinct
   }
+  #Search Filtering
   scope :search_by_query, ->(query) {
     return all if query.blank?
     q = "%#{ActiveRecord::Base.sanitize_sql_like(query)}%"

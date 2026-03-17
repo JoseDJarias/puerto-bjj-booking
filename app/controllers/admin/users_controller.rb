@@ -16,19 +16,19 @@ module Admin
 
       #Package Filtering
       if params[:package_id].present?
-        scope = scope.joins(:memberships)
-                    .where(memberships: { 
-                      membership_package_id: params[:package_id],
-                      status: :active
-                    }).distinct
+        scope = scope.by_membership_package(params[:package_id])
       end
 
       if params[:query].present?
         scope = scope.search_by_query(params[:query])
       end
 
-      @pagy, @users = pagy(:countless, scope, limit: 15)
-
+      @pagy, @users = pagy(:countless, scope, limit: 10)
+      
+      respond_to do |format|
+        format.html
+        format.turbo_stream
+      end
     end
 
     def show

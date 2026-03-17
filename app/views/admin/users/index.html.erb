@@ -1,7 +1,6 @@
 <% content_for :page_title, t('admin.users.index.title') %>
 
 <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-  <h2 class="text-xl font-semibold text-slate-900"><%= t('admin.users.index.title') %></h2>
   <%= link_to new_admin_user_path, class: "inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 transition-all" do %>
     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
     <%= t('admin.users.new.title') %>
@@ -84,17 +83,19 @@
         <tbody id="users_table_body" class="divide-y divide-slate-200 bg-white">
           <%= render partial: "admin/users/partials/user", collection: @users, as: :user %>
         </tbody>
+        <% if @pagy.next %>
+          <tbody id="load_more_container">
+            <tr>
+              <td colspan="4" class="p-6 text-center bg-slate-50/50 border-t border-slate-100">
+                <%= link_to "Cargar más usuarios", 
+                    admin_users_path(page: @pagy.next, query: params[:query], filter: params[:filter], package_id: params[:package_id]), 
+                    data: { turbo_stream: true }, 
+                    class: "inline-flex items-center rounded-full bg-white px-8 py-2.5 text-sm font-black text-indigo-600 shadow-sm ring-1 ring-indigo-100 hover:bg-indigo-600 hover:text-white transition-all active:scale-95" %>
+              </td>
+            </tr>
+          </tbody>
+        <% end %>
       </table>
     </div>
-
-    <% if @pagy.next %>
-      <div id="load_more_container" class="p-4 text-center border-t border-slate-100 bg-slate-50">
-        <%= link_to admin_users_path(page: @pagy.next, query: params[:query], filter: params[:filter], package_id: params[:package_id]), 
-            data: { turbo_stream: true }, 
-            class: "inline-flex items-center rounded-full bg-white px-6 py-2 text-sm font-bold text-indigo-600 shadow-sm ring-1 ring-indigo-200 hover:bg-indigo-50 active:scale-95 transition-all" do %>
-          Cargar más usuarios
-        <% end %>
-      </div>
-    <% end %>
   <% end %>
 </div>

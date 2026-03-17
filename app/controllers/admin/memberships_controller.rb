@@ -14,6 +14,10 @@ module Admin
         scope = scope.expired_listing
       end
 
+      if params[:package_id].present?
+        scope = scope.by_package(params[:package_id])
+      end
+
       if params[:query].present?
         sanitized_query = ActiveRecord::Base.sanitize_sql_like(params[:query])
         q = "%#{sanitized_query}%"

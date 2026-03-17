@@ -14,6 +14,9 @@ class Membership < ApplicationRecord
   scope :expired_listing, -> { expired.or(where(end_date: ..Date.yesterday)) }
   scope :past, -> { where(end_date: ..Date.yesterday).or(where(status: [:expired, :cancelled])) }
   
+  #Package Filtering, use it with merge in other scopes
+  scope :by_package, ->(package_id) { where(membership_package_id: package_id) }
+
   before_validation :calculate_end_date, on: :create
   before_validation :calculate_amount_paid, on: :create
 

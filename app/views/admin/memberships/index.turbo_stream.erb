@@ -1,5 +1,43 @@
-<%= turbo_stream.append "memberships_table_body" do %>
-  <%= render @memberships %>
+<%= turbo_stream.replace "membership_stats_container" do %>
+  <div id="membership_stats_container">
+    <div class="grid grid-cols-3 gap-4 mb-6">
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total</p>
+        <p class="text-2xl font-black text-slate-900"><%= @stats.total %></p>
+      </div>
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm border-l-4 border-l-green-500">
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Activas</p>
+        <p class="text-2xl font-black text-green-600"><%= @stats.active %></p>
+      </div>
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm border-l-4 border-l-slate-400">
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Vencidas</p>
+        <p class="text-2xl font-black text-slate-500"><%= @stats.expired %></p>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<% if params[:page].present? && params[:page].to_i > 1 %>
+  <%# Si es paginación (botón cargar más), solo añadimos %>
+  <%= turbo_stream.append "memberships_table_body" do %>
+    <%= render @memberships %>
+  <% end %>
+<% else %>
+  <%# Si es una búsqueda o cambio de filtro, REEMPLAZAMOS todo el contenido del tbody %>
+  <%= turbo_stream.update "memberships_table_body" do %>
+    <% if @memberships.any? %>
+      <%= render @memberships %>
+    <% else %>
+      <tr>
+        <td colspan="4" class="py-12 text-center">
+          <div class="flex flex-col items-center justify-center">
+            <h3 class="text-xs font-black text-slate-900 uppercase italic">No se encontraron resultados para "<%= params[:query] %>"</h3>
+            <p class="text-[10px] text-slate-500 mt-1 uppercase tracking-tighter">Asegúrate de que el usuario tenga una membresía en este programa</p>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  <% end %>
 <% end %>
 
 <% if @pagy.next %>

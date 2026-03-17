@@ -56,11 +56,16 @@ class User < ApplicationRecord
   def self.stats(base_scope = User.all)
     counts = base_scope.select(
       "COUNT(*) as total_rows",
-      "COUNT(CASE WHEN approved_at IS NULL THEN 1 END) as pending_rows",
-      "COUNT(CASE WHEN approved_at IS NOT NULL THEN 1 END) as approved_rows",
+      # pending: Does not have approved_at and is not inactive/suspended
+      "COUNT(CASE WHEN approved_at IS NULL AND status = 0 THEN 1 END) as pending_rows",
+      
+      # approved: Has approved_at and is active (0)
+      "COUNT(CASE WHEN approved_at IS NOT NULL AND status = 0 THEN 1 END) as approved_rows",
+      
+      # inactive: Any user with status 1 or 2, regardless of approved_at
       "COUNT(CASE WHEN status IN (1, 2) THEN 1 END) as inactive_rows"
     ).take
-
+  
     UserStats.new(
       counts["total_rows"].to_i,
       counts["pending_rows"].to_i,

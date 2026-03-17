@@ -23,6 +23,8 @@ module Admin
         )
       end
 
+      @stats = Membership.stats
+
       @pagy, @memberships = pagy(:countless, scope, limit: 10)
 
       respond_to do |format|

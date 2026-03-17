@@ -7,9 +7,43 @@
   <% end %>
 </div>
 
+<%# Stats de Usuarios %>
+<div class="flex items-center gap-2 mb-4 ml-1">
+  <div class="h-5 w-1 bg-indigo-600 rounded-full"></div> <%# Acento visual %>
+  <h3 class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-500">
+    <%= t('admin.users.index.stats_overview', default: 'Resumen de Usuarios') %>
+  </h3>
+</div>
+<div id="user_stats_container" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+
+  <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total</p>
+    <p class="text-2xl font-black text-slate-900"><%= @stats.total %></p>
+  </div>
+  
+  <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm border-l-4 border-l-yellow-500">
+    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pendientes</p>
+    <p class="text-2xl font-black text-yellow-600"><%= @stats.pending %></p>
+  </div>
+
+  <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm border-l-4 border-l-green-500">
+    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Aprobados</p>
+    <p class="text-2xl font-black text-green-600"><%= @stats.approved %></p>
+  </div>
+
+  <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm border-l-4 border-l-slate-400">
+    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Inactivos</p>
+    <p class="text-2xl font-black text-slate-500"><%= @stats.inactive %></p>
+  </div>
+</div>
+
 <%# Search and Package Filter Bar %>
 <div class="bg-white rounded-2xl border border-slate-200 shadow-sm sticky top-0 z-20 mb-8 overflow-hidden">
-  
+  <div class="px-8 pt-6 -mb-4">
+    <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-400">
+      <%= t('admin.users.index.search_title', default: 'Búsqueda y Filtros') %>
+    </h3>
+  </div>
   <%= form_with url: admin_users_path(format: :turbo_stream), method: :get, data: { turbo_frame: "users_list", turbo_action: "advance" } do |f| %>
     <%= hidden_field_tag :filter, params[:filter] %>
     
@@ -55,7 +89,12 @@
 </div>
 
 <%# Status Tabs %>
-<nav class="flex space-x-2 overflow-x-auto no-scrollbar pb-4 mb-2" aria-label="Filtros de estado">
+<div class="mb-3 ml-1">
+  <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-400">
+    <%= t('admin.users.index.status_filter', default: 'Filtrar por Estado') %>
+  </h3>
+</div>
+<nav class="flex space-x-2 overflow-x-auto no-scrollbar pb-4 mb-4" aria-label="Filtros de estado">
   <% [[nil, "Todos"], ["pending", "Pendientes"], ["approved", "Aprobados"], ["inactive", "Inactivos"]].each do |val, label| %>
     <% active = params[:filter] == val %>
     <%= link_to admin_users_path(filter: val, query: params[:query], package_id: params[:package_id]),
@@ -65,6 +104,13 @@
     <% end %>
   <% end %>
 </nav>
+
+<div class="flex items-center gap-2 mb-6">
+    <div class="h-5 w-1 bg-indigo-600 rounded-full"></div>
+    <h3 class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-500">
+      <%= t('admin.users.index.table_title', default: 'Lista de Alumnos') %>
+    </h3>
+</div>
 
 <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
   <%= turbo_frame_tag "users_list", target: "_top" do %>

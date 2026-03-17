@@ -417,7 +417,7 @@ es:
     memberships:
       index:
         title: "Control de Membresías"
-        new: "Nueva Membresía"
+        new: "Crear Nueva Membresía"
         user_column: "Alumno"
         search_placeholder: "Buscar alumno..."
         filter_all: "Todas"
@@ -432,7 +432,7 @@ es:
           plan_details: "Detalles del Plan"
           validity: "Vigencia"
       new:
-        title: "Nueva Membresía"
+        title: "Registrar Nueva Membresía"
         subtitle: "Asignando plan a %{name}"
       edit:
         title: "Editar Membresía"

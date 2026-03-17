@@ -32,7 +32,7 @@
     <% end %>
   </nav>
 
-  <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+ <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-slate-200">
         <thead class="bg-slate-50">
@@ -43,14 +43,24 @@
             <th class="relative px-4 py-3"></th>
           </tr>
         </thead>
-        <%= turbo_frame_tag "memberships_list" do %>
+
+        <%# EL TRUCO: El frame es el tbody mismo para que no rompa el HTML %>
+        <%= turbo_frame_tag "memberships_list", class: "contents" do %>
           <tbody id="memberships_table_body" class="divide-y divide-slate-200 bg-white">
             <%= render @memberships %>
           </tbody>
+
           <% if @pagy.next %>
-            <div id="load_more_container" class="p-4 text-center bg-slate-50">
-              <%= link_to t("admin.memberships.index.load_more"), admin_memberships_path(page: @pagy.next, query: params[:query], filter: params[:filter]), data: { turbo_stream: true }, class: "inline-flex items-center rounded-full bg-white px-6 py-2 text-sm font-bold text-indigo-600 shadow-sm ring-1 ring-indigo-200 hover:bg-indigo-50 active:scale-95 transition-all" %>
-            </div>
+            <tbody id="load_more_container">
+              <tr>
+                <td colspan="4" class="p-6 text-center bg-slate-50/50 border-t border-slate-100">
+                  <%= link_to t("admin.memberships.index.load_more"), 
+                      admin_memberships_path(page: @pagy.next, query: params[:query], filter: params[:filter]), 
+                      data: { turbo_stream: true }, 
+                      class: "inline-flex items-center rounded-full bg-white px-8 py-2.5 text-sm font-black text-indigo-600 shadow-sm ring-1 ring-indigo-100 hover:bg-indigo-600 hover:text-white transition-all active:scale-95" %>
+                </td>
+              </tr>
+            </tbody>
           <% end %>
         <% end %>
       </table>

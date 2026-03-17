@@ -1,0 +1,20 @@
+<%= turbo_stream.append "memberships_table_body" do %>
+  <%= render @memberships %>
+<% end %>
+
+<% if @pagy.next %>
+  <%= turbo_stream.replace "load_more_container" do %>
+    <tbody id="load_more_container">
+      <tr>
+        <td colspan="4" class="p-6 text-center bg-slate-50/50">
+          <%= link_to t("admin.memberships.index.load_more"), 
+              admin_memberships_path(page: @pagy.next, query: params[:query], filter: params[:filter]), 
+              data: { turbo_stream: true }, 
+              class: "..." %>
+        </td>
+      </tr>
+    </tbody>
+  <% end %>
+<% else %>
+  <%= turbo_stream.remove "load_more_container" %>
+<% end %>

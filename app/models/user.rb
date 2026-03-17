@@ -52,14 +52,20 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
-  def self.stats
-    counts = group(:status).count
-    # 'status' asumiendo que tienes un enum o columna status (pending, approved, inactive)
-    Struct.new(:total, :pending, :approved, :inactive).new(
-      counts.values.sum,
-      counts["pending"] || 0,
-      counts["approved"] || 0,
-      counts["inactive"] || 0
+  UserStats = Struct.new(:total, :pending, :approved, :inactive)
+  def self.stats(base_scope = User.all)
+    counts = base_scope.select(
+      "COUNT(*) as total_rows",
+      "COUNT(CASE WHEN approved_at IS NULL THEN 1 END) as pending_rows",
+      "COUNT(CASE WHEN approved_at IS NOT NULL THEN 1 END) as approved_rows",
+      "COUNT(CASE WHEN status IN (1, 2) THEN 1 END) as inactive_rows"
+    ).take
+
+    UserStats.new(
+      counts["total_rows"].to_i,
+      counts["pending_rows"].to_i,
+      counts["approved_rows"].to_i,
+      counts["inactive_rows"].to_i
     )
   end
 

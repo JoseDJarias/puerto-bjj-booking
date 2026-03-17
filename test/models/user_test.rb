@@ -104,4 +104,54 @@ class UserTest < ActiveSupport::TestCase
     
     assert_not user.save, "No debería permitir cambiar a una contraseña corta"
   end
+
+
+  # --- Tests de Estadísticas del Dashboard ---
+
+  test "self.stats debe calcular correctamente los estados basados en approved_at y status" do
+    # En lugar de delete_all, creamos usuarios con emails únicos para este test
+    # Aprobado y Activo
+    User.create!(
+      first_name: "Ok", last_name: "1", identification: "111110111", 
+      email_address: "aprobado@test.com", password: "password123", 
+      approved_at: Time.current, status: :active
+    )
+
+    # Pendiente (approved_at nil)
+    User.create!(
+      first_name: "Pending", last_name: "User", identification: "222220222", 
+      email_address: "pendiente@test.com", password: "password123", 
+      approved_at: nil, status: :active
+    )
+
+    # Inactivo (status: 1)
+    User.create!(
+      first_name: "Inactive", last_name: "User", identification: "333330333", 
+      email_address: "inactivo@test.com", password: "password123", 
+      approved_at: Time.current, status: :inactive
+    )
+
+    # Suspendido (status: 2)
+    User.create!(
+      first_name: "Suspended", last_name: "User", identification: "444440444", 
+      email_address: "suspendido@test.com", password: "password123", 
+      approved_at: Time.current, status: :suspended
+    )
+
+    # Ejecutamos el método sobre todos los usuarios (incluyendo los de tus fixtures)
+    stats = User.stats
+    
+    # Assertions lógicas:
+    # 1. El total debe ser al menos 4 (los que creamos) + los que tengas en fixtures
+    assert stats.total >= 4
+    
+    # 2. Verificamos que los inactivos y suspendidos se sumen (1 de cada uno = 2)
+    # Si tus fixtures tienen más inactivos, ajusta el número o usa un scope
+    inactivos_esperados = User.where(status: [:inactive, :suspended]).count
+    assert_equal inactivos_esperados, stats.inactive, "Debe sumar inactivos y suspendidos"
+
+    # 3. Verificamos la lógica de pendientes
+    pendientes_esperados = User.where(approved_at: nil).count
+    assert_equal pendientes_esperados, stats.pending, "Debe contar usuarios con approved_at nil"
+  end
 end

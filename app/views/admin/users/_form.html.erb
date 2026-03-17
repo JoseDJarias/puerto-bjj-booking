@@ -1,6 +1,5 @@
 <div class="mb-6">
-  <h2 class="text-xl font-bold text-slate-900 mb-2"><%= t('admin.users.new.title') %></h2>
-  <p class="mt-2 text-sm text-slate-500"><%= t('admin.users.new.subtitle') %></p>
+  <h2 class="text-xl font-bold text-slate-900 mb-2">Registrar o Actualizar Alumno</h2>
 </div>
 <%= form_with model: [:admin, user], class: "space-y-6" do |f| %>
  <% if user.errors.any? %>
@@ -93,7 +92,7 @@
 
 <%# Delete Button: Only appears if the user already exists (we are editing) %>
 <% if user.persisted? && user != Current.user %>
-  <div class="mt-12 pt-8 border-t-2 border-slate-100">
+  <div class="pt-8 border-t-2 border-slate-100">
     <div class="rounded-3xl bg-rose-50 p-6 sm:p-8 border border-rose-100">
       <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
         <div class="space-y-1">

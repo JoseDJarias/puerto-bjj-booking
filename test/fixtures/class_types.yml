@@ -6,3 +6,15 @@ bjj_gi:
   updated_at: <%= Time.current %>
   created_at: <%= Time.current %>
 
+bjj_nogi:
+  name: "BJJ No-Gi"
+  active: true
+  updated_at: <%= Time.current %>
+  created_at: <%= Time.current %>
+
+boxeo:
+  name: "Boxeo"
+  active: true
+  updated_at: <%= Time.current %>
+  created_at: <%= Time.current %>
+

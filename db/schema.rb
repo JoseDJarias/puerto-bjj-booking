@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_09_011747) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_18_035205) do
   create_table "bookings", force: :cascade do |t|
     t.integer "changed_by_id"
     t.integer "class_schedule_id", null: false
@@ -32,6 +32,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_011747) do
     t.datetime "created_at", null: false
     t.integer "duration_minutes", default: 60, null: false
     t.integer "instructor_id", null: false
+    t.integer "modality"
     t.datetime "starts_at", null: false
     t.string "topic"
     t.datetime "updated_at", null: false

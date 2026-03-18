@@ -10,6 +10,7 @@ one:
   capacity: 20
   instructor: admin # O el nombre que tengas en users.yml
   class_type: bjj_gi # El nombre que tengas en class_types.ymlue
+  modality: gi
 #
 two:
   starts_at: <%= Time.current + 4.hours %>
@@ -17,3 +18,20 @@ two:
   capacity: 20
   instructor: admin # O el nombre que tengas en users.yml
   class_type: bjj_gi # El nombre que tengas en class_types.yml
+  modality: gi
+# Agregamos los nuevos casos de prueba
+three:
+  starts_at: <%= Time.current + 1.day %>
+  duration_minutes: 90
+  capacity: 15
+  instructor: admin
+  class_type: bjj_nogi
+  modality: nogi
+
+four:
+  starts_at: <%= Time.current + 2.days %>
+  duration_minutes: 60
+  capacity: 12
+  instructor: admin
+  class_type: boxeo
+  modality: nil

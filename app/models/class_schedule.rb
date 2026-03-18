@@ -7,6 +7,8 @@ class ClassSchedule < ApplicationRecord
   GRACE_PERIOD_MINUTES = 20
   BOOKING_OPEN_HOUR = 20
 
+  enum :modality, { gi: 0, nogi: 1 }
+
   validates :starts_at, presence: true
   validates :duration_minutes, numericality: { greater_than: 0 }
   validates :capacity, numericality: { greater_than: 0 }
@@ -53,6 +55,10 @@ class ClassSchedule < ApplicationRecord
   scope :for_range, ->(start_date, end_date) {
     where(starts_at: start_date.beginning_of_day..end_date.end_of_day)
   }
+  # Show modality in the UI if it's not nil(for bjj gi or nogi)
+  def show_modality?
+    modality.present?
+  end
 
   # --- TIME LOGIC ---
   def ends_at

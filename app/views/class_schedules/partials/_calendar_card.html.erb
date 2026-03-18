@@ -58,6 +58,10 @@
         <p class="font-black text-slate-800 text-sm leading-tight truncate group-hover:text-indigo-600 transition-colors">
           <%= schedule.class_type.name %>
         </p>
+
+        <div class="shrink-0 scale-90 origin-right"> <%# Un poco más pequeño para el calendario %>
+          <%= modality_badge(schedule) %>
+        </div>
         
         <p class="text-[10px] text-slate-500 font-bold mt-1 lowercase">
           <%= l(schedule.starts_at, format: "%-I:%M %P") %>

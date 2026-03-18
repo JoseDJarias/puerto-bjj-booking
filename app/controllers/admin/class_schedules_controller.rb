@@ -177,7 +177,7 @@ module Admin
     end
 
     def class_schedule_params
-      params.require(:class_schedule).permit(:class_type_id, :instructor_id, :starts_at, :duration_minutes, :capacity, :cancelled)
+      params.require(:class_schedule).permit(:class_type_id, :instructor_id, :starts_at, :duration_minutes, :capacity, :cancelled, :modality)
     end
   end
 end

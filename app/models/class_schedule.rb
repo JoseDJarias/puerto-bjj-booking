@@ -19,16 +19,17 @@ class ClassSchedule < ApplicationRecord
     where("strftime('%w', starts_at, 'localtime') IN (?)", days.map(&:to_s))
       .where("strftime('%H:%M', starts_at, 'localtime') = ?", time_string)
   }
-  # Booking day rolls at 23:00: after 11 PM user sees next calendar day's classes.
+  # Booking day rolls at 20:00: after 11 PM user sees next calendar day's classes.
   def self.operative_date
     Time.zone.now.hour >= BOOKING_OPEN_HOUR ? Date.tomorrow : Date.current
   end
 
+  # Class schedule index Classes from date.beginning_of_day to date.end_of_day
   scope :for_date, ->(date) {
       where(starts_at: date.beginning_of_day..date.end_of_day).order(:starts_at)
     }
 
-    # Classes from (now - grace period) to end_time, to be visible during the 20 min grace period.
+    # Dashboard show Classes from (now - grace period) to end_time, to be visible during the 20 min grace period.
     scope :dashboard_upcoming, -> {
       now = Time.zone.now
       start_time = now - GRACE_PERIOD_MINUTES.minutes

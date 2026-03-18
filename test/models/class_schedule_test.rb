@@ -36,4 +36,64 @@ class ClassScheduleTest < ActiveSupport::TestCase
     nogi_class = class_schedules(:three)
     assert_equal 1, nogi_class.read_attribute_before_type_cast(:modality), "En la DB el valor de No-Gi debe ser 1"
   end
+
+  # --- dashboard_upcoming + grace period ---
+  test "dashboard_upcoming incluye clase que aún no ha empezado" do
+    base = Time.zone.now
+    schedule = ClassSchedule.create!(
+      starts_at: base + 1.hour,
+      duration_minutes: 60,
+      capacity: 20,
+      instructor: users(:admin),
+      class_type: class_types(:bjj_gi),
+      cancelled: false
+    )
+    travel_to base do
+      assert_includes ClassSchedule.dashboard_upcoming, schedule,
+        "Una clase que empieza en el futuro debe aparecer en dashboard_upcoming"
+    end
+  end
+
+  test "dashboard_upcoming incluye clase que ya empezó pero está dentro del grace period" do
+    starts_at = Time.zone.now - 5.minutes
+    schedule = ClassSchedule.create!(
+      starts_at: starts_at,
+      duration_minutes: 60,
+      capacity: 20,
+      instructor: users(:admin),
+      class_type: class_types(:bjj_gi),
+      cancelled: false
+    )
+    # "Ahora" = 5 min después del inicio → todavía en grace de 20 min
+    travel_to starts_at + 5.minutes do
+      assert_includes ClassSchedule.dashboard_upcoming, schedule,
+        "Una clase que empezó hace 5 min debe seguir visible durante el grace period (20 min)"
+    end
+  end
+
+  test "dashboard_upcoming excluye clase que empezó hace más del grace period" do
+    starts_at = Time.zone.now - 25.minutes
+    schedule = ClassSchedule.create!(
+      starts_at: starts_at,
+      duration_minutes: 60,
+      capacity: 20,
+      instructor: users(:admin),
+      class_type: class_types(:bjj_gi),
+      cancelled: false
+    )
+    travel_to starts_at + 25.minutes do
+      assert_not_includes ClassSchedule.dashboard_upcoming, schedule,
+        "Una clase que empezó hace más de 20 min no debe aparecer en dashboard_upcoming"
+    end
+  end
+
+  test "dashboard_upcoming ordena por starts_at ascendente" do
+    base = Time.zone.now
+    c1 = ClassSchedule.create!(starts_at: base + 2.hours, duration_minutes: 60, capacity: 20, instructor: users(:admin), class_type: class_types(:bjj_gi), cancelled: false)
+    c2 = ClassSchedule.create!(starts_at: base + 1.hour, duration_minutes: 60, capacity: 20, instructor: users(:admin), class_type: class_types(:bjj_gi), cancelled: false)
+    travel_to base do
+      ids = ClassSchedule.dashboard_upcoming.pluck(:id)
+      assert ids.index(c2.id) < ids.index(c1.id), "La clase más temprana (c2) debe aparecer antes que c1"
+    end
+  end
 end

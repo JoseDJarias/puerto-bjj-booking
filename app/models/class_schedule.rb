@@ -28,17 +28,16 @@ class ClassSchedule < ApplicationRecord
       where(starts_at: date.beginning_of_day..date.end_of_day).order(:starts_at)
     }
 
+    # Classes from (now - grace period) to end_time, to be visible during the 20 min grace period.
     scope :dashboard_upcoming, -> {
       now = Time.zone.now
-      
-      start_time = now
-  
+      start_time = now - GRACE_PERIOD_MINUTES.minutes
+
       end_time = if now.hour >= BOOKING_OPEN_HOUR
                    (Date.tomorrow + 1.day).beginning_of_day + 12.hours
                  else
                    Date.tomorrow.beginning_of_day + 12.hours
                  end
-  
       where(starts_at: start_time..end_time).order(starts_at: :asc)
     }
   

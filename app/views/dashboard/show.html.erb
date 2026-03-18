@@ -1,4 +1,4 @@
-<div class="max-w-3xl mx-auto px-4 py-6">
+<div class="mx-auto px-2 py-6">
   <%= turbo_stream_from [current_user, "bookings"] %>
   <% if @user.pending_approval? %>
     <%# --- Waiting for Admin approval --- %>

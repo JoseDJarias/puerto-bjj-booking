@@ -1,27 +1,37 @@
 <h2 class="mb-6 text-xl font-semibold text-slate-900"><%= t('auth.sign_in.title') %></h2>
 
 <%= form_with url: session_path do |form| %>
-  <!-- Email Field -->
   <div class="mb-5">
     <%= form.label :email_address, t('auth.sign_in.email_label'), class: "mb-2 block text-sm font-medium text-slate-700" %>
-    <%= form.email_field :email_address,
-        required: true,
-        autofocus: true,
-        autocomplete: "username",
-        placeholder: t('auth.sign_in.email_placeholder'),
-        value: params[:email_address],
-        class: "block w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/10" %>
+    <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: t('auth.sign_in.email_placeholder'), class: "block w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/10" %>
   </div>
 
-  <!-- Password Field -->
-  <div class="mb-5">
+  <div class="mb-5" data-controller="password-visibility">
     <%= form.label :password, t('auth.sign_in.password_label'), class: "mb-2 block text-sm font-medium text-slate-700" %>
-    <%= form.password_field :password,
-        required: true,
-        autocomplete: "current-password",
-        placeholder: t('auth.sign_in.password_placeholder'),
-        maxlength: 72,
-        class: "block w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/10" %>
+    
+    <div class="relative"> 
+      <%= form.password_field :password,
+          required: true,
+          autocomplete: "current-password",
+          data: { password_visibility_target: "input" },
+          placeholder: t('auth.sign_in.password_placeholder'),
+          maxlength: 72,
+          class: "block w-full rounded-lg border border-slate-300 pl-4 pr-12 py-3 text-slate-900 placeholder-slate-400 transition focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/10" %>
+
+      <button type="button" 
+          data-action="click->password-visibility#toggle"
+          class="absolute inset-y-0 right-0 flex items-center justify-center w-14 text-slate-400 hover:text-indigo-600 focus:outline-none transition-colors">
+        
+        <svg data-password-visibility-target="iconOpen" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.644C3.483 8.617 7.234 6 12 6c4.766 0 8.517 2.617 9.964 5.678a1.012 1.012 0 010 .644C20.517 15.383 16.766 18 12 18.001c-4.766 0-8.517-2.617-9.964-5.679z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+
+          <svg data-password-visibility-target="iconClosed" class="h-5 w-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+        </svg>
+      </button>
+    </div>
   </div>
 
   <!-- Remember me -->

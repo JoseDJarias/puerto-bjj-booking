@@ -604,7 +604,7 @@ es:
     membership_info:
       title: "Mis Accesos"
       scroll_more: "Desliza para ver más"
-      active: "Activa"
+      active: "Membresía Activa"
       expires_in: "Vence en"
       until: "Hasta"
       tickets_drop_in: "Tickets / Drop-in"

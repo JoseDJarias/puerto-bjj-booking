@@ -1,17 +1,10 @@
 <% content_for :page_title, t('admin.users.index.title') %>
 
-<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-  <%= link_to new_admin_user_path, class: "inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 transition-all" do %>
-    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-    <%= t('admin.users.new.title') %>
-  <% end %>
-</div>
-
 <%# Stats de Usuarios %>
 <div class="flex items-center gap-2 mb-4 ml-1">
   <div class="h-5 w-1 bg-indigo-600 rounded-full"></div> <%# Acento visual %>
   <h3 class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-500">
-    <%= t('admin.users.index.stats_overview', default: 'Resumen de Usuarios') %>
+    <%= t('admin.users.index.stats_overview', default: 'Resumen de Alumnos') %>
   </h3>
 </div>
 <div id="user_stats_container" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -35,6 +28,14 @@
     <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Inactivos / Susp</p>
     <p class="text-2xl font-black text-slate-500"><%= @stats.inactive %></p>
   </div>
+</div>
+
+<%# Registro de Nuevo Alumno %>
+<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+  <%= link_to new_admin_user_path, class: "inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 transition-all" do %>
+    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+    <%= t('admin.users.new.title') %>
+  <% end %>
 </div>
 
 <%# Search and Package Filter Bar %>

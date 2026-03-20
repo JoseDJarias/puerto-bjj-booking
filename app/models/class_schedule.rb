@@ -150,16 +150,22 @@ class ClassSchedule < ApplicationRecord
     # Selected days (e.g.: [1, 3] for Mon/Wed)
     target_days = schedule_params[:days].map(&:to_i)
     # Hora base (ej: "18:30")
-    base_time = Time.parse(schedule_params[:time])
+    base_time = Time.zone.parse(schedule_params[:time])
+
+    now = Time.current
 
     # Iterate day by day in the range
     date_range.each do |date|
       # If the current day matches the desired days (e.g.: is Monday?)
       if target_days.include?(date.wday)
         # Construct the exact date-time by combining the date from the loop with the base time
-        start_datetime = date.to_time.change(hour: base_time.hour, min: base_time.min)
+        start_datetime = date.in_time_zone.change(hour: base_time.hour, min: base_time.min)
 
-        classes_to_create << attributes.merge(starts_at: start_datetime)
+        classes_to_create << attributes.merge(
+          starts_at: start_datetime,
+          created_at: now,
+          updated_at: now
+          )
       end
     end
 

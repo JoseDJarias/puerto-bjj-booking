@@ -44,6 +44,13 @@ class User < ApplicationRecord
     where("first_name LIKE :q OR last_name LIKE :q OR email_address LIKE :q OR identification LIKE :q OR phone_number LIKE :q", q: q)
   }
 
+  scope :eligible_instructors, -> { 
+    where(role: [:instructor, :admin])
+    .active_status
+    .approved
+    .order(:first_name)
+  }
+
   def display_name
     nickname.presence || first_name
   end

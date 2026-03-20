@@ -5,12 +5,12 @@
         <%= user.first_name&.first || user.email_address.first.upcase %>
       </div>
       <div class="ml-3 min-w-0 max-w-[120px] sm:max-w-[200px]"> <%# Limitamos el ancho para forzar el truncado %>
-        <div class="text-[12px] text-slate-900 truncate tracking-tight">
+        <div class="text-sm font-medium text-slate-900 truncate">
           <%= user.full_legal_name %>
         </div>
         <div class="flex items-center gap-1.5 mt-0.5">
-          <span class="text-[9px] font-black uppercase tracking-widest text-slate-400">EMAIL</span>
-          <span class="text-[11px] font-medium text-slate-500 truncate italic">
+          <span class="text-[9px] font-black uppercase tracking-widest text-slate-400">EMAIL:</span>
+          <span class="text-sm font-small text-slate-500 truncate italic">
             <%= user.email_address.truncate(18) %>
           </span>
         </div>
@@ -21,7 +21,6 @@
   <%# ROL%>
   <td class="px-3 py-4 whitespace-nowrap">
     <span class="inline-flex items-center rounded-lg bg-slate-100 px-2 py-1 text-[9px] font-black uppercase tracking-widest text-slate-600 ring-1 ring-inset ring-slate-200">
-      <%# Lógica para mostrar ADMIN en lugar de ADMINISTRADOR %>
       <%= user.admin? ? "ADMIN" : t("enums.user.role.#{user.role}").upcase.truncate(10) %>
     </span>
   </td>

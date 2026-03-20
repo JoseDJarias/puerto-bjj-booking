@@ -339,7 +339,7 @@ es:
         title: "Detalle de Usuario"
         back: "Volver a usuarios"
         memberships_title: "Historial de Membresías"
-        new_membership: "+ Nueva Membresía"
+        new_membership: "Nueva Membresía"
         no_memberships: "Este usuario no tiene membresías activas ni historial."
         no_history: "Sin historial"
         validity: "Vigencia"
@@ -558,7 +558,7 @@ es:
       role:
         member: "Miembro"
         instructor: "Instructor"
-        admin: "Administrador"
+        admin: "Admin"
       status:
         active: "Activo"
         inactive: "Inactivo"
@@ -566,8 +566,9 @@ es:
     membership:
       status:
         active: "Activa"
-        expired: "Vencida"
-        cancelled: "Cancelada"  
+        inactive: "Inactivo"
+        suspended: "Suspendido" 
+  
 
   # === FLASH MESSAGES ===
   flash:

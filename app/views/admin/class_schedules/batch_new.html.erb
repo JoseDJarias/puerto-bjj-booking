@@ -36,8 +36,8 @@
             <% @class_types.each do |type| %>
               <label class="group relative cursor-pointer">
                 <input type="radio" name="class_schedule[class_type_id]" value="<%= type.id %>" class="sr-only peer" required>
-                <div class="p-5 rounded-2xl bg-slate-50 border-2 border-transparent transition-all peer-checked:bg-blue-600 peer-checked:border-indigo-400 peer-checked:shadow-lg peer-checked:shadow-indigo-100 group-hover:bg-slate-100 flex flex-col items-center gap-2 text-center h-full justify-center">
-                  <span class="text-[11px] font-black text-slate-500 peer-checked:text-white uppercase leading-tight transition-colors">
+                <div class="p-5 rounded-2xl bg-slate-50 border-2 border-transparent transition-all peer-checked:bg-indigo-600 peer-checked:border-indigo-400 peer-checked:shadow-lg peer-checked:shadow-indigo-100 group-hover:bg-slate-100 flex flex-col items-center gap-2 text-center h-full justify-center">
+                  <span class="text-[11px] font-black text-slate-900 peer-checked:text-white uppercase leading-tight transition-colors">
                     <%= type.name %>
                   </span>
                 </div>

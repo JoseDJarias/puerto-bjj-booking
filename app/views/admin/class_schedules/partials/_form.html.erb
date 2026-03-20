@@ -18,7 +18,7 @@
   <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
     <%# 1. DISCIPLINA %>
     <div class="space-y-2">
-      <%= f.label :class_type_id, class: "text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1" %>
+      <%= f.label :class_type_id, "Disciplina", class: "text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1" %>
       <div class="relative group">
         <%= f.collection_select :class_type_id, @class_types, :id, :name, 
             { prompt: t('admin.class_schedules.form.select_discipline') }, 

@@ -122,47 +122,56 @@ module Admin
     end
 
     def process_batch
-      #Create and batch destroy of classes
-      schedule_data = params[:schedule]
-      days = schedule_data[:days].select(&:present?).map(&:to_i)
-      discipline_id = params[:class_schedule][:class_type_id]
-      instructor_id = params[:class_schedule][:instructor_id]
+      schedule_params = params[:schedule]
+      times = schedule_params[:times]&.select(&:present?) || []
+      days = schedule_params[:days]&.select(&:present?)&.map(&:to_i) || []
       
-      if schedule_data[:time].blank? || schedule_data[:days].blank?
-        return redirect_to batch_new_admin_class_schedules_path, alert: "Por favor selecciona hora y días."
+      if times.empty? || days.empty?
+        return redirect_to batch_new_admin_class_schedules_path, 
+                           alert: "Debes seleccionar al menos un día y un horario."
       end
-
-      start_date = Date.parse(schedule_data[:start_date])
-      end_date = Date.parse(schedule_data[:end_date])
+    
+      start_date = Date.parse(schedule_params[:start_date])
+      end_date = Date.parse(schedule_params[:end_date])
       date_range = start_date..end_date
-
+    
       if params[:bulk_action] == "destroy"
-        target_classes = ClassSchedule.where(
-          starts_at: start_date.beginning_of_day..end_date.end_of_day,
-          class_type_id: params[:class_schedule][:class_type_id],
-          instructor_id: params[:class_schedule][:instructor_id]
-        ).matching_schedule(days, schedule_data[:time])
-
-        count = target_classes.destroy_all.count
+        count = 0
+        times.each do |time_string|
+          count += ClassSchedule.where(
+            starts_at: start_date.beginning_of_day..end_date.end_of_day,
+            class_type_id: class_schedule_params[:class_type_id],
+            instructor_id: class_schedule_params[:instructor_id]
+          ).matching_schedule(days, time_string).destroy_all.count
+        end
         flash_message = "Se eliminaron #{count} clases correctamente."
+    
       else
         base_attributes = {
           class_type_id: class_schedule_params[:class_type_id],
           instructor_id: class_schedule_params[:instructor_id],
           duration_minutes: class_schedule_params[:duration_minutes],
-          capacity: class_schedule_params[:capacity]
+          capacity: class_schedule_params[:capacity],
+          modality: class_schedule_params[:modality]
         }
-
-        count = ClassSchedule.bulk_schedule(
-          { days: days, time: schedule_data[:time] }, 
-          date_range, 
-          base_attributes
-        )
-        flash_message = t('admin.class_schedules.flash.created_batch', count: count)
+    
+        total_created = 0
+        
+        times.each do |time_string|
+          total_created += ClassSchedule.bulk_schedule(
+            { days: days, time: time_string }, 
+            date_range, 
+            base_attributes
+          )
+        end
+        flash_message = t('admin.class_schedules.flash.created_batch', count: total_created)
       end
+    
       redirect_to admin_class_schedules_path, notice: flash_message
+    
     rescue StandardError => e
-      redirect_to batch_new_admin_class_schedules_path, alert: t('admin.class_schedules.flash.error_batch', message: e.message)
+      redirect_to batch_new_admin_class_schedules_path, 
+                  alert: "Error en el proceso: #{e.message}"
     end
 
     private
@@ -173,7 +182,7 @@ module Admin
 
     def set_collections
       @class_types = ClassType.active.order(:name)
-      @instructors = User.where(role: [:instructor, :admin]).order(:first_name)
+      @instructors = User.eligible_instructors
     end
 
     def class_schedule_params

@@ -44,13 +44,13 @@
         <%# 1. Stats:%>
         <div class="grid grid-cols-2 lg:flex gap-3 w-full lg:w-auto mt-4 lg:mt-0">
           <div class="bg-white p-4 lg:p-5 rounded-3xl border border-slate-100 shadow-sm text-center lg:min-w-[110px]">
-            <span class="block text-[8px] font-black text-slate-400 uppercase mb-1 tracking-widest"><%= t('admin.class_schedules.show.spots_label') %></span>
+            <span class="block text-[8px] font-black text-slate-400 uppercase mb-1 tracking-widest"><%= "Cupos" %></span>
             <span id="spots_counter" class="text-2xl lg:text-3xl font-black italic tracking-tighter <%= @class_schedule.full? ? 'text-red-500' : 'text-slate-900' %>">
               <%= @class_schedule.active_bookings_count %>/<%= @class_schedule.capacity %>
             </span>
           </div>
           <div class="bg-slate-900 p-4 lg:p-5 rounded-3xl shadow-xl shadow-indigo-100 text-center lg:min-w-[110px] border border-slate-800">
-            <span class="block text-[8px] font-black text-indigo-400 uppercase mb-1 tracking-widest text-shadow-sm"><%= t('admin.class_schedules.show.present') %></span>
+            <span class="block text-[8px] font-black text-indigo-400 uppercase mb-1 tracking-widest text-shadow-sm"><%= "Asistieron" %></span>
             <span id="attended_counter" class="text-2xl lg:text-3xl font-black italic tracking-tighter text-white">
             </span>
           </div>
@@ -65,7 +65,7 @@
           <div class="px-6 lg:px-8 py-5 border-b border-slate-50 flex justify-between items-center bg-slate-50/30">
             <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest italic">Lista de Inscritos</h3>
             <span id="enrolled_badge" class="px-2.5 py-1 bg-indigo-50 text-indigo-600 text-[9px] font-black rounded-full uppercase">
-              <%= @class_schedule.active_bookings_count %> <%= t('admin.class_schedules.show.enrolled_badge') %>
+              <%= @class_schedule.active_bookings_count %> <%= "Inscritos" %>
             </span>
           </div>
           <%= render "admin/class_schedules/partials/attendance_list", schedule: @class_schedule %>
@@ -76,7 +76,7 @@
       <div class="lg:col-span-4 space-y-6" data-controller="search-list">
         <div class="bg-slate-900 p-6 lg:p-8 rounded-[2.5rem] lg:rounded-[3rem] text-white shadow-2xl border border-slate-800">
           <h3 class="text-lg lg:text-xl font-black italic uppercase tracking-tighter mb-6 leading-none">
-            <%= t('admin.class_schedules.show.inscription') %><br><span class="text-indigo-400"><%= t('admin.class_schedules.show.manual') %></span>
+            <%= "Inscribir Alumno" %><br><span class="text-indigo-400"><%= "Manualmente" %></span>
           </h3>
           
           <%# Search & Toggle %>
@@ -105,7 +105,7 @@
               <% end %>
             </div>
 
-            <%= f.submit t('admin.class_schedules.show.submit_enrollment'), class: "w-full bg-indigo-600 text-white py-3.5 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] shadow-lg active:scale-95 transition-all cursor-pointer" %>
+            <%= f.submit "Agregar" , class: "w-full bg-indigo-600 text-white py-3.5 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] shadow-lg active:scale-95 transition-all cursor-pointer" %>
           <% end %>
         </div>
       </div>

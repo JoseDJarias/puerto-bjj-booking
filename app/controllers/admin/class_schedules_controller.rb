@@ -122,56 +122,54 @@ module Admin
     end
 
     def process_batch
-      schedule_params = params[:schedule]
-      times = schedule_params[:times]&.select(&:present?) || []
-      days = schedule_params[:days]&.select(&:present?)&.map(&:to_i) || []
+      safe_params = class_schedule_params
       
-      if times.empty? || days.empty?
+      # Filter active days from the grid
+      day_configs = safe_params[:day_configs]&.to_h&.values&.select { |c| c[:active] == "1" } || []
+
+      if day_configs.empty?
         return redirect_to batch_new_admin_class_schedules_path, 
-                           alert: "Debes seleccionar al menos un día y un horario."
+                          alert: "Debes seleccionar al menos un día en el grid."
       end
-    
-      start_date = Date.parse(schedule_params[:start_date])
-      end_date = Date.parse(schedule_params[:end_date])
+
+      start_date = Date.parse(safe_params[:start_date])
+      end_date = Date.parse(safe_params[:end_date])
       date_range = start_date..end_date
+
+      # Remove keys that are not columns of the table (dates and grid)
+      base_attributes = safe_params.except(:start_date, :end_date, :day_configs)
+
+      total_processed = 0
     
       if params[:bulk_action] == "destroy"
-        count = 0
-        times.each do |time_string|
-          count += ClassSchedule.where(
-            starts_at: start_date.beginning_of_day..end_date.end_of_day,
-            class_type_id: class_schedule_params[:class_type_id],
-            instructor_id: class_schedule_params[:instructor_id]
-          ).matching_schedule(days, time_string).destroy_all.count
+        day_configs.each do |config|
+          # Iterate over the array of times to delete each one specifically
+          config[:times].each do |time_string|
+            next if time_string.blank?
+            total_processed += ClassSchedule.where(starts_at: date_range)
+                                           .where(class_type_id: base_attributes[:class_type_id])
+                                           .matching_schedule([config[:day_index]], time_string)
+                                           .destroy_all.count
+          end
         end
-        flash_message = "Se eliminaron #{count} clases correctamente."
-    
+        flash_message = "Se eliminaron #{total_processed} clases correctamente."
       else
-        base_attributes = {
-          class_type_id: class_schedule_params[:class_type_id],
-          instructor_id: class_schedule_params[:instructor_id],
-          duration_minutes: class_schedule_params[:duration_minutes],
-          capacity: class_schedule_params[:capacity],
-          modality: class_schedule_params[:modality]
-        }
-    
-        total_created = 0
-        
-        times.each do |time_string|
-          total_created += ClassSchedule.bulk_schedule(
-            { days: days, time: time_string }, 
-            date_range, 
-            base_attributes
-          )
+        day_configs.each do |config|
+          # Iterate over the array of times for each day
+          config[:times].each do |time_string|
+            next if time_string.blank?
+            
+            total_processed += ClassSchedule.bulk_schedule(
+              { days: [config[:day_index].to_i], time: time_string }, 
+              date_range, 
+              base_attributes
+            )
+          end
         end
-        flash_message = t('admin.class_schedules.flash.created_batch', count: total_created)
+        flash_message = t('admin.class_schedules.flash.created_batch', count: total_processed)
       end
     
       redirect_to admin_class_schedules_path, notice: flash_message
-    
-    rescue StandardError => e
-      redirect_to batch_new_admin_class_schedules_path, 
-                  alert: "Error en el proceso: #{e.message}"
     end
 
     private
@@ -186,7 +184,20 @@ module Admin
     end
 
     def class_schedule_params
-      params.require(:class_schedule).permit(:class_type_id, :instructor_id, :starts_at, :duration_minutes, :capacity, :cancelled, :modality)
+      params.require(:class_schedule).permit(
+        :class_type_id, 
+        :instructor_id, 
+        :duration_minutes, 
+        :capacity, 
+        :modality,
+        :start_date,    # Nueva fecha inicio
+        :end_date,      # Nueva fecha fin
+        day_configs: [  # Estructura del Grid
+          :active, 
+          :day_index, 
+          times: []     # El array de horas
+        ]
+      )
     end
   end
 end

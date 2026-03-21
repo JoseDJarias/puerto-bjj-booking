@@ -104,54 +104,91 @@
               </label>
             <% end %>
           </div>
-        </div>
+        </div>       
 
-        <%# 3. DINAMIC TIME SELECTOR - Con margen superior generoso para que destaque el bloque azul %>
-        <%# 4. DINAMIC TIME SELECTOR %>
-        <div class="bg-indigo-50/50 p-6 sm:p-8 rounded-[2.5rem] border border-indigo-100/50 space-y-8 mt-4">
-          <label class="text-[11px] font-black text-indigo-700 uppercase tracking-[0.2em] block text-center">
-            Definir Horarios de Clase
-          </label>    
-          
-          <div data-batch-schedule-target="container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            
-            <button type="button" data-action="batch-schedule#add"
-                    class="order-last sm:order-first flex items-center justify-center border-2 border-dashed border-indigo-300 rounded-2xl bg-white/50 hover:bg-white hover:border-indigo-600 transition-all group min-h-[64px] shadow-sm">
-              <svg class="w-6 h-6 text-indigo-400 group-hover:text-indigo-600 transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-                <path d="M12 4v16m8-8H4" />
-              </svg>
-            </button>
-
-            <div class="time-slot-item">
-              <input type="time" name="schedule[times][]" required 
-                    class="block w-full bg-white border-2 border-indigo-100 rounded-2xl py-4 px-3 sm:px-4 text-base sm:text-sm font-black text-slate-700 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all shadow-sm [color-scheme:light]">
-            </div>
+        <%# 3. Weekly Schedule Grid %>
+        <div class="space-y-8 mt-12">
+          <div class="text-center">
+            <label class="text-[11px] font-black text-slate-900 uppercase tracking-[0.2em]">
+              Configuración Semanal
+            </label>
+            <p class="text-[10px] text-slate-400 font-bold uppercase mt-1">Selecciona los días y define uno o varios horarios</p>
           </div>
-        </div>
 
-        <%# 5. DAY SELECTOR %>
-        <div class="space-y-6 mt-6">
-          <label class="text-[11px] font-black text-slate-900 uppercase tracking-[0.2em] block text-center">Días de Entrenamiento</label>
-          <div class="flex flex-wrap justify-center gap-3">
-            <% t('date.day_names').each_with_index do |day_name, index| %>
-              <label class="group relative cursor-pointer">
-                <input type="checkbox" name="schedule[days][]" value="<%= index %>" class="sr-only peer">
-                <div class="w-14 h-14 rounded-2xl bg-white border-2 border-slate-100 flex items-center justify-center transition-all peer-checked:bg-indigo-600 peer-checked:text-white peer-checked:border-indigo-600 peer-checked:shadow-lg peer-checked:shadow-indigo-100 group-hover:border-slate-300 shadow-sm">
-                  <span class="text-xs font-black uppercase tracking-tighter"><%= day_name[0..2] %></span>
+          <div class="grid grid-cols-1 md:grid-cols-7 gap-4">
+            <% days = t('date.day_names').rotate(1) %>
+            <% days.each_with_index do |day_name, index| %>
+              <% day_index = (index + 1) % 7 %>  
+              
+              <div class="group relative bg-white border-2 border-slate-100 rounded-3xl p-4 transition-all has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50/30" 
+                  data-controller="batch-schedule">
+                
+                <label class="cursor-pointer flex flex-col items-center gap-2 mb-3">
+                  <input type="checkbox" 
+                        name="class_schedule[day_configs][<%= index %>][active]" 
+                        value="1" 
+                        class="sr-only peer" 
+                        data-action="change->batch-schedule#toggleDay">
+                  
+                  <span class="text-[10px] font-black uppercase text-slate-400 peer-checked:text-indigo-600 transition-colors">
+                    <%= day_name[0..2] %>
+                  </span>
+                  
+                  <input type="hidden" name="class_schedule[day_configs][<%= index %>][day_index]" value="<%= day_index %>">
+                  
+                  <div class="w-6 h-6 rounded-full border-2 border-slate-200 flex items-center justify-center peer-checked:bg-indigo-600 peer-checked:border-indigo-600 transition-all shadow-sm">
+                    <svg class="w-3 h-3 text-white opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                      <path d="M5 13l4 4L19 7"/>
+                    </svg>
+                  </div>
+                </label>
+
+                <%# Hours Container %>
+                <div data-batch-schedule-target="container" 
+                    class="space-y-2 opacity-20 pointer-events-none transition-all duration-300">
+                  <div class="relative">
+                    <input type="time" 
+                          name="class_schedule[day_configs][<%= index %>][times][]" 
+                          value="09:00" 
+                          class="w-full bg-white border border-slate-200 rounded-xl py-2 px-2 text-[11px] font-black text-slate-700 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 transition-all shadow-sm">
+                  </div>
                 </div>
-              </label>
+
+                <%# Add Extra Hour Button %>
+                <button type="button" 
+                        data-action="click->batch-schedule#add" 
+                        class="mt-3 w-full py-2 border-2 border-dashed border-slate-100 rounded-xl text-slate-300 hover:text-indigo-600 hover:border-indigo-200 hover:bg-white transition-all text-[9px] font-black uppercase tracking-wider">
+                  + Añadir Hora
+                </button>
+
+                <%# New Slots Template %>
+                <template data-batch-schedule-target="template">
+                  <div class="relative animate-in slide-in-from-top-1 duration-200 mt-2">
+                    <input type="time" 
+                          name="class_schedule[day_configs][<%= index %>][times][]" 
+                          value="18:00" 
+                          class="w-full bg-white border border-slate-200 rounded-xl py-2 px-2 text-[11px] font-black text-slate-700 shadow-sm">
+                    
+                    <button type="button" 
+                            data-action="click->batch-schedule#remove" 
+                            class="absolute -top-1.5 -right-1.5 bg-slate-900 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center shadow-lg hover:bg-red-500 transition-colors border-2 border-white">
+                      ×
+                    </button>
+                  </div>
+                </template>
+              </div>
             <% end %>
           </div>
         </div>
 
-        <%# 6. CONFIG EXTRA %>
+        <%# 4. Extra Config %>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pt-10 border-t border-slate-100">
           <div class="space-y-3">
             <label class="text-[10px] font-black text-slate-900 uppercase tracking-widest ml-1 flex items-center gap-2">
               <svg class="w-3 h-3 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
               Inicia
             </label>
-            <input type="date" name="schedule[start_date]" value="<%= @default_start %>" required class="block w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-3 px-4 text-sm font-black text-slate-700 focus:bg-white focus:border-indigo-500 transition-all shadow-sm">
+            <input type="date" name="class_schedule[start_date]" value="<%= @default_start %>" required class="block w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-3 px-4 text-sm font-black text-slate-700 focus:bg-white focus:border-indigo-500 transition-all shadow-sm">
           </div>
 
           <div class="space-y-3">
@@ -159,7 +196,7 @@
               <svg class="w-3 h-3 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
               Finaliza
             </label>
-            <input type="date" name="schedule[end_date]" value="<%= @default_end %>" required class="block w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-3 px-4 text-sm font-black text-slate-700 focus:bg-white focus:border-indigo-500 transition-all shadow-sm">
+            <input type="date" name="class_schedule[end_date]" value="<%= @default_end %>" required class="block w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-3 px-4 text-sm font-black text-slate-700 focus:bg-white focus:border-indigo-500 transition-all shadow-sm">
           </div>
 
           <div class="space-y-3">
@@ -199,16 +236,4 @@
       <% end %>
     </div>
   </div>
-
-  <%# Time Slot Template %>
-  <template data-batch-schedule-target="template">
-    <div class="time-slot-item relative group animate-in slide-in-from-top-2 duration-300">
-      <input type="time" name="schedule[times][]" required 
-             class="block w-full bg-white border-2 border-indigo-100 rounded-2xl py-4 px-4 text-sm font-black text-slate-700 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all shadow-sm">
-      <button type="button" data-action="batch-schedule#remove"
-              class="absolute -top-3 -right-3 bg-slate-900 text-white rounded-full w-7 h-7 flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500">
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M6 18L18 6M6 6l12 12"/></svg>
-      </button>
-    </div>
-  </template>
 </div>

@@ -18,6 +18,11 @@ proxy:
   hosts:
     - staging.booking.puertojiujitsu.com
     - www.staging.booking.puertojiujitsu.com
+  app_port: 3000
+  healthcheck:
+    path: /up
+    interval: 5
+    timeout: 5
 
 env:
   secret:
@@ -30,3 +35,6 @@ env:
 volumes:
   - "puerto_bjj_booking_staging_storage:/rails/storage"
   - "puerto_bjj_booking_staging_uploads:/rails/public/uploads"
+
+builder:
+  arch: amd64

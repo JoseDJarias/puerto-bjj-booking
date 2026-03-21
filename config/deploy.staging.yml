@@ -1,6 +1,13 @@
 # Staging Configuration - Inherits from deploy.yml with overrides
 service: puerto_bjj_booking_staging
 
+image: daniel01ariasjaen/puerto_bjj_booking
+
+registry:
+  username: daniel01ariasjaen
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
 servers:
   web:
     hosts:

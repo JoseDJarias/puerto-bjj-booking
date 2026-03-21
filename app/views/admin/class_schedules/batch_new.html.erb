@@ -24,10 +24,10 @@
         </p>
       </header>
 
-      <%= form_with url: process_batch_admin_class_schedules_path, method: :post, scope: :class_schedule, class: "space-y-12" do |f| %>
+      <%= form_with url: process_batch_admin_class_schedules_path, method: :post, scope: :class_schedule, class: "space-y-6" do |f| %>
         
         <%# 1. DISCIPLINE SELECTOR %>
-        <div class="space-y-5">
+        <div class="space-y-3">
           <label class="text-[11px] font-black text-slate-900 uppercase tracking-[0.2em] flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-indigo-600"></span>
             <%= t('admin.class_schedules.form.select_discipline') %>
@@ -47,7 +47,7 @@
         </div>
 
        <%# 2. MODALITY SELECTOR Dropdown %>
-        <div class="py-8 border-b border-slate-50">
+        <div class="py-4 border-b border-slate-50">
           <label class="text-[11px] font-black text-slate-900 uppercase tracking-[0.2em] flex items-center gap-2 mb-4">
             <span class="w-2 h-2 rounded-full bg-indigo-600 animate-pulse"></span>
             Modalidad de Jiu Jitsu (Gi o No-Gi)
@@ -84,7 +84,7 @@
         </div>
 
         <%# 3. INSTRUCTOR SELECTOR%>
-        <div class="py-8">
+        <div class="py-4">
           <label class="text-[11px] font-black text-slate-900 uppercase tracking-[0.2em] flex items-center gap-2 mb-6">
             <span class="w-2 h-2 rounded-full bg-indigo-600"></span>
             <%= t('admin.class_schedules.form.select_instructor') %>
@@ -107,7 +107,7 @@
         </div>       
 
         <%# 3. Weekly Schedule Grid %>
-        <div class="space-y-8 mt-12">
+        <div class="space-y-4 mt-6">
           <div class="text-center">
             <label class="text-[11px] font-black text-slate-900 uppercase tracking-[0.2em]">
               Configuración Semanal
@@ -115,7 +115,7 @@
             <p class="text-[10px] text-slate-400 font-bold uppercase mt-1">Selecciona los días y define uno o varios horarios</p>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-7 gap-4">
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
             <% days = t('date.day_names').rotate(1) %>
             <% days.each_with_index do |day_name, index| %>
               <% day_index = (index + 1) % 7 %>  

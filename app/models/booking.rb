@@ -187,6 +187,14 @@ class Booking < ApplicationRecord
                       target: "attendance_list_#{class_schedule_id}",
                       partial: "admin/class_schedules/partials/attendance_list",
                       locals: { schedule: class_schedule }
+
+    broadcast_update_to "schedule_#{class_schedule_id}",
+                      target: "admin_attended_bookings_counter_#{class_schedule_id}",
+                      html: class_schedule.attended_bookings_count.to_s
+
+    broadcast_update_to "schedule_#{class_schedule_id}",
+                      target: "user_enrolled_count_#{class_schedule_id}",
+                      html: "#{class_schedule.active_bookings_count} Inscritos"
   end
 
   def broadcast_admin_sidebar_update

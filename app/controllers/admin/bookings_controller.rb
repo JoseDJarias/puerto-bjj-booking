@@ -9,11 +9,18 @@ module Admin
       @booking = Booking.find_or_initialize_by(user: user, class_schedule: @schedule)
       
       if @booking.update_status!(:confirmed, current_user)
-        # 3. reload @schedule.bookings for active_bookings_count and other methods.
+        # Reload @schedule.bookings for active_bookings_count and other methods.
         @schedule.bookings.reload 
     
+        flash.now[:notice] = "#{user.first_name} agregado."
+
         respond_to do |format|
-          format.turbo_stream 
+          format.turbo_stream do
+            render turbo_stream: [
+              turbo_stream.prepend("flash", partial: "layouts/flash"),
+              turbo_stream.remove("empty_tatami_msg")
+            ]
+          end
           format.html { redirect_to attendance_admin_class_schedule_path(@schedule), notice: "#{user.first_name} agregado." }
         end
       else
@@ -40,7 +47,14 @@ module Admin
       if @booking.update_status!(new_status, current_user)
         @class_schedule = @booking.class_schedule
         respond_to do |format|
-          format.turbo_stream
+          format.turbo_stream do
+            render turbo_stream: [
+              turbo_stream.replace(helpers.dom_id(@booking), 
+                partial: "admin/class_schedules/partials/booking_row", 
+                locals: { booking: @booking }),
+            ]
+          end
+          format.html { redirect_to admin_class_schedule_path(@booking.class_schedule) }
         end
       end
     end

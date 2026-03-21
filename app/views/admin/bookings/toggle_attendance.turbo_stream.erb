@@ -1,7 +1,0 @@
-<%= turbo_stream.replace dom_id(@booking), render("admin/class_schedules/partials/booking_row", booking: @booking) %>
-
-<%= turbo_stream.update "attended_counter", @class_schedule.attended_bookings_count %>
-
-<%= turbo_stream.update "spots_counter", "#{@class_schedule.active_bookings_count}/#{@class_schedule.capacity}" %>
-
-<%= turbo_stream.update "enrolled_badge", "#{@class_schedule.active_bookings_count} #{t('admin.class_schedules.attendance.enrolled_label').downcase.capitalize}" %>

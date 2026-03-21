@@ -68,10 +68,9 @@
           <div class="flex flex-col items-center text-center md:items-start md:text-left">
             <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Alumnos inscritos</span>
             <div class="flex items-baseline gap-2">
-              <span id="admin_active_bookings_counter_<%= @class_schedule.id %>" class="text-4xl font-black italic text-indigo-600 leading-none">
-                <%= @class_schedule.active_bookings_count %>
+              <span id="user_enrolled_count_<%= @class_schedule.id %>" class="text-4xl font-black italic text-indigo-600 leading-none">
+                <%= @class_schedule.active_bookings_count %> Inscritos
               </span>
-              <span class="text-slate-400 font-bold uppercase text-[9px]">Inscritos</span>
             </div>
           </div>
 

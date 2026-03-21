@@ -1,5 +1,5 @@
 <% has_access = user.has_booking_access? %>
-<label id="user_sidebar_<%= user.id %>" 
+<label id="user_sidebar_item_<%= user.id %>" 
        class="flex items-center gap-3 p-2.5 rounded-xl border border-transparent hover:bg-slate-800 cursor-pointer transition-all group relative <%= 'hidden opacity-50' unless has_access %>" 
        data-search-list-target="item" 
        data-has-access="<%= has_access %>"

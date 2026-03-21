@@ -460,10 +460,10 @@ es:
 
     class_schedules:
       index:
-        title: "Calendario Académico"
+        title: "Horarios de Clases"
         subtitle: "Horarios de Clases"
-        new_single: "Clase Individual"
-        program_batch: "Programar Horario"
+        new_single: "Programar Clase Individual"
+        program_batch: "Programar Horario de Clases"
       batch_new:
         title: "Programar Horario Recurrente"
         heading: "Generador de Horarios"

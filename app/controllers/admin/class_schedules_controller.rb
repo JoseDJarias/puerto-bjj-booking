@@ -187,15 +187,17 @@ module Admin
       params.require(:class_schedule).permit(
         :class_type_id, 
         :instructor_id, 
+        :starts_at,
         :duration_minutes, 
         :capacity, 
         :modality,
-        :start_date,    # Nueva fecha inicio
-        :end_date,      # Nueva fecha fin
-        day_configs: [  # Estructura del Grid
+        :cancelled,
+        :start_date,
+        :end_date,
+        day_configs: [
           :active, 
           :day_index, 
-          times: []     # El array de horas
+          times: []
         ]
       )
     end

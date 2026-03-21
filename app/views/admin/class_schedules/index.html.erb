@@ -1,15 +1,10 @@
 <% content_for :page_title, t('admin.class_schedules.index.title') %>
 
 <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between border-b border-slate-200 pb-6">
-  <div>
-    <p class="text-slate-500 font-medium mt-1"><%= t('admin.class_schedules.index.subtitle') %></p>
-  </div>
-  
   <div class="flex gap-3">
     <%= link_to t('admin.class_schedules.index.new_single'), new_admin_class_schedule_path, class: "rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-all shadow-sm" %>
     
     <%= link_to batch_new_admin_class_schedules_path, class: "inline-flex justify-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-indigo-700 items-center gap-2 transition-all shadow-lg shadow-indigo-100" do %>
-      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
       <%= t('admin.class_schedules.index.program_batch') %>
     <% end %>
   </div>

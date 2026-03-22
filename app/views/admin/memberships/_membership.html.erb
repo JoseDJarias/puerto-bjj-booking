@@ -23,7 +23,10 @@
       <% end %>
     </div>
   </td>
-  <td class="px-4 py-4 text-right">
+  <td class="px-4 py-4 text-center">
     <%= link_to t("admin.common.edit"), edit_admin_membership_path(membership), class: "text-indigo-600 hover:text-indigo-900 font-bold text-sm" %>
+  </td>
+  <td class="px-4 py-4 text-center">
+    <%= link_to t("admin.common.delete"), admin_membership_path(membership), method: :delete, data: { turbo_method: :delete, turbo_confirm: t("admin.common.delete_confirm") }, class: "text-red-600 hover:text-red-900 font-bold text-sm" %>
   </td>
 </tr>

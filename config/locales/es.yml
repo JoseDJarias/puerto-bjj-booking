@@ -269,6 +269,7 @@ es:
       no: "No"
       edit: "Editar"
       delete: "Eliminar"
+      delete_confirm: "¿Estás seguro? Esto eliminará la membresía y todas sus reservas asociadas."
       back: "Volver al listado"
       cancel: "Cancelar"
       create: "Crear"

@@ -26,6 +26,8 @@ class User < ApplicationRecord
   validates :identification, uniqueness: true, if: -> { identification.present? && !admin_editing_password }
   validate :flexible_identification_check, if: -> { identification.present? }
 
+  after_update :send_welcome_email, if: -> { saved_change_to_approved_at?(from: nil) && approved? }
+
   #Admin scope for accounts management
   scope :pending, -> { where(approved_at: nil) }
   scope :approved, -> { where.not(approved_at: nil) }
@@ -113,5 +115,9 @@ class User < ApplicationRecord
     else
       errors.add(:identification, "formato de pasaporte inválido (debe tener entre 6 y 15 caracteres)")
     end
+  end
+
+  def send_welcome_email
+    UserMailer.welcome_email(self).deliver_later
   end
 end

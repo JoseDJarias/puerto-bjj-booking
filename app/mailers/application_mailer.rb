@@ -1,4 +1,5 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: "from@example.com"
+  default from: "Puerto BJJ <academia@booking.puertojiujitsu.com>",
+          reply_to: "infopuertobjj@gmail.com"
   layout "mailer"
 end

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <style>
+      .button {
+        background-color: #000000;
+        border-radius: 5px;
+        color: #ffffff !important;
+        display: inline-block;
+        font-weight: bold;
+        padding: 15px 25px;
+        text-decoration: none;
+        margin: 20px 0;
+        text-align: center;
+      }
+      .whatsapp-button {
+        background-color: #25D366;
+        color: white !important;
+        padding: 12px 25px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333; line-height: 1.6;">
+    <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
+      <h1 style="border-bottom: 2px solid #000; padding-bottom: 10px; text-align: center;">PUERTO BJJ</h1>
+      
+      <p>¡Hola, <strong><%= @user.first_name %></strong>!</p>
+
+      <p>Tu solicitud de registro en <strong>Booking Puerto BJJ</strong> ha sido revisada y aprobada exitosamente.</p>
+
+      <div style="background-color: #f8f9fa; padding: 20px; border: 1px solid #000; border-radius: 8px; margin: 25px 0;">
+        <h3 style="margin-top: 0; color: #000; text-align: center;">Próximos pasos para activar tu cuenta:</h3>
+        
+        <ol style="padding-left: 20px; font-size: 15px;">
+          <li style="margin-bottom: 10px;">
+            <strong>Realiza tu pago:</strong> Puedes hacerlo de forma presencial en la academia o vía <strong>SINPE Móvil</strong>.
+          </li>
+          <li style="margin-bottom: 10px;">
+            <strong>Notifica al Admin:</strong> Si pagas por SINPE, es <u>indispensable</u> enviar el comprobante para procesar tu inscripción.
+          </li>
+          <li>
+            <strong>Activación:</strong> Una vez confirmado el pago, nuestro equipo activará tu membresía y podrás reservar tus clases de inmediato.
+          </li>
+        </ol>
+      </div>
+
+      <div style="text-align: center; margin: 30px 0;">
+        <p style="font-size: 15px; margin-bottom: 15px;"><strong>¿Listo para enviar tu comprobante?</strong></p>
+        <a href="https://wa.me/50672026863?text=Hola!%20Mi%20usuario%20ya%20fue%20aprobado%20en%20la%20app%20de%20Puerto%20BJJ%20y%20quiero%20enviar%20mi%20comprobante%20de%20pago" class="whatsapp-button">
+          📱 Notificar Pago por WhatsApp
+        </a>
+      </div>
+
+      <div style="text-align: center; margin: 10px 0;">
+        <p style="font-size: 14px; color: #666;">O entra aquí para ver los horarios:</p>
+        <a href="<%= @url %>" class="button">Ir a mi Perfil en Puerto BJJ</a>
+      </div>
+
+      <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+
+      <p style="font-size: 15px; text-align: center;">
+        <strong>¿Dudas generales sobre las clases?</strong><br>
+      </p>
+
+      <div style="text-align: center; margin: 20px 0;">
+        <a href="https://wa.me/50672026863?text=Hola,%20me%20gustaría%20obtener%20información%20sobre%20las%20clases%20de%20Jiu-Jitsu" class="whatsapp-button">
+          💬 Consultas por WhatsApp
+        </a>
+      </div>
+
+      <p style="font-size: 14px; text-align: center; color: #666;">
+        Email: <strong>infopuertobjj@gmail.com</strong>
+      </p>
+      
+      <p style="text-align: center;">Nos vemos pronto en la lona,<br>
+      <strong>Equipo Puerto BJJ</strong></p>
+      
+      <div style="margin-top: 40px; font-size: 11px; color: #999; text-align: center;">
+        <p>Este correo fue enviado a <%= @user.email_address %> porque tu cuenta fue aprobada en booking.puertojiujitsu.com</p>
+      </div>
+    </div>
+  </body>
+</html>

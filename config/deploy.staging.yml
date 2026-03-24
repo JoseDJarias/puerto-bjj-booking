@@ -31,6 +31,7 @@ env:
     RAILS_ENV: staging
     RAILS_LOG_TO_STDOUT: true
     SOLID_QUEUE_IN_PUMA: true
+    SOLID_QUEUE_ASYNC: true
 
 volumes:
   - "puerto_bjj_booking_staging_storage:/rails/storage"

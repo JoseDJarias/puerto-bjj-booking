@@ -27,6 +27,7 @@ proxy:
 env:
   secret:
     - RAILS_MASTER_KEY
+    - RESEND_API_KEY
   clear:
     RAILS_ENV: staging
     RAILS_LOG_TO_STDOUT: true

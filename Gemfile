@@ -45,7 +45,7 @@ gem "image_processing", "~> 1.2"
 gem "simple_calendar", "~> 3.0"
 
 # Pagination gem [https://github.com/ddnexus/pagy]
-gem "pagy", "~> 43.2.9"
+gem "pagy", "~> 43.4.2"
 
 # Email sending gem [https://github.com/resend/resend-ruby]
 gem "resend"

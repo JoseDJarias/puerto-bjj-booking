@@ -253,7 +253,7 @@ es:
         today_block: "HOY (BLOQUE ACTUAL)"
         tomorrow: "MAÑANA"
         yesterday: "AYER"
-        today: "HOY"
+        go_to_today: "Volver a la fecha actual"
         viewing_block: "Viendo horario del"
         instructor_prefix: "Prof:"
         no_instructor: "---"

@@ -79,7 +79,9 @@
         <% if @offset != 0 %>
           <%= link_to admin_dashboard_path(offset: 0), 
                       class: "w-full flex items-center justify-center px-4 py-2.5 bg-slate-900 rounded-xl text-[10px] font-black text-white uppercase tracking-widest shadow-lg shadow-slate-200 active:scale-95 transition-all" do %>
-            <%= t('admin.dashboard.index.today') %>
+            <span class="block w-full text-center font-black uppercase tracking-tighter">
+              <%= t('admin.dashboard.index.go_to_today') %>
+            </span>
           <% end %>
         <% else %>
           <div class="h-1 w-8 bg-slate-100 rounded-full"></div>

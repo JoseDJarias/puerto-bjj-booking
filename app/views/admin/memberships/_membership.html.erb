@@ -20,6 +20,8 @@
       </span>
       <% if membership.current? %>
         <span class="text-[10px] text-green-600 font-bold"><%= t("admin.memberships.index.days_left", count: membership.days_remaining) %></span>
+        <% else %>
+          <span class="text-[10px] text-red-600 font-bold"><%= t("admin.memberships.index.expired") %></span>
       <% end %>
     </div>
   </td>

@@ -428,6 +428,7 @@ es:
         table_due: "Vence"
         load_more: "Cargar más"
         days_left: "Quedan %{count} días"
+        expired: "Vencida"
         tabs_aria: "Filtros de listado"
         table:
           plan_details: "Detalles del Plan"

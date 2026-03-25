@@ -38,7 +38,7 @@
           <div class="relative bg-white rounded-[2.5rem] border-2 border-slate-50 p-7 shadow-sm overflow-hidden">
             <div class="absolute top-0 right-0 p-4">
                <span class="text-[9px] font-black px-3 py-1 bg-slate-100 text-slate-500 rounded-full uppercase tracking-widest">
-                <%= t("my_membership.history.membership_status.#{m.status}") %>
+                <%= t("enums.membership.status.#{m.current? ? 'active' : 'expired'}") %>
               </span>
             </div>
 

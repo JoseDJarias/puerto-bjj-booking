@@ -568,8 +568,8 @@ es:
     membership:
       status:
         active: "Activa"
-        inactive: "Inactivo"
-        suspended: "Suspendido" 
+        expired: "Vencida"
+        cancelled: "Cancelada" 
   
 
   # === FLASH MESSAGES ===

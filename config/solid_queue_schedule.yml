@@ -1,0 +1,4 @@
+expire_memberships:
+  class: ExpireMembershipsJob
+  cron: "0 0 * * *"
+  queue: default

@@ -108,7 +108,6 @@ class ClassSchedule < ApplicationRecord
   end
   
   def full?
-    spots_left=1
     spots_left <= 0
   end
   

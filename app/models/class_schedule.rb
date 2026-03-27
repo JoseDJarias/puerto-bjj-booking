@@ -99,7 +99,7 @@ class ClassSchedule < ApplicationRecord
   end
 
   def self.logical_today
-    Time.current.hour >= BOOKING_OPEN_HOUR ? Date.tomorrow : Date.current
+    Time.current.hour >= OPERATIVE_ADMIN_HOUR ? Date.tomorrow : Date.current
   end
 
 # --- SPOTS LOGIC ---

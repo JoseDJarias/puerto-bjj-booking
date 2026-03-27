@@ -248,7 +248,7 @@ es:
         badge_instructor: "Modo Instructor"
         greeting: "¡Bienvenido"
         sessions_count: "Clases programadas para hoy: %{count}"
-        section_plan: "Horario del día de:"
+        section_plan: "Horario del día: "
         section_my_classes: "Mis Clases"
         today_block: "HOY (BLOQUE ACTUAL)"
         tomorrow: "MAÑANA"

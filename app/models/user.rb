@@ -3,6 +3,7 @@ class User < ApplicationRecord
   include MembershipValidator
 
   attr_accessor :admin_editing_password
+  attr_accessor :approve_on_create
   
   has_secure_password
   has_many :sessions, dependent: :destroy
@@ -27,7 +28,7 @@ class User < ApplicationRecord
   validate :flexible_identification_check, if: -> { identification.present? }
 
   after_update :send_welcome_email, if: -> { saved_change_to_approved_at?(from: nil) && approved? }
-
+  before_save :handle_manual_approval, if: -> { approve_on_create == "1" }
   #Admin scope for accounts management
   scope :pending, -> { where(approved_at: nil) }
   scope :approved, -> { where.not(approved_at: nil) }
@@ -119,5 +120,9 @@ class User < ApplicationRecord
 
   def send_welcome_email
     UserMailer.welcome_email(self).deliver_later
+  end
+
+  def handle_manual_approval
+    self.approved_at ||= Time.current
   end
 end

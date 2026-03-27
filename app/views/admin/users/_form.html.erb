@@ -69,6 +69,12 @@
         <%= f.select :status, User.statuses.keys.map { |s| [t("enums.user.status.#{s}"), s] }, {}, class: "block w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-indigo-500" %>
       </div>
     </div>
+    <% if f.object.new_record? %>
+      <div class="mt-4 flex items-center gap-2 bg-indigo-50 p-3 rounded-lg border border-indigo-100">
+        <%= f.check_box :approve_on_create, class: "h-4 w-4 rounded border-indigo-300 text-indigo-600 focus:ring-indigo-600" %>
+        <%= f.label :approve_on_create, "Aprobar usuario inmediatamente", class: "text-sm font-semibold text-indigo-900" %>
+      </div>
+    <% end %>
   </div>
 
   <div class="pt-4 border-t border-slate-100">

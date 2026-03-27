@@ -6,6 +6,7 @@ class ClassSchedule < ApplicationRecord
 
   GRACE_PERIOD_MINUTES = 20
   BOOKING_OPEN_HOUR = 20
+  OPERATIVE_ADMIN_HOUR = 21
 
   enum :modality, { gi: 0, nogi: 1 }
 
@@ -13,34 +14,32 @@ class ClassSchedule < ApplicationRecord
   validates :duration_minutes, numericality: { greater_than: 0 }
   validates :capacity, numericality: { greater_than: 0 }
   scope :active, -> { where(cancelled: false) }
-  # app/models/class_schedule.rb
+
   scope :matching_schedule, ->(days, time_string) {
-    # Añadimos 'localtime' para que SQLite convierta de UTC a tu hora antes de comparar
     where("strftime('%w', starts_at, 'localtime') IN (?)", days.map(&:to_s))
       .where("strftime('%H:%M', starts_at, 'localtime') = ?", time_string)
   }
-  # Booking day rolls at 20:00: after 11 PM user sees next calendar day's classes.
+
+  # Booking day rolls at 20:00: after 8:00 PM user sees next calendar day's classes.
   def self.operative_date
     Time.zone.now.hour >= BOOKING_OPEN_HOUR ? Date.tomorrow : Date.current
   end
 
-  # Class schedule index Classes from date.beginning_of_day to date.end_of_day
   scope :for_date, ->(date) {
       where(starts_at: date.beginning_of_day..date.end_of_day).order(:starts_at)
     }
 
-    # Dashboard show Classes from (now - grace period) to end_time, to be visible during the 20 min grace period.
-    scope :dashboard_upcoming, -> {
-      now = Time.zone.now
-      start_time = now - GRACE_PERIOD_MINUTES.minutes
+  scope :dashboard_upcoming, -> {
+    now = Time.zone.now
+    start_time = now - GRACE_PERIOD_MINUTES.minutes
 
-      end_time = if now.hour >= BOOKING_OPEN_HOUR
-                   (Date.tomorrow + 1.day).beginning_of_day + 12.hours
-                 else
-                   Date.tomorrow.beginning_of_day + 12.hours
-                 end
-      where(starts_at: start_time..end_time).order(starts_at: :asc)
-    }
+    end_time = if now.hour >= BOOKING_OPEN_HOUR
+                  (Date.tomorrow + 1.day).beginning_of_day + 12.hours
+                else
+                  Date.tomorrow.beginning_of_day + 12.hours
+                end
+    where(starts_at: start_time..end_time).order(starts_at: :asc)
+  }
   
   scope :past_logical, -> { 
     where("starts_at < ?", Time.zone.now).order(starts_at: :desc) 

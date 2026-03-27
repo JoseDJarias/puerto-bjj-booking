@@ -20,11 +20,6 @@ class ClassSchedule < ApplicationRecord
       .where("strftime('%H:%M', starts_at, 'localtime') = ?", time_string)
   }
 
-  # Booking day rolls at 20:00: after 8:00 PM user sees next calendar day's classes.
-  def self.operative_date
-    Time.zone.now.hour >= BOOKING_OPEN_HOUR ? Date.tomorrow : Date.current
-  end
-
   scope :for_date, ->(date) {
       where(starts_at: date.beginning_of_day..date.end_of_day).order(:starts_at)
     }

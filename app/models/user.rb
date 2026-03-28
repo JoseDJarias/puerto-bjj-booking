@@ -23,7 +23,7 @@ class User < ApplicationRecord
   
   # Identification validation
   before_validation :normalize_identification
-  validates :identification, presence: true, unless: :admin_editing_password
+  validates :identification, presence: true, unless: -> {:admin_editing_password || :password_digest_changed?}
   validates :identification, uniqueness: true, if: -> { identification.present? && !admin_editing_password }
   validate :flexible_identification_check, if: -> { identification.present? }
 

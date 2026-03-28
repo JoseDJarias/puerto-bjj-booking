@@ -9,7 +9,8 @@ class PasswordsController < ApplicationController
   end
 
   def create
-    if user = User.find_by(email_address: params[:email_address])
+    user = User.find_by(email_address: params[:email_address])
+    if user
       PasswordsMailer.reset(user).deliver_later
     end
 
@@ -24,7 +25,7 @@ class PasswordsController < ApplicationController
       @user.sessions.destroy_all
       redirect_to new_session_path, notice: t('flash.notices.password_updated')
     else
-      redirect_to edit_password_path(params[:token]), alert: "Passwords did not match."
+      render :edit, status: :unprocessable_entity
     end
   end
 

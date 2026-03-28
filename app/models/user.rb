@@ -55,7 +55,7 @@ class User < ApplicationRecord
   }
 
   def display_name
-    nickname.presence || first_name
+    nickname.presence || full_legal_name
   end
   
   def full_legal_name

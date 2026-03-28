@@ -25,6 +25,14 @@ module Admin
       @users_available = User.includes(:memberships, :drop_in_tickets)
                         .where.not(id: booked_user_ids)
                         .order(:first_name)
+
+      @back_path = if params[:from] == 'dashboard'
+                     admin_dashboard_path
+                   else
+                     admin_class_schedules_path
+                   end
+
+      @back_label = params[:from] == 'dashboard' ? "Dashboard" : t('admin.class_schedules.index.title')
                         
       respond_to do |format|
         format.html { 

@@ -13,6 +13,16 @@ es:
   time:
     am: "AM"
     pm: "PM"
+    formats:
+      # Este es el que te falta:
+      short: "%d %b %H:%M"
+      time_only: "%I:%M %p"
+
+  datetime:
+    distance_in_words:
+      x_minutes:
+        one: "1 minuto"
+        other: "%{count} minutos"
 
   number:
     currency:
@@ -592,7 +602,7 @@ es:
       password_reset_sent: "Instrucciones para restablecer la contraseña enviadas (si el usuario existe)."
       password_updated: "Tu contraseña ha sido actualizada."
       signed_out: "Sesión cerrada exitosamente."
-  
+
   # === USER DASHBOARD ===
   dashboard:
     title: "Inicio"
@@ -728,6 +738,8 @@ es:
               invalid: "no tiene un formato válido (debe incluir @ y un dominio)"
             password:
               confirmation: "no coincide con la contraseña"
+              too_short: "es demasiado corta (mínimo %{count} caracteres)"
+              blank: "no puede estar en blanco"
             password_confirmation:
               confirmation: "no coincide con la contraseña"
             nickname:
@@ -740,3 +752,5 @@ es:
       blank: "no puede estar en blanco"
       taken: "ya está en uso"
       confirmation: "no coincide con la confirmación"
+    template:
+      header: "Error en el formulario"

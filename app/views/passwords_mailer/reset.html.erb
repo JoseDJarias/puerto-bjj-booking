@@ -1,6 +1,36 @@
-<p>
-  You can reset your password on
-  <%= link_to "this password reset page", edit_password_url(@user.password_reset_token) %>.
+<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  color: #1e293b;
+  line-height: 1.6;
+  box-sizing: border-box;">
 
-  This link will expire in <%= distance_of_time_in_words(0, @user.password_reset_token_expires_in) %>.
-</p>
+  <h2 style="color: #4f46e5; font-size: 24px; font-weight: 800; margin-bottom: 16px; text-align: center;">
+    ¿Olvidaste tu contraseña?
+  </h2>
+
+  <p style="font-size: 16px; margin-bottom: 24px; text-align: center;">
+    No pasa nada, nos sucede a todos. Haz clic en el botón de abajo para configurar una nueva:
+  </p>
+
+  <div style="text-align: center; margin: 32px 0;">
+    <%= link_to "Resetear Contraseña", edit_password_url(@user.password_reset_token),
+                style: "background-color: #4f46e5; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 10px; font-weight: bold; display: inline-block; box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);" %>
+  </div>
+
+  <div style="background-color: #f8fafc; border-radius: 12px; padding: 20px; border: 1px dashed #cbd5e1; text-align: center;">
+    <p style="font-size: 14px; margin: 0; color: #64748b;">
+      Por seguridad, este enlace expirará en
+      <strong style="color: #475569;"><%= distance_of_time_in_words(Time.current, Time.current + @user.password_reset_token_expires_in) %></strong>.
+    </p>
+    <p style="font-size: 13px; margin-top: 6px; color: #94a3b8; font-weight: 500;">
+      (Vence a las <%= l(Time.current + @user.password_reset_token_expires_in, format: :time_only) %>)
+    </p>
+  </div>
+
+  <p style="font-size: 12px; color: #94a3b8; margin-top: 40px; border-top: 1px solid #f1f5f9; padding-top: 20px; text-align: center;">
+    Si no solicitaste este cambio, puedes ignorar este correo con seguridad.
+  </p>
+</div>

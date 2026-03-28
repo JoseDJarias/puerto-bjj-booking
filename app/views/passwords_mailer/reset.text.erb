@@ -1,4 +1,17 @@
-You can reset your password on
+¿Olvidaste tu contraseña de Puerto BJJ?
+=========================================
+
+No hay problema, sucede hasta en las mejores luchas. Puedes configurar una nueva contraseña haciendo clic en el siguiente enlace:
+
 <%= edit_password_url(@user.password_reset_token) %>
 
-This link will expire in <%= distance_of_time_in_words(0, @user.password_reset_token_expires_in) %>.
+-----------------------------------------
+SEGURIDAD:
+Este enlace es válido por <%= distance_of_time_in_words(Time.current, Time.current + @user.password_reset_token_expires_in) %>.
+(Vence a las <%= l(Time.current + @user.password_reset_token_expires_in, format: :time_only) %>)
+
+Si no solicitaste este cambio, puedes ignorar este correo. Tu contraseña actual seguirá funcionando sin cambios.
+-----------------------------------------
+
+¡Nos vemos en el tatami!
+Equipo Puerto BJJ

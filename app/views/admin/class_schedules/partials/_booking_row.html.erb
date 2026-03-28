@@ -6,7 +6,7 @@
   <div class="flex items-center gap-4 min-w-0">   
     <div class="min-w-0">
       <div class="text-base lg:text-lg font-black text-slate-900 uppercase italic leading-none mb-1 truncate">
-        <%= booking.user.nickname.presence || booking.user.first_name %>
+        <%= booking.user.nickname.presence || booking.user.full_legal_name %>
       </div>
       <div class="flex items-center gap-2">
         <span class="text-[9px] font-black uppercase tracking-tighter <%= booking.user.has_booking_access? ? 'text-green-500' : 'text-red-500' %>">

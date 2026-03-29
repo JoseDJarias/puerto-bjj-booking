@@ -68,9 +68,9 @@ puts "👥 Creating Users..."
 
 # 6. Usuarios (Usando una forma más robusta)
 users_data = [
-  { email_address: "admin@puertobjj.com", password: "password123", role: "admin", first_name: "Daniel", last_name: "Admin", identification: "111", phone_number: "88880001" },
-  { email_address: "instructor@puertobjj.com", password: "password123", role: "instructor", first_name: "Carlos", last_name: "Gracie", identification: "222", phone_number: "88880002" },
-  { email_address: "member@puertobjj.com", password: "password123", role: "member", first_name: "Daniel", last_name: "Arias", identification: "333", phone_number: "88880003" }
+  { email_address: "admin@puertobjj.com", password: "password123", role: "admin", first_name: "Daniel", last_name: "Admin", identification: "123457895", phone_number: "88880001" },
+  { email_address: "instructor@puertobjj.com", password: "password123", role: "instructor", first_name: "Carlos", last_name: "Gracie", identification: "123457896", phone_number: "88880002" },
+  { email_address: "member@puertobjj.com", password: "password123", role: "member", first_name: "Daniel", last_name: "Arias", identification: "123457892", phone_number: "88880003" }
 ]
 
 users_data.each do |data|

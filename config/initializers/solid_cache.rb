@@ -1,6 +1,11 @@
-Rails.application.reloader.to_prepare do
-  ActiveSupport.on_load(:solid_cache_record) do
-    
-    connects_to database: { writing: :cache, reading: :cache }
+Rails.application.config.to_prepare do
+  module SolidCache
+    class Record < ActiveRecord::Base
+      establish_connection(:cache) 
+      
+      def self.with_shard(shard, &block)
+        yield
+      end
+    end
   end
 end

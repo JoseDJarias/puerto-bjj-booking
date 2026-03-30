@@ -16,10 +16,10 @@ production:
   expire_memberships_task:
     class: ExpireMembershipsJob
     queue: default
-    schedule: "every day at 10:00pm"  
+    schedule: "every day at 00:00am"  
 
 staging:
   expire_memberships_task:
     class: ExpireMembershipsJob
     queue: default
-    schedule: "every 5 minutes"
+    schedule: "every day at 00:00am"

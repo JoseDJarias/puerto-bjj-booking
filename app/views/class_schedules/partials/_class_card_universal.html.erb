@@ -1,6 +1,5 @@
 <%# app/views/class_schedules/_class_card_universal.html.erb %>
 
-<%# --- 2. EL CONTENEDOR UNIVERSAL (Turbo Frame) --- %>
 <%# This ID allows the model to replace the entire card if necessary %>
 <%= turbo_frame_tag "universal_card_#{schedule.id}" do %>
   
@@ -22,13 +21,11 @@
               </div>
             <% end %>
 
-            <%# CAMBIO AQUÍ: flex-col para que el badge siempre esté abajo %>
             <div class="mb-2 flex flex-col items-start gap-1.5">
               <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 uppercase tracking-wider">
                 <%= schedule.class_type.name %>
               </span>
               
-              <%# El badge ahora cae abajo por el flex-col del padre %>
               <div class="mx-2">
                 <%= modality_badge(schedule) %>
               </div>
@@ -39,7 +36,6 @@
             </h3>
           </div>
 
-          <%# Los spots se quedan a la derecha, eso está perfecto %>
           <div id="spots_schedule_<%= schedule.id %>" class="shrink-0">
             <%= render "class_schedules/spots", schedule: schedule %>
           </div>
@@ -68,7 +64,7 @@
           </div>
         </div>
 
-          <%# --- LISTA DE PARTICIPANTES --- %>
+          <%# --- Participants List --- %>
         <div class="pt-1">
           <details class="group/details">
             <summary class="list-none cursor-pointer">

@@ -17,10 +17,8 @@ module DashboardHelper
         tag.span("#{diff / 60} min", class: "text-orange-600 animate-pulse")
       end
     elsif now >= start_t && now <= end_t
-      # Present Class
       tag.span("En curso", class: "text-green-600 font-bold")
     else
-      # Past Class
       "Terminada"
     end
   end

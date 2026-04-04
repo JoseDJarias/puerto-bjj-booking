@@ -29,7 +29,6 @@ module Authorizable
   def manage_plans_and_packages? = admin?
 
   # === HELPERS DE ROLES ===
-  
   def admin? = role == "admin"
   def instructor? = role == "instructor" || admin?
   def member? = role == "member"

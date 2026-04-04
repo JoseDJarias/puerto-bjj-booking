@@ -3,7 +3,6 @@ module Admin
     before_action :set_class_type, only: %i[edit update]
 
     def index
-      #Ordered by name for visual consistency
       @class_types = ClassType.order(:name)
     end
 

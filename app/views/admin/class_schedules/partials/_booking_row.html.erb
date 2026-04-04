@@ -17,7 +17,6 @@
   </div>
 
   <div class="flex items-center gap-2">
-      <%# 1. BLOQUEAR / DESBLOQUEAR %>
     <%= button_to admin_booking_path(booking, action_type: "toggle_block"), 
                   method: :patch,
                   class: "p-2.5 rounded-xl transition-all #{booking.blocked? ? 'bg-red-600 text-white shadow-lg shadow-red-200' : 'text-slate-300 hover:text-amber-500 hover:bg-amber-50'}",
@@ -31,14 +30,12 @@
       </svg>
     <% end %>
 
-    <%# 2. CHECK-IN %>
     <%= button_to toggle_attendance_admin_booking_path(booking), 
                   method: :patch,
                   class: "p-2.5 rounded-xl transition-all #{booking.attended? ? 'bg-green-500 text-white shadow-lg shadow-green-200' : 'text-slate-300 hover:text-green-500 hover:bg-green-50'}" do %>
       <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3.5"><path d="M5 13l4 4L19 7" /></svg>
     <% end %>
 
-    <%# 3. Throw out of the class %>
     <%= button_to admin_booking_path(booking), method: :delete, data: { turbo_confirm: t('admin.class_schedules.attendance.throw_out_confirm') }, 
                   class: "p-2.5 text-slate-300 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all" do %>
       <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>

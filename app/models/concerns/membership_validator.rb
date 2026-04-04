@@ -13,19 +13,16 @@ module MembershipValidator
     has_membership || has_drop_in || has_unused_ticket
   end
 
-  # Responds: "Does the user have access to this class?"
+ # Responds: "Does the user have access to this class?"
  def authorized_for?(class_type)
   return true if admin?
 
     return false unless eligible? # De Authorizable
 
-    # 1. ¿Tiene membresía activa para este deporte?
     return true if covered_by_membership?(class_type)
     
-    # 2. ¿Ya activó un Drop-in hoy? (Cubre todas las clases del día)
     return true if drop_in_active_today?
 
-    # 3. ¿Tiene tickets sin usar en la billetera?
     return true if unused_tickets?
 
     false
@@ -80,7 +77,6 @@ module MembershipValidator
   end
 
   def all_accessible_class_types
-    # Return all class types that the user has access to
     current_memberships.flat_map { |m| m.membership_package.class_types }.uniq
   end
 

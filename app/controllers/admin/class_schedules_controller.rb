@@ -36,7 +36,6 @@ module Admin
                         
       respond_to do |format|
         format.html { 
-          # If it's a Turbo Frame request, remove the layout
           layout = turbo_frame_request? ? false : "admin"
           render layout: layout 
         }
@@ -63,8 +62,6 @@ module Admin
     def update
       # 1. If the 'action_type' parameter is present, it's a quick attendance action
       if params[:action_type].present?
-        # Here you need to find the BOOKING, not the class. 
-        # Make sure to send the booking_id in your attendance buttons.
         @booking = Booking.find(params[:booking_id]) 
         
         target_status = case params[:action_type]
@@ -78,7 +75,7 @@ module Admin
     
         if @booking.update_status!(target_status, current_user)
           respond_to do |format|
-            format.turbo_stream { render "admin/bookings/update" } # O donde tengas tu stream
+            format.turbo_stream { render "admin/bookings/update" }
             format.html { redirect_back fallback_location: admin_dashboard_path }
           end
         end
@@ -92,7 +89,7 @@ module Admin
         end
       end
     end
-    # app/controllers/admin/class_schedules_controller.rb
+    
     def attendance
       @schedule = ClassSchedule.find(params[:id])
       
@@ -122,7 +119,6 @@ module Admin
       redirect_to admin_class_schedules_path, notice: t('admin.class_schedules.flash.deleted')
     end
 
-    # --- BULK GENERATOR ---
     def batch_new
       @class_schedule = ClassSchedule.new
       @default_start = Date.current
@@ -132,7 +128,6 @@ module Admin
     def process_batch
       safe_params = class_schedule_params
       
-      # Filter active days from the grid
       day_configs = safe_params[:day_configs]&.to_h&.values&.select { |c| c[:active] == "1" } || []
 
       if day_configs.empty?
@@ -144,14 +139,13 @@ module Admin
       end_date = Date.parse(safe_params[:end_date])
       date_range = start_date..end_date
 
-      # Remove keys that are not columns of the table (dates and grid)
       base_attributes = safe_params.except(:start_date, :end_date, :day_configs)
 
       total_processed = 0
     
+      # Iterate over the array of times to delete each one specifically
       if params[:bulk_action] == "destroy"
         day_configs.each do |config|
-          # Iterate over the array of times to delete each one specifically
           config[:times].each do |time_string|
             next if time_string.blank?
             total_processed += ClassSchedule.where(starts_at: date_range)
@@ -163,7 +157,6 @@ module Admin
         flash_message = "Se eliminaron #{total_processed} clases correctamente."
       else
         day_configs.each do |config|
-          # Iterate over the array of times for each day
           config[:times].each do |time_string|
             next if time_string.blank?
             

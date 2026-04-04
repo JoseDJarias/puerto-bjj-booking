@@ -8,8 +8,6 @@ class Membership < ApplicationRecord
   validates :start_date, presence: true
   validates :amount_paid, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 
-  # 'current': It means that the status is active and the date is valid.
-  # We use the modern syntax for infinite ranges (Date.current..)
   scope :current, -> { active.where(end_date: Date.current..) }
   scope :expired_listing, -> { expired.or(where(end_date: ..Date.yesterday)) }
   scope :past, -> { where(end_date: ..Date.yesterday).or(where(status: [:expired, :cancelled])) }
@@ -46,6 +44,7 @@ class Membership < ApplicationRecord
 
   private
 
+  # === CALCULATIONS ===
   def calculate_end_date
     return if end_date.present?
     return unless start_date && membership_plan
@@ -53,7 +52,6 @@ class Membership < ApplicationRecord
     self.end_date = start_date + membership_plan.duration_months.months
   end
 
-  # === CALCULATIONS ===
   def calculate_amount_paid
     return if amount_paid.present?
 

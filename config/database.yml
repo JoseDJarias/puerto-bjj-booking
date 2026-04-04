@@ -9,6 +9,16 @@ default: &default
   max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
 
+development:
+  primary:
+    <<: *default
+    database: storage/development.sqlite3
+  # AGREGA ESTO:
+  cache:
+    <<: *default
+    database: storage/development_cache.sqlite3
+    migrations_paths: db/cache_migrate
+
 staging: &staging_config
   primary:
     <<: *default

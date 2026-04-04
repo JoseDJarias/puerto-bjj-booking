@@ -11,7 +11,6 @@
     </article>
 
   <% else %>
-    <%# --- Dashboard Pro (Your new Root) --- %>
     
     <%# 1. Welcome Card %>
     <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm mb-6 relative overflow-hidden">
@@ -30,19 +29,14 @@
 
     <%# 2. Stats Cards (KPIs) %>
     <div class="grid grid-cols-3 gap-2 sm:gap-4 mb-8">
-      <%# Total Classes %>
       <div class="bg-white py-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col items-center">
         <span class="text-[10px] text-slate-400 font-bold uppercase mb-1"><%= t('dashboard.stats.total_classes') %></span>
         <span class="text-2xl font-black text-slate-800"><%= @total_attended %></span>
       </div>
-
-      <%# This Month %>
       <div class="bg-indigo-50 py-4 rounded-3xl border border-indigo-100 shadow-sm flex flex-col items-center">
         <span class="text-[10px] text-indigo-500 font-bold uppercase mb-1"><%= t('dashboard.stats.this_month') %></span>
         <span class="text-2xl font-black text-indigo-600"><%= @month_attended %></span>
       </div>
-
-      <%# Smart Counter (Helper) %>
       <div class="bg-white py-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col items-center">
         <span class="text-[10px] text-slate-400 font-bold uppercase mb-1"><%= t('dashboard.stats.next_in') %></span>
         <span class="text-lg font-black text-slate-800 leading-none h-[28px] flex items-center">
@@ -51,12 +45,8 @@
       </div>
     </div>
 
-    <%# --- 3. NEW PARTIAL OF MEMBERSHIPS (HERE WE ADD IT) --- %>
-    <%# This is the horizontal carousel that we designed %>
     <%= render "dashboard/partials/membership_info" %>
 
-    <%# 4. List of Reservations (Tabs) %>
-    <%# Moveremos esto a un partial para que el dashboard no sea eterno %>
     <%= render "dashboard/partials/tabs_and_content", upcoming: @upcoming_bookings, past: @past_bookings %>
 
   <% end %>

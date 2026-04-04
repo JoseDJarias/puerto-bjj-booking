@@ -6,7 +6,7 @@ module Admin
 
     def index
       start_date = params.fetch(:start_date, Date.current).to_date
-      
+
       # monthly calendar
       @class_schedules = ClassSchedule.for_range(start_date.beginning_of_month, start_date.end_of_month)
                                       .includes(:class_type, :instructor)
@@ -19,7 +19,7 @@ module Admin
         bookings: { user: [:memberships, :drop_in_tickets] }
         ).find(params[:id])
       @bookings = @class_schedule.bookings.order(status: :asc, updated_at: :desc)
-      
+
       # modal: manual search
       booked_user_ids = @class_schedule.active_bookings_list.map(&:user_id)
       @users_available = User.includes(:memberships, :drop_in_tickets)
@@ -33,7 +33,7 @@ module Admin
                    end
 
       @back_label = params[:from] == 'dashboard' ? "Dashboard" : t('admin.class_schedules.index.title')
-                        
+
       respond_to do |format|
         format.html { 
           layout = turbo_frame_request? ? false : "admin"
@@ -63,7 +63,7 @@ module Admin
       # 1. If the 'action_type' parameter is present, it's a quick attendance action
       if params[:action_type].present?
         @booking = Booking.find(params[:booking_id]) 
-        
+
         target_status = case params[:action_type]
                         when "check_in"
                           @booking.attended? ? "confirmed" : "attended"
@@ -72,14 +72,14 @@ module Admin
                         else
                           @booking.status
                         end
-    
+
         if @booking.update_status!(target_status, current_user)
           respond_to do |format|
             format.turbo_stream { render "admin/bookings/update" }
             format.html { redirect_back fallback_location: admin_dashboard_path }
           end
         end
-    
+
       # 2. If there is no action_type, it's the normal form edit of the class
       else
         if @class_schedule.update(class_schedule_params)
@@ -89,24 +89,24 @@ module Admin
         end
       end
     end
-    
+
     def attendance
       @schedule = ClassSchedule.find(params[:id])
-      
+
       active_statuses = [0, 3] 
-    
+
       enrolled_user_ids = @schedule.bookings
                                    .where(status: active_statuses)
                                    .pluck(:user_id)
                                    .compact
                                    .uniq
-    
+
       # Roster list
       @bookings = @schedule.bookings
                            .includes(user: [:memberships, :drop_in_tickets])
                            .where(status: active_statuses)
                            .order("users.first_name ASC")
-    
+
       # Available users (Excluding the ones that have a place and the admin)
       @available_users = User.active
                              .includes(:memberships, :drop_in_tickets)
@@ -127,7 +127,7 @@ module Admin
 
     def process_batch
       safe_params = class_schedule_params
-      
+
       day_configs = safe_params[:day_configs]&.to_h&.values&.select { |c| c[:active] == "1" } || []
 
       if day_configs.empty?
@@ -142,7 +142,7 @@ module Admin
       base_attributes = safe_params.except(:start_date, :end_date, :day_configs)
 
       total_processed = 0
-    
+
       # Iterate over the array of times to delete each one specifically
       if params[:bulk_action] == "destroy"
         day_configs.each do |config|
@@ -159,7 +159,7 @@ module Admin
         day_configs.each do |config|
           config[:times].each do |time_string|
             next if time_string.blank?
-            
+
             total_processed += ClassSchedule.bulk_schedule(
               { days: [config[:day_index].to_i], time: time_string }, 
               date_range, 
@@ -167,9 +167,9 @@ module Admin
             )
           end
         end
-        flash_message = t('admin.class_schedules.flash.created_batch', count: total_processed)
+        flash_message = t("admin.class_schedules.flash.created_batch", count: total_processed)
       end
-    
+
       redirect_to admin_class_schedules_path, notice: flash_message
     end
 

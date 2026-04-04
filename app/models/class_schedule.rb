@@ -28,9 +28,9 @@ class ClassSchedule < ApplicationRecord
     start_time = now - GRACE_PERIOD_MINUTES.minutes
 
     end_time = if now.hour >= BOOKING_OPEN_HOUR
-                  (Date.tomorrow + 1.day).beginning_of_day + 12.hours
+                  (Date.tomorrow + 1.day).end_of_day
                 else
-                  Date.tomorrow.beginning_of_day + 12.hours
+                  Date.tomorrow.end_of_day
                 end
     where(starts_at: start_time..end_time).order(starts_at: :asc)
   }
@@ -146,7 +146,6 @@ class ClassSchedule < ApplicationRecord
 
     now = Time.current
 
-    # Iterate day by day in the range
     date_range.each do |date|
       # If the current day matches the desired days (e.g.: is Monday?)
       if target_days.include?(date.wday)
@@ -161,7 +160,7 @@ class ClassSchedule < ApplicationRecord
       end
     end
 
-    # Rails 8: insert_all is super efficient to create hundreds of records at once
+    # insert_all create hundreds of records at once
     if classes_to_create.any?
       insert_all(classes_to_create)
     end

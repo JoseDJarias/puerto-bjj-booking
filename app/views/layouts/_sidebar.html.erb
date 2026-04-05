@@ -42,13 +42,6 @@
       </svg>
       <span><%= t("nav.bookings") %></span>
     <% end %>
-    
-    <%= link_to week_class_schedules_path, class: "#{link_classes} #{current_page?(week_class_schedules_path) ? active_classes : inactive_classes}" do %>
-      <svg class="h-5 w-5 <%= current_page?(week_class_schedules_path) ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600' %>" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-      <span><%= t("class_schedules.week.title") %></span>
-    <% end %>
 
     <%= link_to dog_fights_path, class: "#{link_classes} #{current_page?(dog_fights_path) ? active_classes : inactive_classes}" do %>
       <svg class="h-5 w-5 <%= current_page?(dog_fights_path) ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600' %>" fill="none" viewBox="0 0 24 24" stroke="currentColor">

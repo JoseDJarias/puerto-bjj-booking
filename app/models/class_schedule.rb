@@ -34,7 +34,7 @@ class ClassSchedule < ApplicationRecord
                 end
     where(starts_at: start_time..end_time).order(starts_at: :asc)
   }
-  
+
   scope :past_logical, -> { 
     where("starts_at < ?", Time.zone.now).order(starts_at: :desc) 
     }
@@ -95,15 +95,15 @@ class ClassSchedule < ApplicationRecord
     Time.current.hour >= BOOKING_OPEN_HOUR ? Date.tomorrow : Date.current
   end
 
-# --- SPOTS LOGIC ---
+  # --- SPOTS LOGIC ---
   def spots_left
     capacity - active_bookings_count
   end
-  
+
   def full?
     spots_left <= 0
   end
-  
+
   # Helper to show in the UI: "18:30 - 19:30"
   def time_range
     "#{starts_at.strftime('%l:%M %p').strip} - #{ends_at.strftime('%l:%M %p').strip}"
@@ -134,11 +134,11 @@ class ClassSchedule < ApplicationRecord
   # - schedule_params: { days: [1, 3], time: "18:30" } (Monday=1, Wednesday=3)
   # - range: Date.today..3.months.from_now
   # - fixed attributes: instructor_id, class_type_id, etc.
-  
+
   def self.bulk_schedule(schedule_params, date_range, attributes)
     # Array to save the records before inserting (Bulk Insert is faster)
     classes_to_create = []
-    
+
     # Selected days (e.g.: [1, 3] for Mon/Wed)
     target_days = schedule_params[:days].map(&:to_i)
     # Hora base (ej: "18:30")
@@ -164,7 +164,7 @@ class ClassSchedule < ApplicationRecord
     if classes_to_create.any?
       insert_all(classes_to_create)
     end
-    
+
     classes_to_create.count
   end
 end

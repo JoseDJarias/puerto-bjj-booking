@@ -1,45 +1,101 @@
 <%# app/views/class_schedules/index.html.erb %>
 
-<div class="max-w-7xl mx-auto px-4 py-6">
-  <%# Private channel for updates of the user's booking button (Book/Cancel) %>
+<div class="max-w-5xl mx-auto px-4 py-2">
   <%= turbo_stream_from current_user, "bookings" %>
+  <header class="flex items-center justify-between mb-6 mt-4">
+    <h1 class="text-xl font-black text-slate-900 tracking-tight">Agenda</h1>
 
-  <div class="flex items-center justify-between mb-8 bg-white p-3 rounded-2xl shadow-sm border border-slate-100 sticky top-2 z-10 backdrop-blur-md bg-white/90">
-    <%= link_to class_schedules_path(date: @date - 1.day), class: "p-2 hover:bg-slate-50 rounded-xl text-slate-400 hover:text-indigo-600 transition-colors" do %>
-      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-    <% end %>
-
-    <div class="text-center">
-      <span class="block text-[10px] text-slate-400 font-black uppercase tracking-widest">
-        <%= @date.today? ? "HOY" : l(@date, format: "%A") %>
-      </span>
-      <span class="block text-xl font-black text-slate-800">
-        <%= @date.strftime("%d %b") %> 
-      </span>
+    <div class="flex gap-4">
+      <%= link_to "DÍA", class_schedules_path(date: @date, view_mode: "day"),
+                  class: "text-[10px] font-black tracking-widest #{@view_mode == 'day' ? 'text-indigo-600 border-b-2 border-indigo-600' : 'text-slate-400'}" %>
+      <%= link_to "SEMANA", class_schedules_path(date: @date, view_mode: "week"),
+                  class: "text-[10px] font-black tracking-widest #{@view_mode == 'week' ? 'text-indigo-600 border-b-2 border-indigo-600' : 'text-slate-400'}" %>
     </div>
+  </header>
 
-    <%= link_to class_schedules_path(date: @date + 1.day), class: "p-2 hover:bg-slate-50 rounded-xl text-slate-400 hover:text-indigo-600 transition-colors" do %>
-      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-    <% end %>
+  <%# -- Date Selector -- %>
+  <div class="w-full max-w-4xl mx-auto mb-8">
+    <div class="flex items-center justify-center border-b border-slate-50 pb-6 w-full">
+
+      <div class="flex-none w-8 sm:w-10 flex justify-start">
+        <%= link_to class_schedules_path(date: @date - 7.days, view_mode: @view_mode),
+                    class: "text-slate-200 hover:text-indigo-600 p-1" do %>
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3.5"><path d="M15 19l-7-7 7-7" /></svg>
+        <% end %>
+      </div>
+
+      <div class="flex-1 flex items-center justify-between mx-auto max-w-xs sm:max-w-xl">
+        <% @days_range.each do |day| %>
+          <% is_selected = (day == @date) %>
+          <% has_classes = @schedules_by_date[day].present? %>
+
+          <%# flex-basis: 0 y flex-grow: 1 obligan a que todos midan lo mismo exactamente %>
+          <%= link_to class_schedules_path(date: day, view_mode: @view_mode),
+                      class: "flex flex-col items-center justify-center transition-all flex-1 min-w-0" do %>
+
+            <%# Nombre del día: tracking-tighter para iPhone SE, normal para el resto %>
+            <span class="text-[11px] sm:text-[10px] font-black uppercase mb-2 tracking-tighter sm:tracking-widest <%= is_selected ? 'text-indigo-600' : 'text-slate-300' %>">
+              <%= t('date.abbr_day_names')[day.wday] %>
+            </span>
+
+            <div class="w-10 h-10 sm:w-10 sm:h-9 flex items-center justify-center rounded-full text-[11px] sm:text-sm font-black transition-all relative <%= is_selected ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-500 hover:bg-slate-100' %>">
+              <%= day.day %>
+              <% if has_classes && !is_selected %>
+                <div class="absolute -bottom-1 w-1 h-1 bg-indigo-200 rounded-full"></div>
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+
+      <div class="flex-none w-8 sm:w-10 flex justify-end">
+        <%= link_to class_schedules_path(date: @date + 7.days, view_mode: @view_mode),
+                    class: "text-slate-200 hover:text-indigo-600 p-1" do %>
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3.5"><path d="M9 5l7 7-7 7" /></svg>
+        <% end %>
+      </div>
+    </div>
   </div>
 
-<% if @class_schedules.any? %>
-   <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      <% @class_schedules.each do |schedule| %>
-      <%= turbo_stream_from "schedule_#{schedule.id}" %>
-        <%= render "class_schedules/partials/class_card_universal", 
-                   schedule: schedule, 
-                   user: current_user, 
-                   context: :schedule %>
+  <%= turbo_frame_tag "agenda_content" do %>
+    <div class="animate-in fade-in duration-300">
+      <% if @view_mode == "day" %>
+        <div class="space-y-4">
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">
+            <%= l(@date, format: "%A %d, %B") %>
+          </p>
+
+          <% if @class_schedules.any? %>
+            <% @class_schedules.each do |schedule| %>
+              <%= turbo_stream_from "schedule_#{schedule.id}" %>
+              <%= render "class_schedules/partials/class_card_universal", schedule: schedule, user: Current.user, context: :agenda %>
+            <% end %>
+          <% else %>
+            <div class="py-20 text-center border-2 border-dashed border-slate-100 rounded-[2rem] text-slate-300 text-xs font-bold uppercase tracking-widest">
+              Sin clases hoy
+            </div>
+          <% end %>
+        </div>
+      <%   else %>
+        <div class="space-y-8">
+          <% @days_range.each do |day| %>
+            <% day_classes = @schedules_by_date[day] || [] %>
+            <% next if day_classes.empty? %> <%# Solo mostramos días con clases para ahorrar espacio %>
+
+            <section>
+              <div class="flex items-center gap-3 mb-4">
+                <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest"><%= l(day, format: "%a %d") %></span>
+                <div class="h-px flex-1 bg-slate-100"></div>
+              </div>
+              <div class="grid gap-3 sm:grid-cols-2">
+                <% day_classes.each do |s| %>
+                  <%= render "class_schedules/partials/class_card_universal", schedule: s, user: Current.user, context: :week %>
+                <% end %>
+              </div>
+            </section>
+          <% end %>
+        </div>
       <% end %>
-    </div>
-  <% else %>
-    <div class="text-center py-12 bg-white rounded-2xl border border-slate-100 shadow-sm mt-4">
-      <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-50 mb-4">
-        <svg class="w-8 h-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-      </div>
-      <h3 class="text-lg font-medium text-slate-900"><%= t('class_schedules.index.free_day') %></h3>
-      <p class="text-slate-500"><%= t('class_schedules.index.free_day_description') %></p>
     </div>
   <% end %>
 </div>

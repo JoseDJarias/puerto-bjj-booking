@@ -2,8 +2,6 @@
 
 <%# This ID allows the model to replace the entire card if necessary %>
 <%= turbo_frame_tag "universal_card_#{schedule.id}" do %>
-  
-  <%# Visual opacity logic based on the grace period %>
   <% 
     card_state_classes = if schedule.cancelled?
     "bg-slate-50 border-slate-200 opacity-80"
@@ -13,16 +11,15 @@
       "bg-white hover:shadow-xl hover:border-indigo-100"
     end
   %>
-
-  <div class="group rounded-2xl shadow-sm border border-slate-200/60 p-6 transition-all duration-300 flex flex-col justify-between <%= card_state_classes %>"> 
-    <% if schedule.cancelled? %>
-      <div class="absolute top-4 right-4 z-10">
+  <div class="group rounded-2xl shadow-sm border border-slate-200/60 p-6 transition-all duration-300 flex flex-col justify-between <%= card_state_classes %>">    
+     <% if schedule.cancelled? %>
+      <div class=" z-10">
         <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black bg-red-600 text-white uppercase tracking-widest shadow-sm">
           🚫 Clase Cancelada
         </span>
       </div>
-    <% end %>       
-
+    <% end %>    
+   
     <%= link_to class_schedule_path(schedule), 
               data: { turbo_frame: "modal_detail" }, 
               class: "p-6 pb-0 block group/card" do %>

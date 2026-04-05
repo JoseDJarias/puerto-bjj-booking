@@ -48,6 +48,9 @@ class ClassSchedule < ApplicationRecord
   scope :for_range, ->(start_date, end_date) {
     where(starts_at: start_date.beginning_of_day..end_date.end_of_day)
   }
+
+  after_update_commit :broadcast_cancellation, if: :saved_change_to_cancelled?
+
   # Show modality in the UI if it's not nil(for bjj gi or nogi)
   def show_modality?
     modality.present?
@@ -82,7 +85,7 @@ class ClassSchedule < ApplicationRecord
   def upcoming_lock?
     !past? && !booking_window_open?
   end
-  
+
   def status_for(user)
     return :past if past?
     return :unauthorized unless user.authorized_for?(class_type)
@@ -167,4 +170,17 @@ class ClassSchedule < ApplicationRecord
 
     classes_to_create.count
   end
+end
+
+private
+
+def broadcast_cancellation
+  broadcast_replace_to "schedule_#{id}",
+                       target: "universal_card_#{id}",
+                       partial: "class_schedules/class_card_universal",
+                       locals: { schedule: self, user: nil, context: :dashboard }
+  broadcast_replace_to "schedule_#{id}",
+                       target: "action_button_schedule_#{id}",
+                       partial: "class_schedules/partials/action_button",
+                       locals: { schedule: self, user: nil }
 end

@@ -177,7 +177,7 @@ private
 def broadcast_cancellation
   broadcast_replace_to "schedule_#{id}",
                        target: "universal_card_#{id}",
-                       partial: "class_schedules/class_card_universal",
+                       partial: "class_schedules/partials/class_card_universal",
                        locals: { schedule: self, user: nil, context: :dashboard }
   broadcast_replace_to "schedule_#{id}",
                        target: "action_button_schedule_#{id}",

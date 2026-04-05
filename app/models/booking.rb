@@ -12,18 +12,18 @@ class Booking < ApplicationRecord
   # cancelled_admin: The admin cancelled (Releases space)
   # attended: Already attended (Occupies space in the history)
   # no_show: Didn't show up (Releases space or marks for punishment)
-  enum :status, { 
-    confirmed: 0, 
-    cancelled_user: 1, 
-    cancelled_admin: 2, 
-    attended: 3, 
+  enum :status, {
+    confirmed: 0,
+    cancelled_user: 1,
+    cancelled_admin: 2,
+    attended: 3,
     no_show: 4,
     blocked: 5
   }
 
   # --- SCOPES ---
   # Defines which states "occupy space" on the tatami
-  scope :active, -> { where(status: [:confirmed, :attended]) }
+  scope :active, -> { where(status: [ :confirmed, :attended ]) }
 
   MAX_SUBMISSION_LIMIT = 3
 
@@ -52,7 +52,7 @@ class Booking < ApplicationRecord
     self.status = :confirmed
 
     # We save without validating membership but maintaining data integrity
-    save(validate: false) 
+    save(validate: false)
   end
 
   # THE MASTER METHOD: Handles all transitions
@@ -160,9 +160,9 @@ class Booking < ApplicationRecord
   def broadcast_spots_update
     # Broadcast to: "schedule_1"
     # Update: <div id="spots_schedule_1">
-    broadcast_replace_to "schedule_#{class_schedule.id}", 
-                        target: "spots_schedule_#{class_schedule.id}", 
-                        partial: "class_schedules/spots", 
+    broadcast_replace_to "schedule_#{class_schedule.id}",
+                        target: "spots_schedule_#{class_schedule.id}",
+                        partial: "class_schedules/spots",
                         locals: { schedule: class_schedule }
   end
 

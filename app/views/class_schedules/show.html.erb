@@ -68,7 +68,7 @@
           <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 flex flex-col items-center justify-center text-center">
             <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3">Disponibilidad</span>
             <div id="spots_schedule_<%= @schedule.id %>" class="flex justify-center w-full">
-              <%= render "class_schedules/spots", schedule: @schedule %>
+              <%= render "class_schedules/partials/spots", schedule: @schedule %>
             </div>
           </div>
 

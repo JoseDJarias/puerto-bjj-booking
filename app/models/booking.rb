@@ -169,7 +169,7 @@ class Booking < ApplicationRecord
   def broadcast_user_button
     # Broadcast to the private channel of the user: [user, "bookings"]
     # Update: <div id="action_button_schedule_1">
-    broadcast_replace_to [user, "bookings"],
+    broadcast_replace_to [ user, "bookings" ],
                         target: "action_button_schedule_#{class_schedule.id}",
                         partial: "class_schedules/partials/action_button",
                         locals: { schedule: class_schedule, user: user }

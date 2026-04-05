@@ -6,12 +6,12 @@ class Booking < ApplicationRecord
 
   has_one :drop_in_ticket, dependent: :nullify
 
-    # --- ROBUST STATES ---
-    # confirmed: Occupies space (Standard booking)
-    # cancelled_user: The user cancelled (Releases space)
-    # cancelled_admin: The admin cancelled (Releases space)
-    # attended: Already attended (Occupies space in the history)
-    # no_show: Didn't show up (Releases space or marks for punishment)
+  # --- ROBUST STATES ---
+  # confirmed: Occupies space (Standard booking)
+  # cancelled_user: The user cancelled (Releases space)
+  # cancelled_admin: The admin cancelled (Releases space)
+  # attended: Already attended (Occupies space in the history)
+  # no_show: Didn't show up (Releases space or marks for punishment)
   enum :status, { 
     confirmed: 0, 
     cancelled_user: 1, 
@@ -26,18 +26,18 @@ class Booking < ApplicationRecord
   scope :active, -> { where(status: [:confirmed, :attended]) }
 
   MAX_SUBMISSION_LIMIT = 3
-  
+
   # 1. Capacity: Only validates if the booking is active and not an Admin who forces it
   validate :ensure_capacity, if: -> { active_status? && status_changed? && !admin_override? }
-  
+
   # 2. Change Limit: Only validates if not an Admin
   validate :check_submission_limit, on: :update, unless: :admin_override?
 
   # --- REALTIME UPDATES (Turbo Streams) ---
   after_commit :broadcast_realtime_updates_for_users
-  
+
   after_update :process_attendance_payment, if: -> { attended? && saved_change_to_status? }
-  
+
   def active_status?
     confirmed? || attended?
   end
@@ -50,7 +50,7 @@ class Booking < ApplicationRecord
     self.user_id = student_id
     self.changed_by = actor
     self.status = :confirmed
-    
+
     # We save without validating membership but maintaining data integrity
     save(validate: false) 
   end
@@ -59,7 +59,6 @@ class Booking < ApplicationRecord
   # Handles the initial creation or toggle, with locks and validations.
   def handle_user_action!(actor)
     class_schedule.with_lock do
-
       if !active_status?
         unless actor.admin? || !class_schedule.full?
           errors.add(:base, "Lo sentimos, la clase ya no tiene cupos disponibles.")
@@ -78,14 +77,14 @@ class Booking < ApplicationRecord
   rescue ActiveRecord::RecordInvalid
     false
   end
-  
+
   def update_status!(new_status, actor)
     self.changed_by = actor
-    
+
     # Indecision counter logic:
     # If it's the same user changing their status, we add to the counter.
     # If it's the admin, we don't penalize the user by adding to the counter.
-    if new_status.to_s == 'confirmed' && actor == user && !actor.admin? && !actor.instructor? 
+    if new_status.to_s == "confirmed" && actor == user && !actor.admin? && !actor.instructor?
       self.submission_count += 1
     end
 
@@ -116,10 +115,10 @@ class Booking < ApplicationRecord
   end
 
   def check_submission_limit
-    return if status.to_s == 'cancelled_user'
+    return if status.to_s == "cancelled_user"
     # Submission limit policy: Maximum 3 attempts allowed
     if submission_count > MAX_SUBMISSION_LIMIT && status_changed?
-      errors.add(:base, I18n.t('bookings.messages.limit_reached'))
+      errors.add(:base, I18n.t("bookings.messages.limit_reached"))
     end
   end
 
@@ -156,7 +155,6 @@ class Booking < ApplicationRecord
 
     # 4. Update Admin Sidebar (Private)
     broadcast_admin_sidebar_update
-
   end
 
   def broadcast_spots_update
@@ -204,12 +202,11 @@ class Booking < ApplicationRecord
                           partial: "admin/class_schedules/partials/user_sidebar_item",
                           locals: { user: user }
     end
-  
+
     if confirmed? || attended?
       # Remove it from the sidebar in all Admin browsers
       broadcast_remove_to "schedule_#{class_schedule_id}",
                           target: "user_sidebar_item_#{user.id}"
     end
   end
-
 end

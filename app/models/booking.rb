@@ -109,7 +109,7 @@ class Booking < ApplicationRecord
 
   def ensure_capacity
     # Validate against the spots_left method of the schedule
-    if class_schedule.spots_left <= 0
+    if class_schedule.full?
       errors.add(:base, "La clase está llena.")
     end
   end

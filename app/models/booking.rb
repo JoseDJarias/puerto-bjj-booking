@@ -162,7 +162,7 @@ class Booking < ApplicationRecord
     # Update: <div id="spots_schedule_1">
     broadcast_replace_to "schedule_#{class_schedule.id}",
                         target: "spots_schedule_#{class_schedule.id}",
-                        partial: "class_schedules/spots",
+                        partial: "class_schedules/partials/spots",
                         locals: { schedule: class_schedule }
   end
 

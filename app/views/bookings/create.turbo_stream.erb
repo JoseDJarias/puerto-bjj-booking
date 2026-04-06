@@ -5,5 +5,5 @@
                          locals: { schedule: @schedule, user: current_user } %>
 
 <%= turbo_stream.replace "spots_schedule_#{@schedule.id}", 
-                         partial: "class_schedules/spots", 
+                         partial: "class_schedules/partials/spots",
                          locals: { schedule: @schedule } %>

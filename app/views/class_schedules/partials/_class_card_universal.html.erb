@@ -2,28 +2,28 @@
 
 <%# This ID allows the model to replace the entire card if necessary %>
 <%= turbo_frame_tag "universal_card_#{schedule.id}" do %>
-  <% 
+  <%
     card_state_classes = if schedule.cancelled?
     "bg-slate-50 border-slate-200 opacity-80"
     elsif schedule.past_grace_period?
-      "opacity-60 grayscale bg-slate-50" 
+      "opacity-60 grayscale bg-slate-50"
     else
       "bg-white hover:shadow-xl hover:border-indigo-100"
     end
   %>
-  <div class="group rounded-2xl shadow-sm border border-slate-200/60 p-6 transition-all duration-300 flex flex-col justify-between <%= card_state_classes %>">    
+  <div class="group rounded-2xl shadow-sm border border-slate-200/60 p-6 transition-all duration-300 flex flex-col justify-between <%= card_state_classes %>">
      <% if schedule.cancelled? %>
       <div class=" z-10">
         <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black bg-red-600 text-white uppercase tracking-widest shadow-sm">
           🚫 Clase Cancelada
         </span>
       </div>
-    <% end %>    
-   
-    <%= link_to class_schedule_path(schedule), 
-              data: { turbo_frame: "modal_detail" }, 
+    <% end %>
+
+    <%= link_to class_schedule_path(schedule),
+              data: { turbo_frame: "modal_detail" },
               class: "p-6 pb-0 block group/card" do %>
-      <div class="space-y-5">         
+      <div class="space-y-5">
         <div class="flex justify-between items-start">
           <div class="flex flex-col">
             <% if schedule.topic.present? %>
@@ -38,14 +38,13 @@
               <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 uppercase tracking-wider">
                 <%= schedule.class_type.name %>
               </span>
-              
               <div class="mx-2">
                 <%= modality_badge(schedule) %>
               </div>
             </div>
 
             <h3 class="text-3xl font-black text-slate-900 leading-tight tracking-tight">
-              <%= l(schedule.starts_at, format: "%l:%M %P") %>    
+              <%= l(schedule.starts_at, format: "%l:%M %P") %>
             </h3>
           </div>
 

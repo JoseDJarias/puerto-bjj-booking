@@ -1,14 +1,20 @@
 class ClassSchedulesController < ApplicationController
   before_action :require_booking_access
   def index
-    # 1. Date calculation (defaults to logical today)
-    @date = params[:date] ? Date.parse(params[:date]) : ClassSchedule.logical_today
+    # 1. View Mode (day is default for quick booking)
+    @view_mode = params[:view_mode] || "day"
+
+    # 2. Date calculation (defaults to logical today)
+    base_date = params[:date] ? Date.parse(params[:date]) : ClassSchedule.logical_today
+    @date = if params[:nav] == "true" && @view_mode == "week"
+      base_date.beginning_of_week(:monday)
+    else
+      base_date
+    end
     @week_start = @date.beginning_of_week(:monday)
     @week_end = @week_start + 6.days
     @days_range = (@week_start..@week_end).to_a
 
-    # 2. View Mode (day is default for quick booking)
-    @view_mode = params[:view_mode] || "day"
 
     # 3. Data Fetching
     # We fetch the full week to allow switching days without new DB queries if needed,

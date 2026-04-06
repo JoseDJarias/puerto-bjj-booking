@@ -13,8 +13,7 @@ class ClassSchedulesController < ApplicationController
     # 3. Data Fetching
     # We fetch the full week to allow switching days without new DB queries if needed,
     # but here we keep it simple and reactive.
-    @schedules_by_date = ClassSchedule.active
-                                      .for_range(@week_start, @week_end)
+    @schedules_by_date = ClassSchedule.for_range(@week_start, @week_end)
                                       .visible_for(Current.user)
                                       .includes(:class_type, :instructor, :bookings)
                                       .order(:starts_at)

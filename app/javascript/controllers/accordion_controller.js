@@ -3,12 +3,13 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["wrapper", "icon", "card"]
+  static values = { alwaysActive: Boolean }
 
   connect() {
   }
 
   toggle(event) {
-    if (window.innerWidth >= 1024) return
+    if (!this.alwaysActiveValue && window.innerWidth >= 1024) return
     event.preventDefault()
 
     this.wrapperTarget.classList.toggle("grid-rows-[0fr]")

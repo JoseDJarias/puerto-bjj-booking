@@ -209,15 +209,12 @@ es:
       error: "No se pudo procesar la reserva."
 
   class_schedules:
-    week:
-      title: "Horario de la semana"
-      no_classes: "No hay clases programadas para este día"
     spots:
       full_badge: "Clase Llena"
       available_suffix: "lugares libres"
       few_left: "¡Quedan pocos!"
     index:
-      public_title: "Próximas Clases"
+      title: "Explorar Clases"
       public_subtitle: "Reserva tu lugar en el tatami"
       instructor_prefix: "Prof."
       view_participants: "Ver participantes"

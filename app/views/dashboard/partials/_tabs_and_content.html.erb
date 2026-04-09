@@ -42,7 +42,7 @@
           <% current_date = schedule.starts_at.to_date %>
           <div class="flex items-center gap-3 mt-4 mb-2">
             <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-              <%= current_date == Date.current ? "Hoy" : "Mañana" %>
+             <%= l(current_date, format: "%A %d, %B") %>  
             </span>
             <div class="h-px bg-slate-100 flex-1"></div>
           </div>

@@ -1,7 +1,7 @@
 module Admin
   class ClassSchedulesController < OperationsController
     before_action :require_admin, only: %i[new create edit update destroy batch_new process_batch]
-    before_action :set_class_schedule, only: %i[show edit update destroy attendance]
+    before_action :set_class_schedule, only: %i[edit update destroy attendance]
     before_action :set_collections, only: %i[new edit batch_new]
 
     def index
@@ -22,7 +22,7 @@ module Admin
 
       # modal: manual search
       booked_user_ids = @class_schedule.active_bookings_list.map(&:user_id)
-      @users_available = User.includes(:memberships, :drop_in_tickets)
+      @available_users = User.includes(:memberships, :drop_in_tickets)
                         .where.not(id: booked_user_ids)
                         .order(:first_name)
 
@@ -91,18 +91,16 @@ module Admin
     end
 
     def attendance
-      @schedule = ClassSchedule.find(params[:id])
-
       active_statuses = [0, 3] 
 
-      enrolled_user_ids = @schedule.bookings
+      enrolled_user_ids = @class_schedule.bookings
                                    .where(status: active_statuses)
                                    .pluck(:user_id)
                                    .compact
                                    .uniq
 
       # Roster list
-      @bookings = @schedule.bookings
+      @bookings = @class_schedule.bookings
                            .includes(user: [:memberships, :drop_in_tickets])
                            .where(status: active_statuses)
                            .order("users.first_name ASC")

@@ -2,7 +2,6 @@
 
 <div data-controller="modal" data-action="keyup@window->modal#handleKeyup" class="min-h-screen bg-slate-50/50">
   <%= turbo_stream_from "schedule_#{@class_schedule.id}" %>
-
   <div class="w-full max-w-6xl mx-auto px-2 py-8 pb-40">
     <header class="mb-10 flex items-center gap-8 px-2">
       <%= link_to admin_dashboard_path, class: "p-3 bg-white rounded-2xl text-slate-500 shadow-sm border border-slate-100 active:scale-90 transition-all" do %>
@@ -12,15 +11,15 @@
       <% end %>
       <div>
         <h1 class="text-4xl font-black text-slate-900 leading-[0.8] italic uppercase tracking-tighter">
-          <%= @schedule.class_type.name %>
+          <%= @class_schedule.class_type.name %>
         </h1>
         <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-2">
-          <%= l(@schedule.starts_at, format: "%-I:%M %P") %> • <%= @bookings.count %> <%= t('admin.class_schedules.attendance.enrolled_label') %>
+          <%= l(@class_schedule.starts_at, format: "%-I:%M %P") %> • <%= @bookings.count %> <%= t('admin.class_schedules.attendance.enrolled_label') %>
         </p>
       </div>
     </header>
 
-    <div class="space-y-3" id="attendance_list_<%= @schedule.id %>">
+    <div class="space-y-3" id="attendance_list_<%= @class_schedule.id %>">
       <% if @bookings.any? %>
         <% @bookings.each do |booking| %>
           <div id="<%= dom_id(booking) %>">             

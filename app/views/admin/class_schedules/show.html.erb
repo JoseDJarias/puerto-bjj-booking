@@ -1,7 +1,7 @@
 <%# app/views/admin/class_schedules/show.html.erb %>
 <%= turbo_stream_from "schedule_#{@class_schedule.id}" %>
 
-<div class="w-full py-6 px-4">
+<div data-controller="modal" data-action="keyup@window->modal#handleKeyup" class="w-full py-6 px-4">
   <%# 1. BREADCRUMB %>
   <nav class="mb-6 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
     <%= link_to @back_path, class: "hover:text-indigo-600 transition-colors" do %>
@@ -99,33 +99,17 @@
           </div>
         </div>
 
-        <%# INSCRIPCIÓN MANUAL (Ahora integrada y elegante) %>
-        <div data-controller="search-list" class="bg-slate-900 p-8 rounded-[2.5rem] text-white shadow-2xl">
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
-            <h3 class="text-xl font-black italic uppercase tracking-tighter">
-              Inscribir Alumno <span class="text-indigo-400">Manual</span>
-            </h3>
-
-            <%# Buscador compacto %>
-            <div class="relative w-full md:w-72">
-              <input type="text" data-action="input->search-list#filter" placeholder="Buscar por nombre..." 
-                    class="w-full bg-slate-800 border-none rounded-xl py-2.5 pl-10 pr-4 text-xs font-bold text-white focus:ring-2 focus:ring-indigo-500 transition-all placeholder:text-slate-500">
-              <svg class="w-4 h-4 text-slate-600 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-            </div>
-          </div>
-
-          <%= form_with model: [:admin, Booking.new], url: admin_bookings_path do |f| %>
-            <%= f.hidden_field :class_schedule_id, value: @class_schedule.id %>
-            
-            <div id="users_available_list" class="flex gap-3 overflow-x-auto pb-4 mb-6 custom-scrollbar-dark min-h-[80px]">
-              <%= render partial: "admin/class_schedules/partials/user_sidebar_item",
-                         collection: @users_available,
-                         as: :user %>
-            </div>
-
-            <%= f.submit "Confirmar Inscripción" , class: "w-full bg-indigo-500 hover:bg-indigo-400 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-lg active:scale-95 transition-all cursor-pointer" %>
-          <% end %>
+        <%# INSCRIPCIÓN MANUAL%>
+        <div class="sticky bottom-6 mt-10 z-30 flex justify-center pointer-events-none">
+          <button data-action="click->modal#open" 
+                  class="pointer-events-auto flex items-center gap-3 bg-slate-900 text-white px-8 py-4 sm:px-10 sm:py-5 rounded-[2rem] sm:rounded-[2.5rem] font-black text-[10px] sm:text-[11px] uppercase tracking-widest shadow-2xl hover:bg-indigo-600 transition-all active:scale-95 shadow-indigo-500/40 border border-white/10 backdrop-blur-sm">
+            <svg class="w-5 h-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+            </svg>
+            <%= t('admin.class_schedules.attendance.add_manual') %>
+          </button>
         </div>
+        <%= render "admin/class_schedules/partials/add_student_modal" %>
 
       </div> <%# Fin de max-w-4xl %>
     </div> <%# Fin de p-8 %>

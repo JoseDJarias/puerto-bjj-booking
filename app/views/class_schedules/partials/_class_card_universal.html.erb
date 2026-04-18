@@ -11,11 +11,15 @@
       "bg-white hover:shadow-xl hover:border-indigo-100"
     end
   %>
-  <div class="group rounded-2xl shadow-sm border border-slate-200/60 p-6 transition-all duration-300 flex flex-col justify-between <%= card_state_classes %>">
-     <% if schedule.cancelled? %>
-      <div class=" z-10">
-        <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black bg-red-600 text-white uppercase tracking-widest shadow-sm">
-          🚫 Clase Cancelada
+  <div class="relative group rounded-2xl shadow-sm border border-slate-200/60 p-6 transition-all duration-300 flex flex-col justify-between <%= card_state_classes %>">
+    <% if schedule.cancelled? %>
+      <div class="absolute top-4 left-4 z-20">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] sm:text-[10px] font-black bg-red-600 text-white uppercase tracking-tighter sm:tracking-widest shadow-lg shadow-red-200 ring-1 ring-red-700">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-100 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+          </span>
+          Clase Cancelada
         </span>
       </div>
     <% end %>

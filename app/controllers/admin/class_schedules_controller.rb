@@ -186,6 +186,7 @@ module Admin
       params.require(:class_schedule).permit(
         :class_type_id,
         :instructor_id,
+        :guest_instructor_name,
         :starts_at,
         :duration_minutes,
         :capacity,

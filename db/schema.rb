@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_18_035205) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_21_050653) do
   create_table "bookings", force: :cascade do |t|
     t.integer "changed_by_id"
     t.integer "class_schedule_id", null: false
@@ -31,13 +31,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_18_035205) do
     t.integer "class_type_id", null: false
     t.datetime "created_at", null: false
     t.integer "duration_minutes", default: 60, null: false
+    t.string "guest_instructor_name"
     t.integer "instructor_id", null: false
     t.integer "modality"
+    t.decimal "price", precision: 10, scale: 2
+    t.boolean "private", default: false, null: false
     t.datetime "starts_at", null: false
     t.string "topic"
     t.datetime "updated_at", null: false
     t.index ["class_type_id"], name: "index_class_schedules_on_class_type_id"
     t.index ["instructor_id"], name: "index_class_schedules_on_instructor_id"
+    t.index ["private"], name: "index_class_schedules_on_private"
     t.index ["starts_at"], name: "index_class_schedules_on_starts_at"
   end
 
@@ -122,6 +126,23 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_18_035205) do
     t.index ["user_id"], name: "index_memberships_on_user_id"
   end
 
+  create_table "private_class_requests", force: :cascade do |t|
+    t.integer "class_schedule_id"
+    t.datetime "created_at", null: false
+    t.text "message"
+    t.date "preferred_date"
+    t.integer "preferred_instructor_id"
+    t.string "preferred_time_range"
+    t.integer "status", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["class_schedule_id"], name: "index_private_class_requests_on_class_schedule_id"
+    t.index ["preferred_instructor_id"], name: "index_private_class_requests_on_preferred_instructor_id"
+    t.index ["status"], name: "index_private_class_requests_on_status"
+    t.index ["user_id", "status"], name: "index_private_class_requests_on_user_id_and_status"
+    t.index ["user_id"], name: "index_private_class_requests_on_user_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -176,5 +197,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_18_035205) do
   add_foreign_key "memberships", "membership_packages"
   add_foreign_key "memberships", "membership_plans"
   add_foreign_key "memberships", "users"
+  add_foreign_key "private_class_requests", "class_schedules"
+  add_foreign_key "private_class_requests", "users"
+  add_foreign_key "private_class_requests", "users", column: "preferred_instructor_id"
   add_foreign_key "sessions", "users"
 end

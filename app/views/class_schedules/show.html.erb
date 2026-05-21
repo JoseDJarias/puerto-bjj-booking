@@ -60,8 +60,10 @@
           <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 flex flex-col items-center justify-center text-center">
             <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3">Profesor</span>
             <div class="space-y-1">
-              <p class="text-base font-black text-slate-800 leading-none"><%= @schedule.instructor.first_name %></p>
-              <p class="text-[10px] text-slate-500 font-bold uppercase tracking-tighter">Instructor Principal</p>
+              <p class="text-base font-black text-slate-800 leading-none"><%= @schedule.displayed_instructor_name %></p>
+              <p class="text-[10px] text-slate-500 font-bold uppercase tracking-tighter">
+                <%= @schedule.special_guest? ? "Invitado Especial" : "Instructor Principal" %>
+              </p>
             </div>
           </div>
 

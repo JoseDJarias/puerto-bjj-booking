@@ -105,7 +105,7 @@
                 </div>
                 <div>
                   <h4 class="font-black text-slate-900 uppercase italic text-sm"><%= schedule.class_type.name %></h4>
-                  <p class="text-[10px] font-bold text-slate-400 uppercase"><%= t('admin.dashboard.index.instructor_prefix') %> <%= schedule.instructor&.first_name || t('admin.dashboard.index.no_instructor') %></p>
+                  <p class="text-[10px] font-bold text-slate-400 uppercase"><%= t('admin.dashboard.index.instructor_prefix') %> <%= schedule.displayed_instructor_name.presence || t('admin.dashboard.index.no_instructor') %></p>
                 </div>
               </div>
 

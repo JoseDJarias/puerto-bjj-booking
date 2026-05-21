@@ -133,6 +133,16 @@ class ClassSchedule < ApplicationRecord
     bookings.to_a.count(&:blocked?).size
   end
 
+  # --- DISPLAY LOGIC ---
+  def displayed_instructor_name
+    guest_instructor_name.presence || instructor&.display_name
+  end
+
+  def special_guest?
+    guest_instructor_name.present?
+  end
+
+
   # --- THE MAGIC: BULK GENERATOR ---
   # This method receives:
   # - schedule_params: { days: [1, 3], time: "18:30" } (Monday=1, Wednesday=3)

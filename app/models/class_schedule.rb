@@ -29,9 +29,9 @@ class ClassSchedule < ApplicationRecord
     start_time = now - GRACE_PERIOD_MINUTES.minutes
 
     end_time = if now.hour >= BOOKING_OPEN_HOUR
-                  (Date.tomorrow + 1.day).end_of_day
+                  (now + 2.day).end_of_day
                 else
-                  Date.tomorrow.end_of_day
+                  now.tomorrow.end_of_day
                 end
     where(starts_at: start_time..end_time).order(starts_at: :asc)
   }
@@ -67,20 +67,20 @@ class ClassSchedule < ApplicationRecord
   end
 
   def booking_opens_at
-    (starts_at.to_date - 1.day).in_time_zone.change(hour: BOOKING_OPEN_HOUR, min: 0, sec: 0)
+    (starts_at.in_time_zone.to_date - 1.day).in_time_zone.change(hour: BOOKING_OPEN_HOUR, min: 0, sec: 0)
   end
 
   def booking_window_open?
-    Time.current >= booking_opens_at
+    Time.zone.now >= booking_opens_at
   end
 
   def in_grace_period?
-    now = Time.current
+    now = Time.zone.now
     now >= starts_at && now <= (starts_at + GRACE_PERIOD_MINUTES.minutes)
   end
 
   def past_grace_period?
-    Time.current > (starts_at + GRACE_PERIOD_MINUTES.minutes)
+    Time.zone.now > (starts_at + GRACE_PERIOD_MINUTES.minutes)
   end
 
   def upcoming_lock?
@@ -96,7 +96,7 @@ class ClassSchedule < ApplicationRecord
   end
 
   def self.logical_today
-    Time.current.hour >= ADMIN_OPEN_HOUR ? Date.tomorrow : Date.current
+    Time.zone.now.hour >= ADMIN_OPEN_HOUR ? Time.zone.tomorrow : Time.zone.today
   end
 
   # --- SPOTS LOGIC ---
@@ -142,7 +142,6 @@ class ClassSchedule < ApplicationRecord
     guest_instructor_name.present?
   end
 
-
   # --- THE MAGIC: BULK GENERATOR ---
   # This method receives:
   # - schedule_params: { days: [1, 3], time: "18:30" } (Monday=1, Wednesday=3)
@@ -158,7 +157,7 @@ class ClassSchedule < ApplicationRecord
     # Hora base (ej: "18:30")
     base_time = Time.zone.parse(schedule_params[:time])
 
-    now = Time.current
+    now = Time.zone.now
 
     date_range.each do |date|
       # If the current day matches the desired days (e.g.: is Monday?)

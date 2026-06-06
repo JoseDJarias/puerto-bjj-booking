@@ -3,3 +3,7 @@
 one:
   membership_package: unlimited # Debe existir en membership_packages.yml
   class_type: bjj_gi             # Debe existir en class_types.yml
+
+two:
+  membership_package: bjj_plus_mma
+  class_type: bjj_gi   

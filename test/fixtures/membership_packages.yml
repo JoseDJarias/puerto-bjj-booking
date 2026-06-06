@@ -4,3 +4,9 @@ unlimited:
   name: "Plan Ilimitado"
   active: true
   price_modifier: 0.0
+
+bjj_plus_mma:
+  name: "Jiujitsu + MMA"  
+  active: true
+  price_modifier: 0.0
+

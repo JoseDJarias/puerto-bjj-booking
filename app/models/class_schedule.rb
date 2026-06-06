@@ -6,7 +6,7 @@ class ClassSchedule < ApplicationRecord
 
   GRACE_PERIOD_MINUTES = 20
   BOOKING_OPEN_HOUR = 19
-  ADMIN_OPEN_HOUR =21 
+  ADMIN_OPEN_HOUR =21
 
   enum :modality, { gi: 0, nogi: 1 }
 
@@ -38,7 +38,7 @@ class ClassSchedule < ApplicationRecord
 
   scope :past_logical, -> { 
     where("starts_at < ?", Time.zone.now).order(starts_at: :desc) 
-    }
+  }
 
   scope :visible_for, ->(user) {
     return all if user.admin?
@@ -46,6 +46,7 @@ class ClassSchedule < ApplicationRecord
 
     where(class_type: user.bookable_class_types)
   }
+
   scope :for_range, ->(start_date, end_date) {
     where(starts_at: start_date.beginning_of_day..end_date.end_of_day)
   }

@@ -14,7 +14,7 @@ class MembershipTest < ActiveSupport::TestCase
       user: @user,
       membership_package: @package,
       membership_plan: @plan,
-      start_date: Date.current
+      start_date: Time.zone.today
     )
     assert membership.valid?
     assert_equal 100.0, membership.amount_paid.to_f
@@ -25,7 +25,7 @@ class MembershipTest < ActiveSupport::TestCase
       user: @user,
       membership_package: @package,
       membership_plan: @plan,
-      start_date: Date.current,
+      start_date: Time.zone.today,
       amount_paid: 0
     )
     assert membership.valid?
@@ -47,7 +47,7 @@ class MembershipTest < ActiveSupport::TestCase
       user: @user, 
       membership_package: combo_pkg, 
       membership_plan: @plan, 
-      start_date: Date.current
+      start_date: Time.zone.today
     )
     
     membership.valid?
@@ -58,7 +58,7 @@ class MembershipTest < ActiveSupport::TestCase
   # --- TESTS DE FECHAS ---
 
   test "debe calcular la fecha de vencimiento automática (1 mes)" do
-    hoy = Date.current
+    hoy = Time.zone.today
     membership = Membership.create!(
       user: @user,
       membership_package: @package,
@@ -69,7 +69,7 @@ class MembershipTest < ActiveSupport::TestCase
   end
 
   test "debe respetar la fecha de vencimiento puesta manualmente por el admin" do
-    hoy = Date.current
+    hoy = Time.zone.today
     fecha_forzada = hoy + 15.days # Solo le damos 15 días por alguna razón
     
     membership = Membership.new(
@@ -85,7 +85,7 @@ class MembershipTest < ActiveSupport::TestCase
   end
 
   test "debe calcular el fin correctamente si la fecha de inicio es en el pasado" do
-    hace_un_mes = Date.current - 1.month
+    hace_un_mes = Time.zone.today - 1.month
     membership = Membership.create!(
       user: @user,
       membership_package: @package,
@@ -94,5 +94,23 @@ class MembershipTest < ActiveSupport::TestCase
     )
     # Si empezó hace un mes y el plan es mensual, vence HOY
     assert_equal hace_un_mes + 1.month, membership.end_date
+  end
+
+  test "debe calcular el fin de mes exacto (15 de mayo al 15 de junio) respetando la zona horaria" do
+    # Simulamos que la app está configurada para Costa Rica
+    Time.use_zone("America/Costa_Rica") do
+      # Forzamos una fecha fija para el inicio del test
+      start_date_cr = Date.parse("2026-05-15")
+      
+      membership = Membership.create!(
+        user: @user,
+        membership_package: @package,
+        membership_plan: @plan, # Asumiendo duración de 1 mes
+        start_date: start_date_cr
+      )
+      
+      # Verificamos que la fecha de vencimiento sea exactamente el mismo día del mes siguiente
+      assert_equal Date.parse("2026-06-15"), membership.end_date, "Si pagó el 15, debe vencer el 15 del mes siguiente"
+    end
   end
 end

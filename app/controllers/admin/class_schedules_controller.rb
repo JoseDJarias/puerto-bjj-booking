@@ -5,7 +5,7 @@ module Admin
     before_action :set_collections, only: %i[new edit batch_new]
 
     def index
-      start_date = params.fetch(:start_date, Date.current).to_date
+      start_date = params.fetch(:start_date, Time.zone.today).to_date
 
       # monthly calendar
       @class_schedules = ClassSchedule.for_range(start_date.beginning_of_month, start_date.end_of_month)
@@ -119,7 +119,7 @@ module Admin
 
     def batch_new
       @class_schedule = ClassSchedule.new
-      @default_start = Date.current
+      @default_start = Time.zone.today
       @default_end = 3.months.from_now.to_date
     end
 

@@ -125,7 +125,7 @@ class Booking < ApplicationRecord
   def process_attendance_payment
     # 1. Is the sport covered by an active membership?
     # We look if the membership package includes the class type of this booking
-    return if user.memberships.current.any? { |m| m.membership_package.includes_class_type?(class_schedule.class_type) }
+    return if user.covered_by_membership?(class_schedule.class_type)
 
     # 2. Has already activated a Drop-in today? 
     # If there is a ticket 'used_today', this class is free.
@@ -137,8 +137,8 @@ class Booking < ApplicationRecord
     if ticket
       ticket.activate!(self)
     else
-      # 3. There is nothing: Here you could mark a debt or notify the admin
-      # Rails.logger.warn "User #{user.id} attended without prior payment."
+      # # TODO: Add a debt record or trigger an admin notification for unpaid attendance
+      Rails.logger.warn "[Attendance] User ##{user_id} attended class ##{class_schedule_id} without payment."
     end
   end
 

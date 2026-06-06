@@ -1,9 +1,9 @@
 class BookingsController < ApplicationController
   def create
     @schedule = ClassSchedule.find(params[:class_schedule_id])
-    
+
     unless current_user.authorized_for?(@schedule.class_type)
-      return redirect_back(fallback_location: root_path, 
+      return redirect_back(fallback_location: root_path,
                            alert: t('bookings.messages.membership_required'))
     end
 

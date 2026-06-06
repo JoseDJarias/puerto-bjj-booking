@@ -39,14 +39,14 @@ module Admin
       
     def new
       @membership = Membership.new(membership_params)
-      @membership.start_date ||= Date.current 
+      @membership.start_date ||= Time.zone.today
       
       set_collections
     end
 
     def create
       @membership = Membership.new(membership_params)
-      @membership.start_date ||= Date.current
+      @membership.start_date ||= Time.zone.today
 
       if @membership.save
         # Format amount for the flash message

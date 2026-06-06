@@ -37,13 +37,14 @@
       </thead>
 
       <tbody class="bg-white">
+        <% today = Time.zone.today %>
         <% date_range.each_slice(7) do |week| %>
           <tr>
             <% week.each do |day| %>
               <%= content_tag :td, class: calendar.td_classes_for(day).push("h-32 align-top border-b border-r border-slate-100 p-2 hover:bg-slate-50 transition-colors relative group") do %>
                 
                 <div class="mb-1 flex justify-between items-start">
-                   <span class="inline-flex items-center justify-center w-6 h-6 text-xs font-medium rounded-full <%= Date.current == day ? 'bg-indigo-600 text-white' : 'text-slate-500' %>">
+                   <span class="inline-flex items-center justify-center w-6 h-6 text-xs font-medium rounded-full <%=  today == day ? 'bg-indigo-600 text-white' : 'text-slate-500' %>">
                     <%= day.day %>
                    </span>
                 </div>

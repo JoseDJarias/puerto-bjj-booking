@@ -6,7 +6,7 @@ class Booking < ApplicationRecord
 
   has_one :drop_in_ticket, dependent: :nullify
 
-  # --- ROBUST STATES ---
+  # --- STATES ---
   # confirmed: Occupies space (Standard booking)
   # cancelled_user: The user cancelled (Releases space)
   # cancelled_admin: The admin cancelled (Releases space)
@@ -132,7 +132,7 @@ class Booking < ApplicationRecord
     return if user.drop_in_active_today?
 
     # 3. If there is no membership or active ticket today, we try to activate a new one
-    ticket = user.available_ticket_for(class_schedule.class_type)
+    ticket = user.available_ticket
 
     if ticket
       ticket.activate!(self)

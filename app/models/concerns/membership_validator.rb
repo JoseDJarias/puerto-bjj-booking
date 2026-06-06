@@ -5,55 +5,20 @@ module MembershipValidator
     return true if admin?
     return false unless eligible?
 
-    has_membership = memberships.to_a.any? { |m| m.active? && m.end_date >= Date.current }
-    
-    has_drop_in = drop_in_tickets.to_a.any? { |t| t.covers_date?(Date.current) }
-    has_unused_ticket = drop_in_tickets.to_a.any?(&:unused?)
-
-    has_membership || has_drop_in || has_unused_ticket
+    any_active_membership? || any_active_drop_in? || unused_tickets?
   end
 
- # Responds: "Does the user have access to this class?"
- def authorized_for?(class_type)
-  return true if admin?
+  # Responds: "Does the user have access to this class?"
+  def authorized_for?(class_type)
+    return true if admin?
 
-    return false unless eligible? # De Authorizable
+    return false unless eligible? # From Authorizable concern
 
-    return true if covered_by_membership?(class_type)
-    
-    return true if drop_in_active_today?
-
-    return true if unused_tickets?
-
-    false
+    covered_by_membership?(class_type) || any_active_drop_in? || unused_tickets?
   end
 
   def covered_by_membership?(class_type)
     current_memberships.any? { |m| m.membership_package.includes_class_type?(class_type) }
-  end
-
-  def active_on?(package_name)
-    current_memberships.joins(:membership_package)
-                       .where("LOWER(membership_packages.name) LIKE ?", "%#{package_name.downcase}%")
-                       .exists?
-  end
-
-  def drop_in_active_today?
-    drop_in_tickets.used.where(used_at: Time.current.all_day).exists?
-  end
-
-  def unused_tickets?
-    drop_in_tickets.unused.exists?
-  end
-
-  # Universal drop-ins: one unused ticket = access to any class. Package param kept for API compatibility.
-  def ticket_available_for?(_class_type = nil)
-    drop_in_tickets.unused.exists?
-  end
-
-  # Universal drop-ins: returns first unused ticket. Package param kept for API compatibility.
-  def available_ticket_for(_package = nil)
-    drop_in_tickets.unused.first
   end
 
   def needs_membership_renewal?
@@ -65,10 +30,37 @@ module MembershipValidator
     all_accessible_class_types
   end
 
+  # Drop in Tickets - Move this to another part of the code!
+  def drop_in_active_today?
+    any_active_drop_in?
+  end
+
+  def unused_tickets_count
+    drop_in_tickets.unused.count
+  end
+
+  def unused_tickets?
+    drop_in_tickets.unused.exists?
+  end
+
+  # Universal drop-ins: returns first unused ticket.
+  def available_ticket
+    drop_in_tickets.unused.first
+  end
+  # Drop in Tickets - Move this to another part of the code!
+
   private
 
+  def any_active_membership?
+    memberships.active.where(end_date: Time.zone.today..).exists?
+  end
+
+  def any_active_drop_in?
+    drop_in_tickets.used.where(used_at: Time.zone.now.all_day).exists?
+  end
+
   def current_memberships
-    memberships.current.order(end_date: :desc)
+    memberships.active.where(end_date: Time.zone.today..).order(end_date: :desc)
   end
 
   def membership_expires_soon?(days = 7)
@@ -79,5 +71,4 @@ module MembershipValidator
   def all_accessible_class_types
     current_memberships.flat_map { |m| m.membership_package.class_types }.uniq
   end
-
 end

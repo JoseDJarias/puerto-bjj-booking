@@ -7,10 +7,11 @@ class Membership < ApplicationRecord
 
   validates :start_date, presence: true
   validates :amount_paid, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
+  validate :end_date_must_be_after_start_date
 
-  scope :current, -> { active.where(end_date: Time.zone.today..) }
-  scope :expired_listing, -> { expired.or(where(end_date: ...Time.zone.today)) }
-  scope :past, -> { where(end_date: ...Time.zone.today).or(where(status: [:expired, :cancelled])) }
+  scope :current, -> { active }
+  scope :expired_listing, -> { expired }
+  scope :past, -> { expired.or(cancelled) }
   
   #Package Filtering, use it with merge in other scopes
   scope :by_package, ->(package_id) { where(membership_package_id: package_id) }
@@ -19,7 +20,7 @@ class Membership < ApplicationRecord
   before_validation :calculate_amount_paid, on: :create
 
   def current?
-    active? && end_date.present? && end_date >= Time.zone.today
+    active?
   end
   # Helper methods
   def days_remaining
@@ -64,4 +65,10 @@ class Membership < ApplicationRecord
     
     self.amount_paid = pricing&.price || 0
   end 
+
+  def end_date_must_be_after_start_date
+    if start_date.present? && end_date.present? && end_date <= start_date
+      errors.add(:end_date, :must_be_after_start_date)
+    end
+  end
 end

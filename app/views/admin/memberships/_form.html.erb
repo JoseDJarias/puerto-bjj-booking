@@ -15,6 +15,28 @@
                 class: "space-y-8" do |f| %>
 
     <section class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+      <% if membership.errors.any? %>
+        <div class="rounded-2xl bg-red-50 p-4 border-2 border-red-100 mb-6 w-full overflow-hidden">
+            <div class="flex items-start gap-3 mb-3">
+            <div class="h-6 w-6 rounded-full bg-red-100 flex-shrink-0 flex items-center justify-center text-red-600 mt-0.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>
+            </div>
+            <h3 class="text-sm font-black text-red-800 uppercase tracking-tight leading-tight">
+                <%= t("admin.memberships.form.errors_title") %>
+            </h3>
+            </div>
+            
+            <ul class="space-y-2 ml-9 break-words">
+            <% membership.errors.full_messages.each do |msg| %>
+                <li class="text-xs sm:text-sm text-red-700 font-medium leading-relaxed">
+                <span class="font-black italic mr-1 text-red-400">•</span> 
+                <%= msg %>
+                </li>
+            <% end %>
+            </ul>
+        </div>
+      <% end %>
+
       <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
         <span class="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-100 text-indigo-700 text-sm italic font-black">1</span>
         <%= t("admin.memberships.form.step_student") %>
@@ -70,23 +92,49 @@
         <section class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
           <h3 class="text-lg font-bold text-slate-900 mb-6 italic leading-none flex items-center gap-2">
             <span class="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-100 text-indigo-700 text-sm italic font-black">3</span>
-            Fechas de Vigencia
+            <%= t("admin.memberships.form.dates_section_title") %>
           </h3>
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="block text-[10px] font-black uppercase text-slate-400 mb-2 tracking-widest">Inicio</label>
-              <%= f.date_field :start_date, 
-                  class: "block w-full rounded-xl border-slate-300 py-2 px-3 text-sm focus:ring-indigo-600",
-                  data: { action: "change->membership-preview#update" } %>
+          <div class="p-5 bg-slate-50 rounded-2xl border border-slate-100">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <div class="flex-1 w-full">
+                <label class="block text-[10px] font-black uppercase text-slate-500 mb-2 tracking-widest flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                  <%= t("activerecord.attributes.membership.start_date") %>
+                </label>
+                <%= f.date_field :start_date, 
+                    class: "block w-full rounded-xl border-slate-200 bg-white py-2.5 px-4 text-sm font-bold text-slate-700 focus:border-indigo-500 focus:ring-indigo-500 transition-all shadow-sm",
+                    data: { action: "change->membership-preview#update" } %>
+              </div>
+
+              <div class="hidden sm:flex mt-6">
+                <div class="h-8 w-8 flex items-center justify-center rounded-full bg-white shadow-sm border border-slate-100">
+                  <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                </div>
+              </div>
+
+              <div class="flex-1 w-full">
+                <label class="block text-[10px] font-black uppercase text-slate-500 mb-2 tracking-widest flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                  <%= t("admin.memberships.form.end_date_manual") %>
+                </label>
+                <%= f.date_field :end_date, 
+                    class: "block w-full rounded-xl border-slate-200 bg-white py-2.5 px-4 text-sm font-bold text-slate-700 focus:border-indigo-500 focus:ring-indigo-500 transition-all shadow-sm",
+                    data: { membership_preview_target: "endDateInput" } %>
+              </div>
             </div>
-            <div>
-              <label class="block text-[10px] font-black uppercase text-slate-400 mb-2 tracking-widest">Fin (Manual)</label>
-              <%= f.date_field :end_date, 
-                  class: "block w-full rounded-xl border-slate-300 py-2 px-3 text-sm focus:ring-indigo-600",
-                  data: { membership_preview_target: "endDateInput" } %>
+
+            <div class="mt-5 pt-4 border-t border-slate-200">
+              <label class="block text-[10px] font-black uppercase text-slate-500 mb-2 tracking-widest flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <%= t("activerecord.attributes.membership.status") %>
+              </label>
+              <%= f.select :status, 
+                  Membership.statuses.keys.map { |s| [t("activerecord.attributes.membership.statuses.#{s}"), s] },
+                  {},
+                  class: "block w-full rounded-xl border-slate-200 bg-white py-2.5 px-4 text-sm font-bold text-slate-700 focus:border-indigo-500 focus:ring-indigo-500 transition-all shadow-sm cursor-pointer" %>
             </div>
           </div>
-          <p class="text-[9px] text-slate-400 mt-3 italic">* Cambia el inicio para recalcular. El fin es opcional para ajustes manuales.</p>
+          <p class="text-[9px] text-slate-400 mt-3 italic"><%= t("admin.memberships.form.dates_help") %></p>
         </section>
       </section>
 

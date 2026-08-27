@@ -38,7 +38,7 @@
       <div class="flex flex-1 flex-col overflow-hidden">
         <%= render "layouts/topbar" %>
 
-        <main class="flex-1 overflow-auto bg-slate-50 p-4 sm:p-6 lg:p-8">
+        <main class="flex-1 overflow-auto bg-slate-50 p-4 pb-24 sm:p-6 lg:p-8 lg:pb-8">
           <div class="mx-auto max-w-6xl">
             <div id="flash" class="fixed top-4 right-4 z-50 flex flex-col gap-2 w-full max-w-sm pointer-events-none">
               <%= render "layouts/flash" %>
@@ -48,7 +48,7 @@
         </main>
       </div>
 
-
+      <%= render "layouts/bottom_nav" %>
     </div>
   </body>
 </html>

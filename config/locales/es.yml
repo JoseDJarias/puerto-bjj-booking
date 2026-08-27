@@ -223,6 +223,7 @@ es:
       present: "Presente"
       badge_you: "Tu"
       no_participants: "No hay participantes aún"
+      scroll_for_more: "Desliza para ver más"
 
   # === ADMIN PANEL ===
   admin:

@@ -55,4 +55,13 @@
       <p class="text-xs text-slate-400 italic py-6 text-center"><%= t('class_schedules.index.no_participants') %></p>
     <% end %>
   </div>
+
+  <% if participants.size > 4 %>
+    <div class="text-center py-2 text-[10px] text-slate-400 font-bold uppercase tracking-widest animate-pulse mt-1 flex items-center justify-center gap-1">
+      <%= t('class_schedules.index.scroll_for_more') %>
+      <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+      </svg>
+    </div>
+  <% end %>
 <% end %>

@@ -54,7 +54,7 @@ module Admin
         msg = t('admin.memberships.flash.created', amount: amount)
         
         # Redirect back to User Profile for better flow
-        redirect_to admin_user_path(@membership.user_id), notice: msg
+        redirect_to admin_user_path(@membership.user_id), notice: msg, status: :see_other
       else
         @preselected_user = User.find_by(id: membership_params[:user_id]) if membership_params[:user_id]
         render :new, status: :unprocessable_entity
@@ -66,7 +66,7 @@ module Admin
 
     def update
       if @membership.update(membership_params)
-        redirect_to admin_memberships_path, notice: t('admin.memberships.flash.updated')
+        redirect_to admin_memberships_path, notice: t('admin.memberships.flash.updated'), status: :see_other
       else
         render :edit, status: :unprocessable_entity
       end
@@ -74,7 +74,7 @@ module Admin
 
     def destroy
       @membership.destroy
-      redirect_to admin_memberships_path, notice: t('admin.memberships.flash.deleted')
+      redirect_to admin_memberships_path, notice: t('admin.memberships.flash.deleted'), status: :see_other
     end
 
     def calculate_totals

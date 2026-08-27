@@ -11,7 +11,7 @@
 <div data-controller="membership-preview">
   <%= form_with model: [:admin, membership],
                 id: "membership_form",
-                data: { membership_preview_target: "form" },
+                data: { membership_preview_target: "form", turbo: false },
                 class: "space-y-8" do |f| %>
 
     <section class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">

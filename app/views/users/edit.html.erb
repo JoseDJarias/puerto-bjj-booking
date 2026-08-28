@@ -58,9 +58,9 @@
         </div>
       </div>
 
-      <div class="flex items-center justify-end gap-4 pt-6">
-        <%= link_to "Cancelar", root_path, class: "text-xs font-black text-slate-400 uppercase tracking-widest hover:text-slate-600" %>
-        <%= f.submit "Guardar Cambios", class: "cursor-pointer rounded-xl bg-slate-900 px-8 py-4 font-black text-xs text-white uppercase tracking-widest hover:bg-black transition-all shadow-xl shadow-slate-100" %>
+      <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-4 pt-6">
+        <%= link_to "Cancelar", root_path, class: "w-full sm:w-auto text-center text-xs font-black text-slate-400 uppercase tracking-widest hover:text-slate-600 py-2 sm:py-0" %>
+        <%= f.submit "Guardar Cambios", class: "w-full sm:w-auto cursor-pointer rounded-xl bg-slate-900 px-8 py-4 font-black text-xs text-white uppercase tracking-widest hover:bg-black transition-all shadow-xl shadow-slate-100" %>
       </div>
     <% end %>
   </div>

@@ -27,29 +27,20 @@
     <%= link_to class_schedule_path(schedule),
               data: { turbo_frame: "modal_detail" },
               class: "p-6 pb-0 block group/card" do %>
-      <div class="space-y-5">
-        <div class="flex justify-between items-start">
-          <div class="flex flex-col">
-            <% if schedule.topic.present? %>
-              <div class="mb-1">
-                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-black bg-amber-50 text-amber-700 border border-amber-100 uppercase tracking-wider">
-                  🎯 <%= schedule.topic %>
-                </span>
-              </div>
-            <% end %>
-
-            <div class="mb-2 flex flex-col items-start gap-1.5">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 uppercase tracking-wider">
-                <%= schedule.class_type.name %>
-              </span>
-              <div class="mx-2">
-                <%= modality_badge(schedule) %>
-              </div>
-            </div>
-
-            <h3 class="text-3xl font-black text-slate-900 leading-tight tracking-tight">
-              <%= l(schedule.starts_at, format: "%l:%M %P") %>
+        <%# Header: Time & Spots %>
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <h3 class="text-3xl font-black text-slate-900 leading-none tracking-tight flex items-baseline gap-1">
+              <%= l(schedule.starts_at, format: "%-I:%M") %>
+              <span class="text-sm font-bold text-slate-400 uppercase"><%= l(schedule.starts_at, format: "%P") %></span>
             </h3>
+            
+            <% if context == :dashboard %>
+              <p class="text-[11px] font-black text-indigo-600 uppercase tracking-widest mt-2 flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                <%= l(schedule.starts_at, format: "%A %d %b") %>
+              </p>
+            <% end %>
           </div>
 
           <div id="spots_schedule_<%= schedule.id %>" class="shrink-0">
@@ -57,29 +48,43 @@
           </div>
         </div>
 
-        <div class="space-y-3">
-          <% if context == :dashboard %>
-            <div class="flex items-center text-indigo-600 text-sm font-bold">
-              <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <%= l(schedule.starts_at, format: "%A %d %b").capitalize %>
-            </div>
-          <% end %>
+        <%# Badges %>
+        <div class="flex flex-wrap items-center gap-2 mb-4">
+          <span class="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-black bg-indigo-50 text-indigo-700 uppercase tracking-widest border border-indigo-100">
+            <%= schedule.class_type.name %>
+          </span>
+          <%= modality_badge(schedule) %>
+        </div>
 
-          <div class="flex items-center pt-2 border-t border-slate-50">
-            <div class="h-9 w-9 rounded-full bg-slate-100 flex items-center justify-center mr-3 border border-slate-200 shadow-sm">
-              <svg class="w-5 h-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-            </div>
-            <% instructor_label = schedule.special_guest? ? "Profesor / Invitado Especial" : "Profesor" %>
-            <div class="flex flex-col">
-              <span class="text-[9px] text-slate-400 uppercase font-black tracking-widest mb-0.5"> <%= instructor_label%> </span>
-              <span class="text-sm font-bold text-slate-700 leading-none"><%= schedule.displayed_instructor_name %></span>
-            </div>
+        <%# Topic (Enfoque) - As normal text, not a badge %>
+        <% if schedule.topic.present? %>
+          <div class="mb-4">
+            <h4 class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Enfoque de la Clase</h4>
+            <p class="text-base font-bold text-slate-800 leading-snug"><%= schedule.topic %></p>
+          </div>
+        <% end %>
+
+        <%# Instructor %>
+        <div class="flex items-center mb-5">
+          <div class="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center mr-3 border border-slate-200">
+            <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+          </div>
+          <div class="flex flex-col">
+            <% instructor_label = schedule.special_guest? ? "Profesor Invitado" : "Profesor" %>
+            <span class="text-[9px] text-slate-400 uppercase font-black tracking-widest"> <%= instructor_label%> </span>
+            <span class="text-sm font-bold text-slate-700 leading-none mt-0.5"><%= schedule.displayed_instructor_name %></span>
           </div>
         </div>
+
+        <%# Notes Block %>
+        <% if schedule.notes.present? %>
+          <div class="bg-slate-50 border border-slate-100 rounded-xl p-3 mb-5 flex gap-2.5 items-start">
+            <svg class="w-4 h-4 text-slate-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <p class="text-[11px] font-bold text-slate-600 leading-relaxed">
+              <%= schedule.notes %>
+            </p>
+          </div>
+        <% end %>
 
           <%# --- Participants List --- %>
         <div class="pt-1">
@@ -106,7 +111,6 @@
             </div>
           </details>
         </div>
-      </div>
     <% end %>
 
     <%# --- ACTION BUTTON (Book/Cancel/Lock) --- %>

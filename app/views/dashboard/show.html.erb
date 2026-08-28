@@ -16,9 +16,9 @@
     <%# 1. Welcome Card %>
     <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm mb-6 relative overflow-hidden">
       <div class="relative z-10">
-        <h2 class="text-xl font-black text-slate-900 mb-1 tracking-tight"><%= t('dashboard.welcome.title') %></h2>
-        <p class="text-slate-600 font-semibold mb-3 text-sm"><%= t('dashboard.welcome.greeting', name: @user.first_name) %></p>
-        <p class="text-sm font-medium text-slate-700 mb-6 leading-relaxed"><%= t('dashboard.welcome.subtitle') %></p>
+        <% greeting = weekly_dashboard_greeting(@user) %>
+        <h2 class="text-xl sm:text-2xl font-black text-slate-900 mb-2 tracking-tight"><%= greeting[:title] %></h2>
+        <p class="text-sm font-medium text-slate-700 mb-6 leading-relaxed"><%= greeting[:subtitle] %></p>
         
         <button onclick="document.getElementById('classes-section').scrollIntoView({ behavior: 'smooth' })" 
                 class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white text-sm font-bold rounded-2xl shadow-lg shadow-indigo-100 active:scale-95 transition-all">

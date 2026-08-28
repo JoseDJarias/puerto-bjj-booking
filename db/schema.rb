@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_21_050653) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_28_133807) do
   create_table "bookings", force: :cascade do |t|
     t.integer "changed_by_id"
     t.integer "class_schedule_id", null: false
@@ -34,6 +34,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_21_050653) do
     t.string "guest_instructor_name"
     t.integer "instructor_id", null: false
     t.integer "modality"
+    t.text "notes"
     t.decimal "price", precision: 10, scale: 2
     t.boolean "private", default: false, null: false
     t.datetime "starts_at", null: false

@@ -181,6 +181,31 @@
           </div>
         </div>
 
+        <%# 3.5. Topic and Notes %>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-10 border-t border-slate-100 mt-8">
+          <div class="space-y-3">
+            <label class="text-[10px] font-black text-slate-900 uppercase tracking-widest ml-1 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+              Enfoque de la Clase <span class="text-slate-400 normal-case tracking-normal font-bold">(Opcional)</span>
+            </label>
+            <%= f.text_field :topic, 
+                placeholder: "Ej: Semana de Guardia Cerrada",
+                class: "block w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-3 px-4 text-sm font-black text-slate-700 focus:bg-white focus:border-amber-500 transition-all shadow-sm" %>
+            <p class="text-[10px] font-bold text-slate-400 italic ml-1">Aplicará este enfoque a TODAS las clases generadas en este lote.</p>
+          </div>
+
+          <div class="space-y-3">
+            <label class="text-[10px] font-black text-slate-900 uppercase tracking-widest ml-1 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-indigo-600"></span>
+              Notas Especiales <span class="text-slate-400 normal-case tracking-normal font-bold">(Opcional)</span>
+            </label>
+            <%= f.text_area :notes, 
+                rows: 2,
+                placeholder: "Ej: Traer hidratación.",
+                class: "block w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-3 px-4 text-sm font-medium text-slate-700 focus:bg-white focus:border-indigo-500 transition-all shadow-sm" %>
+          </div>
+        </div>
+
         <%# 4. Extra Config %>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pt-10 border-t border-slate-100">
           <div class="space-y-3">

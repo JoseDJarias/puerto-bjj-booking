@@ -192,6 +192,8 @@ module Admin
         :capacity,
         :modality,
         :cancelled,
+        :topic,
+        :notes,
         :start_date,
         :end_date,
         day_configs: [

@@ -19,15 +19,23 @@ export default class extends Controller {
     }
   }
 
+  stopPropagation(e) {
+    e.stopPropagation()
+  }
+
   // 3. Close the modal (The "All terrain")
   close(e) {
     if (e) e.preventDefault()
     
     // CASE A: It's a modal loaded by Turbo (dynamic)
     const frame = this.element.closest('turbo-frame')
-    if (frame && frame.id === "admin_modal") {
-      frame.src = "" // Clean the URL so it can be reopened
-      this.element.remove() // Remove the dynamic modal HTML
+    if (frame && (frame.id === "admin_modal" || frame.id === "modal_detail")) {
+      if (frame.id === "modal_detail" && window.location.pathname !== "/") {
+        window.location.href = "/"
+      } else {
+        frame.src = "" // Clean the URL so it can be reopened
+        this.element.remove() // Remove the dynamic modal HTML
+      }
     } 
 
     // CASE B: It's your static modal (the 'Add Athlete')

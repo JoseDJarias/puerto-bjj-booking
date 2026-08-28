@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
-  resources :class_schedules, only: [:show] do
+  resources :class_schedules, only: [:show, :update] do
     member do
       get :participants 
     end

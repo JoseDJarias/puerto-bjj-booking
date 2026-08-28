@@ -36,13 +36,6 @@
 
     <p class="<%= section_header %>"><%= t("nav.sections.tatami") %></p>
 
-    <%= link_to class_schedules_path, class: "#{link_classes} #{current_page?(class_schedules_path) ? active_classes : inactive_classes}" do %>
-      <svg class="h-5 w-5 <%= current_page?(class_schedules_path) ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600' %>" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-      </svg>
-      <span><%= t("nav.bookings") %></span>
-    <% end %>
-
     <%= link_to dog_fights_path, class: "#{link_classes} #{current_page?(dog_fights_path) ? active_classes : inactive_classes}" do %>
       <svg class="h-5 w-5 <%= current_page?(dog_fights_path) ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600' %>" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />

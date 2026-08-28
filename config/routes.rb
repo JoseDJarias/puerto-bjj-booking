@@ -3,10 +3,7 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
-  resources :class_schedules, only: [:index, :show] do
-    collection do
-      get :week
-    end
+  resources :class_schedules, only: [:show] do
     member do
       get :participants 
     end

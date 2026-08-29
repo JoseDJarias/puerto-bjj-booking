@@ -857,7 +857,11 @@ es:
     index:
       title: "Catálogo Oficial"
       subtitle: "Equipamiento, indumentaria y accesorios de Puerto BJJ"
-      empty_state: "No hay productos disponibles en el catálogo en este momento."
+      empty_title: "Próximamente en la Tienda"
+      empty_state: "Próximamente podrás ver nuestro catálogo de artículos disponibles."
+      empty_subtitle: "Estamos seleccionando y alistando los mejores kimonos, rashguards y equipo de entrenamiento recomendados para que puedas encargarlos directamente desde aquí."
+      empty_hint: "Trabajamos bajo encargo con un anticipo del 50% vía SINPE Móvil y te avisamos automáticamente en cuanto tu paquete llegue a la academia. Si necesitas asesoría sobre tallas o equipo urgente, puedes consultarnos directamente en el tatami."
+      empty_cta: "Volver al Inicio"
       view_details: "Ver producto"
       order_badge: "Bajo Pedido"
       deposit_tag: "Anticipo requerido: %{percentage}%"

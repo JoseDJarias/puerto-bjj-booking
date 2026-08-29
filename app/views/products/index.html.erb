@@ -53,10 +53,10 @@
                 </div>
 
                 <div class="absolute top-3 right-3 flex items-center gap-1.5 z-10">
-                  <% if product.images.count > 1 %>
+                  <% if product.images.size > 1 %>
                     <span class="px-2 py-0.5 rounded-full text-[9px] font-black bg-slate-900/80 text-white backdrop-blur-md shadow-sm"
                           data-product-gallery-target="counter">
-                      1 / <%= product.images.count %>
+                      1 / <%= product.images.size %>
                     </span>
                   <% end %>
                   <button type="button"
@@ -68,7 +68,7 @@
                 </div>
 
                 <%# Navigation Arrows (Desktop / Hover) %>
-                <% if product.images.count > 1 %>
+                <% if product.images.size > 1 %>
                   <button type="button"
                           data-action="click->product-gallery#prevSlide"
                           class="hidden sm:flex absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 items-center justify-center rounded-full bg-white/90 hover:bg-white text-slate-800 shadow-md backdrop-blur-sm transition-all opacity-0 group-hover/img:opacity-100 active:scale-90 cursor-pointer z-10">
@@ -82,7 +82,7 @@
                 <% end %>
 
                 <%# Dots Indicator %>
-                <% if product.images.count > 1 %>
+                <% if product.images.size > 1 %>
                   <div class="absolute bottom-2.5 inset-x-0 flex justify-center gap-1 z-10 pointer-events-none">
                     <% product.images.each_with_index do |_, idx| %>
                       <span class="h-1 rounded-full transition-all duration-300 shadow-sm <%= idx.zero? ? 'bg-white w-4' : 'bg-white/50 w-1.5' %>"
@@ -108,7 +108,7 @@
                 <div class="absolute top-4 inset-x-4 sm:inset-x-6 flex items-center justify-between z-20 pointer-events-none">
                   <span class="px-3.5 py-1.5 rounded-full text-xs font-black bg-white/10 text-white backdrop-blur-md"
                         data-product-gallery-target="modalCounter">
-                    1 / <%= product.images.count %>
+                    1 / <%= product.images.size %>
                   </span>
 
                   <button type="button"
@@ -129,7 +129,7 @@
                        data-product-gallery-target="modalImage">
 
                   <%# Modal Navigation Arrows %>
-                  <% if product.images.count > 1 %>
+                  <% if product.images.size > 1 %>
                     <button type="button"
                             data-action="click->product-gallery#prevLightbox"
                             class="absolute left-2 sm:-left-6 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center rounded-full bg-white/15 hover:bg-white/30 text-white backdrop-blur-md shadow-lg transition-all active:scale-90 cursor-pointer">

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <style>
+      .button {
+        background-color: #4f46e5;
+        border-radius: 8px;
+        color: #ffffff !important;
+        display: inline-block;
+        font-weight: bold;
+        padding: 14px 28px;
+        text-decoration: none;
+        margin: 20px 0;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #1e293b; line-height: 1.6; background-color: #f8fafc; margin: 0; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; padding: 25px; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px;">
+      <h2 style="border-bottom: 2px solid #4f46e5; padding-bottom: 12px; margin-top: 0; color: #0f172a;">PUERTO BJJ - NUEVO PEDIDO</h2>
+      
+      <p>Hola Administrador,</p>
+      <p>El alumno <strong><%= @user.first_name %> <%= @user.last_name %></strong> ha enviado una solicitud de pedido para un producto:</p>
+
+      <div style="background-color: #f1f5f9; padding: 20px; border-radius: 12px; margin: 20px 0;">
+        <h3 style="margin-top: 0; color: #1e293b;"><%= @product_order.product_name %></h3>
+        <p style="margin: 5px 0;"><strong>Alumno:</strong> <%= @user.first_name %> <%= @user.last_name %> (<%= @user.email_address %>)</p>
+        <p style="margin: 5px 0;"><strong>Precio Total:</strong> ₡<%= number_with_delimiter(@product_order.product_price.to_i) %></p>
+        <p style="margin: 5px 0;"><strong>Anticipo Transferido:</strong> ₡<%= number_with_delimiter(@product_order.deposit_amount.to_i) %></p>
+        <% if @product_order.user_notes.present? %>
+          <p style="margin: 5px 0;"><strong>Detalles / Talla / Notas:</strong> <%= @product_order.user_notes %></p>
+        <% end %>
+        <p style="margin: 5px 0;"><strong>Fecha:</strong> <%= l(@product_order.created_at.in_time_zone("America/Costa_Rica"), format: "%d/%m/%Y %I:%M %p") %></p>
+      </div>
+
+      <p style="font-size: 14px; color: #475569;">
+        El alumno ha adjuntado el comprobante de pago por SINPE Móvil. Ingresa al panel de administración para verificar el comprobante y confirmar el pedido:
+      </p>
+
+      <div style="text-align: center; margin: 25px 0;">
+        <a href="https://booking.puertojiujitsu.com/admin/product_orders/<%= @product_order.id %>" class="button">
+          Revisar y Gestionar Pedido
+        </a>
+      </div>
+
+      <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;">
+      <p style="font-size: 12px; color: #94a3b8; text-align: center;">
+        Puerto BJJ App - Notificación de Pedidos
+      </p>
+    </div>
+  </body>
+</html>

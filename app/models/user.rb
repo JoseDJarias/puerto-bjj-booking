@@ -10,6 +10,7 @@ class User < ApplicationRecord
   has_many :memberships, dependent: :destroy
   has_many :drop_in_tickets, dependent: :destroy
   has_many :bookings, dependent: :destroy
+  has_many :product_orders, dependent: :destroy
 
  #pending how to destroy a instructor user
 
@@ -23,7 +24,7 @@ class User < ApplicationRecord
   
   # Identification validation
   before_validation :normalize_identification
-  validates :identification, presence: true, unless: -> {:admin_editing_password || :password_digest_changed?}
+  validates :identification, presence: true, unless: -> { admin_editing_password || (persisted? && password_digest_changed?) }
   validates :identification, uniqueness: true, if: -> { identification.present? && !admin_editing_password }
   validate :flexible_identification_check, if: -> { identification.present? }
 

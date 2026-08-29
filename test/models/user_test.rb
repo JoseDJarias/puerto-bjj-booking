@@ -85,7 +85,7 @@ class UserTest < ActiveSupport::TestCase
   test "debe requerir contraseña de mínimo 8 caracteres al crear" do
     user = User.new(first_name: "Daniel", last_name: "Test" ,password: "1234567")
     assert_not user.valid?
-    assert_includes user.errors[:password], "es demasiado corto (mínimo 8 caracteres)"
+    assert_includes user.errors[:password], "es demasiado corta (mínimo 8 caracteres)"
   end
 
   test "debe permitir actualizar otros campos sin enviar la contraseña" do

@@ -10,7 +10,35 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_28_133807) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_29_062133) do
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.bigint "record_id", null: false
+    t.string "record_type", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.string "content_type"
+    t.datetime "created_at", null: false
+    t.string "filename", null: false
+    t.string "key", null: false
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
   create_table "bookings", force: :cascade do |t|
     t.integer "changed_by_id"
     t.integer "class_schedule_id", null: false
@@ -144,6 +172,38 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_28_133807) do
     t.index ["user_id"], name: "index_private_class_requests_on_user_id"
   end
 
+  create_table "product_orders", force: :cascade do |t|
+    t.text "admin_notes"
+    t.datetime "created_at", null: false
+    t.decimal "deposit_amount", precision: 10, scale: 2, null: false
+    t.integer "product_id", null: false
+    t.string "product_name", null: false
+    t.decimal "product_price", precision: 10, scale: 2, null: false
+    t.integer "status", default: 0, null: false
+    t.boolean "terms_accepted", default: false, null: false
+    t.datetime "terms_accepted_at"
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.text "user_notes"
+    t.index ["product_id"], name: "index_product_orders_on_product_id"
+    t.index ["status"], name: "index_product_orders_on_status"
+    t.index ["user_id"], name: "index_product_orders_on_user_id"
+  end
+
+  create_table "products", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.string "category"
+    t.datetime "created_at", null: false
+    t.integer "deposit_percentage", default: 50, null: false
+    t.text "description"
+    t.string "name", null: false
+    t.text "notes"
+    t.decimal "price", precision: 10, scale: 2, null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_products_on_active"
+    t.index ["category"], name: "index_products_on_category"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -184,6 +244,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_28_133807) do
     t.index ["status"], name: "index_users_on_status"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "bookings", "class_schedules"
   add_foreign_key "bookings", "users"
   add_foreign_key "bookings", "users", column: "changed_by_id"
@@ -201,5 +263,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_28_133807) do
   add_foreign_key "private_class_requests", "class_schedules"
   add_foreign_key "private_class_requests", "users"
   add_foreign_key "private_class_requests", "users", column: "preferred_instructor_id"
+  add_foreign_key "product_orders", "products"
+  add_foreign_key "product_orders", "users"
   add_foreign_key "sessions", "users"
 end

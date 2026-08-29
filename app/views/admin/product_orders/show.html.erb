@@ -1,0 +1,145 @@
+<% content_for :page_title, "Pedido ##{@order.id} | Admin" %>
+
+<div class="max-w-4xl mx-auto space-y-6">
+  <div>
+    <%= link_to admin_product_orders_path, class: "inline-flex items-center gap-1.5 text-xs font-black text-slate-400 hover:text-slate-600 uppercase tracking-widest mb-2" do %>
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+      Volver a la lista de pedidos
+    <% end %>
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+      <h1 class="text-2xl font-black text-slate-900 tracking-tight">Pedido #<%= @order.id %> - <%= @order.product_name %></h1>
+      
+      <% status_classes = case @order.status
+         when "pending_verification" then "bg-amber-50 text-amber-700 border-amber-200"
+         when "payment_confirmed" then "bg-indigo-50 text-indigo-700 border-indigo-200"
+         when "ordered_from_supplier" then "bg-blue-50 text-blue-700 border-blue-200"
+         when "ready_for_pickup" then "bg-green-50 text-green-700 border-green-200"
+         when "delivered" then "bg-slate-100 text-slate-700 border-slate-200"
+         else "bg-red-50 text-red-700 border-red-200"
+         end %>
+      <span class="inline-flex items-center px-3 py-1 rounded-xl text-xs font-black uppercase tracking-wider border <%= status_classes %> self-start sm:self-auto">
+        <%= t("product_orders.status.#{@order.status}") %>
+      </span>
+    </div>
+  </div>
+
+  <%# Action Buttons for State Transitions %>
+  <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
+    <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 mb-4"><%= t('admin.product_orders.show.actions_title') %></h3>
+    <div class="flex flex-wrap gap-3">
+      <% if @order.pending_verification? %>
+        <%= button_to confirm_payment_admin_product_order_path(@order), method: :patch, class: "inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black uppercase tracking-wider rounded-2xl shadow-sm transition-all cursor-pointer" do %>
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          <%= t('admin.product_orders.show.confirm_payment_button') %>
+        <% end %>
+      <% end %>
+
+      <% if @order.payment_confirmed? %>
+        <%= button_to mark_as_ordered_admin_product_order_path(@order), method: :patch, class: "inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-black uppercase tracking-wider rounded-2xl shadow-sm transition-all cursor-pointer" do %>
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+          <%= t('admin.product_orders.show.mark_ordered_button') %>
+        <% end %>
+      <% end %>
+
+      <% if @order.ordered_from_supplier? %>
+        <%= button_to mark_as_ready_admin_product_order_path(@order), method: :patch, class: "inline-flex items-center gap-2 px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white text-xs font-black uppercase tracking-wider rounded-2xl shadow-sm transition-all cursor-pointer" do %>
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+          <%= t('admin.product_orders.show.mark_ready_button') %>
+        <% end %>
+      <% end %>
+
+      <% if @order.ready_for_pickup? %>
+        <%= button_to mark_as_delivered_admin_product_order_path(@order), method: :patch, class: "inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-black uppercase tracking-wider rounded-2xl shadow-sm transition-all cursor-pointer" do %>
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+          <%= t('admin.product_orders.show.mark_delivered_button') %>
+        <% end %>
+      <% end %>
+
+      <% unless @order.delivered? || @order.cancelled? %>
+        <%= button_to cancel_order_admin_product_order_path(@order), method: :patch, data: { turbo_confirm: "¿Deseas cancelar esta orden?" }, class: "inline-flex items-center gap-2 px-4 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-black uppercase tracking-wider rounded-2xl transition-all cursor-pointer" do %>
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+          <%= t('admin.product_orders.show.cancel_button') %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <%# Order Details & Receipt Grid %>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <%# Student & Order Info %>
+    <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
+      <h3 class="text-xs font-black uppercase tracking-wider text-slate-400"><%= t('admin.product_orders.show.student_info') %></h3>
+      
+      <div class="flex items-center gap-3">
+        <div class="h-10 w-10 rounded-full bg-indigo-600 flex items-center justify-center text-sm font-black text-white uppercase">
+          <%= @order.user.first_name.first %>
+        </div>
+        <div>
+          <p class="font-extrabold text-slate-800"><%= @order.user.first_name %> <%= @order.user.last_name %></p>
+          <p class="text-xs text-slate-400"><%= @order.user.email_address %></p>
+          <% if @order.user.identification.present? %>
+            <p class="text-[11px] text-slate-400">Cédula: <%= @order.user.identification %></p>
+          <% end %>
+        </div>
+      </div>
+
+      <hr class="border-slate-100">
+
+      <h3 class="text-xs font-black uppercase tracking-wider text-slate-400"><%= t('admin.product_orders.show.order_info') %></h3>
+      <div class="space-y-2 text-sm">
+        <div class="flex justify-between">
+          <span class="text-slate-500">Producto:</span>
+          <span class="font-bold text-slate-800"><%= @order.product_name %></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-500">Precio Total:</span>
+          <span class="font-bold text-slate-800">₡<%= number_with_delimiter(@order.product_price.to_i) %></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-500">Anticipo Pagado:</span>
+          <span class="font-black text-indigo-600">₡<%= number_with_delimiter(@order.deposit_amount.to_i) %></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-500">Saldo Pendiente al retirar:</span>
+          <span class="font-black text-slate-800">₡<%= number_with_delimiter((@order.product_price - @order.deposit_amount).to_i) %></span>
+        </div>
+        <% if @order.user_notes.present? %>
+          <div class="pt-2">
+            <span class="block text-xs font-bold text-slate-400 uppercase mb-1">Notas del Alumno (Talla/Color):</span>
+            <p class="p-3 bg-slate-50 rounded-xl text-slate-700 font-medium text-xs"><%= @order.user_notes %></p>
+          </div>
+        <% end %>
+      </div>
+
+      <%# Admin Notes Form %>
+      <div class="pt-4 border-t border-slate-100">
+        <%= form_with model: [:admin, @order], class: "space-y-3" do |f| %>
+          <%= f.label :admin_notes, "Notas Internas del Administrador", class: "block text-xs font-black uppercase tracking-wider text-slate-400" %>
+          <%= f.text_area :admin_notes, rows: 3, placeholder: "Anotaciones sobre el pedido, proveedor, guía de rastreo...", class: "w-full rounded-2xl border-slate-200 text-xs font-medium focus:border-indigo-600 focus:ring-indigo-600 py-2.5 px-3" %>
+          <%= f.submit "Guardar Notas", class: "px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-wider cursor-pointer" %>
+        <% end %>
+      </div>
+    </div>
+
+    <%# Receipt Image View %>
+    <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm flex flex-col">
+      <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 mb-4"><%= t('admin.product_orders.show.receipt_title') %></h3>
+      
+      <% if @order.payment_receipt.attached? %>
+        <div class="flex-1 rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 flex items-center justify-center p-2">
+          <%= image_tag @order.payment_receipt, class: "max-h-96 w-auto object-contain rounded-xl shadow-sm" %>
+        </div>
+        <div class="mt-4 text-center">
+          <%= link_to url_for(@order.payment_receipt), target: "_blank", class: "inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-black uppercase tracking-wider transition-colors" do %>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+            Abrir Comprobante en Pestaña Completa
+          <% end %>
+        </div>
+      <% else %>
+        <div class="flex-1 flex items-center justify-center p-12 text-slate-400 text-xs">
+          No hay comprobante adjunto.
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

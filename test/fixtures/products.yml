@@ -1,0 +1,17 @@
+rashguard:
+  name: "Rashguard Puerto BJJ Pro"
+  description: "Rashguard de compresión para entrenamiento No-Gi."
+  price: 25000.00
+  deposit_percentage: 50
+  notes: "Entrega en 15 días."
+  category: "Ropa"
+  active: true
+
+kimono:
+  name: "Kimono Puerto BJJ Edición Especial"
+  description: "Kimono de alta resistencia 450 GSM."
+  price: 60000.00
+  deposit_percentage: 50
+  notes: "Incluye cinturón blanco."
+  category: "Kimonos"
+  active: false

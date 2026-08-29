@@ -1,0 +1,107 @@
+<% content_for :title, "Pedido ##{@order.id} | Puerto BJJ" %>
+
+<div class="max-w-2xl mx-auto space-y-6">
+  <div>
+    <%= link_to my_orders_path, class: "inline-flex items-center gap-1.5 text-xs font-black text-slate-400 hover:text-slate-600 uppercase tracking-widest mb-2" do %>
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+      Volver a mis pedidos
+    <% end %>
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+      <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Pedido #<%= @order.id %></h1>
+      
+      <% status_classes = case @order.status
+         when "pending_verification" then "bg-amber-50 text-amber-700 border-amber-200"
+         when "payment_confirmed" then "bg-indigo-50 text-indigo-700 border-indigo-200"
+         when "ordered_from_supplier" then "bg-blue-50 text-blue-700 border-blue-200"
+         when "ready_for_pickup" then "bg-green-50 text-green-700 border-green-200"
+         when "delivered" then "bg-slate-100 text-slate-700 border-slate-200"
+         else "bg-red-50 text-red-700 border-red-200"
+         end %>
+      <span class="inline-flex items-center px-3 py-1 rounded-xl text-xs font-black uppercase tracking-wider border <%= status_classes %> self-start sm:self-auto">
+        <%= t("product_orders.status.#{@order.status}") %>
+      </span>
+    </div>
+  </div>
+
+  <%# Order Status Timeline / Stepper %>
+  <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
+    <h3 class="text-xs font-black uppercase tracking-wider text-slate-400"><%= t('product_orders.show.timeline_title') %></h3>
+    
+    <% steps = [
+      { key: :pending_verification, label: "Comprobante Enviado", desc: "Verificación de SINPE Móvil" },
+      { key: :payment_confirmed, label: "Pago Confirmado", desc: "En cola para ordenar" },
+      { key: :ordered_from_supplier, label: "Pedido al Proveedor", desc: "En fabricación / importación" },
+      { key: :ready_for_pickup, label: "Listo para Retirar", desc: "En recepción de la academia" }
+    ] %>
+
+    <% current_status_index = case @order.status
+       when "pending_verification" then 0
+       when "payment_confirmed" then 1
+       when "ordered_from_supplier" then 2
+       when "ready_for_pickup", "delivered" then 3
+       else -1
+       end %>
+
+    <div class="space-y-4">
+      <% steps.each_with_index do |step, idx| %>
+        <% is_completed = current_status_index >= idx %>
+        <% is_current = current_status_index == idx %>
+        <div class="flex items-start gap-3">
+          <div class="w-7 h-7 rounded-full flex items-center justify-center shrink-0 <%= is_completed ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-400' %>">
+            <% if is_completed %>
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+            <% else %>
+              <span class="text-xs font-black"><%= idx + 1 %></span>
+            <% end %>
+          </div>
+          <div>
+            <p class="text-xs font-bold <%= is_completed ? 'text-slate-900' : 'text-slate-400' %>"><%= step[:label] %></p>
+            <p class="text-[11px] text-slate-400"><%= step[:desc] %></p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <%# Order Summary Details %>
+  <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
+    <h3 class="text-xs font-black uppercase tracking-wider text-slate-400"><%= t('product_orders.show.order_details') %></h3>
+    
+    <div class="space-y-2.5 text-sm">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-50">
+        <span class="text-slate-500">Producto:</span>
+        <span class="font-extrabold text-slate-800"><%= @order.product_name %></span>
+      </div>
+      <div class="flex justify-between items-center pb-2 border-b border-slate-50">
+        <span class="text-slate-500">Precio Total:</span>
+        <span class="font-bold text-slate-800">₡<%= number_with_delimiter(@order.product_price.to_i) %></span>
+      </div>
+      <div class="flex justify-between items-center pb-2 border-b border-slate-50">
+        <span class="text-slate-500">Anticipo Pagado:</span>
+        <span class="font-black text-indigo-600">₡<%= number_with_delimiter(@order.deposit_amount.to_i) %></span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-slate-500">Saldo a pagar al retirar:</span>
+        <span class="font-black text-slate-900">₡<%= number_with_delimiter((@order.product_price - @order.deposit_amount).to_i) %></span>
+      </div>
+
+      <% if @order.user_notes.present? %>
+        <div class="pt-2">
+          <span class="block text-xs font-bold text-slate-400 uppercase mb-1">Talla / Especificaciones:</span>
+          <p class="p-3 bg-slate-50 rounded-xl text-slate-700 text-xs font-medium"><%= @order.user_notes %></p>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Payment Receipt View %>
+    <% if @order.payment_receipt.attached? %>
+      <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+        <span class="text-xs font-bold text-slate-500"><%= t('product_orders.show.receipt_uploaded') %></span>
+        <%= link_to url_for(@order.payment_receipt), target: "_blank", class: "inline-flex items-center gap-1 text-xs font-black text-indigo-600 hover:text-indigo-800" do %>
+          <span><%= t('product_orders.show.view_receipt') %></span>
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

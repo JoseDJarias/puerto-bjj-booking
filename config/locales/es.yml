@@ -1,6 +1,8 @@
 es:
   nav:
     home: "Inicio"
+    catalog: "Catálogo"
+    my_orders: "Mis Pedidos"
     bookings: "Explorar Clases"
     close_menu: "Cerrar menú"
     my_membership: "Mi membresía"
@@ -8,6 +10,7 @@ es:
     dog_fights: "Dog Fights"
     sections:
       general: "General"
+      shop: "Tienda / Equipo"
       tatami: "Tatami"
       account: "Mi Cuenta"
   time:
@@ -241,6 +244,9 @@ es:
         operations: "Operaciones"
         dashboard: "Dashboard"
         academy_management: "Gestión de Academia"
+        catalog_section: "Tienda y Pedidos"
+        catalog: "Catálogo"
+        orders: "Pedidos de Alumnos"
       # Sidebar links
       users: "Usuarios"
       memberships: "Membresías"
@@ -565,6 +571,80 @@ es:
         deleted: "Clase eliminada del calendario."
         created_batch: "¡Éxito! Se programaron %{count} clases en el calendario."
         error_batch: "Error al generar: %{message}"
+    products:
+      index:
+        title: "Catálogo de Productos"
+        subtitle: "Gestión de inventario y artículos para encargo"
+        new_button: "Nuevo Producto"
+        empty_state: "No se han creado productos en el catálogo."
+        table:
+          image: "Foto"
+          name: "Producto"
+          price: "Precio"
+          deposit: "Anticipo"
+          status: "Estado"
+          orders: "Pedidos"
+          actions: "Acciones"
+        status:
+          active: "Visible"
+          inactive: "Oculto"
+      form:
+        name_label: "Nombre del Producto"
+        description_label: "Descripción"
+        price_label: "Precio Total (₡)"
+        deposit_label: "Porcentaje de Anticipo (%)"
+        category_label: "Categoría (Opcional)"
+        notes_label: "Notas de Entrega / Instrucciones"
+        active_label: "Producto visible en el catálogo"
+        images_label: "Fotos del Producto"
+        save_button: "Guardar Producto"
+        cancel: "Cancelar"
+      create:
+        success: "Producto creado exitosamente."
+      update:
+        success: "Producto actualizado exitosamente."
+      destroy:
+        success: "Producto eliminado exitosamente."
+        error: "No se puede eliminar este producto porque tiene pedidos asociados."
+      images:
+        destroyed: "Foto eliminada del producto exitosamente."
+    product_orders:
+      index:
+        title: "Gestión de Pedidos"
+        subtitle: "Control de solicitudes de alumnos, pagos y entregas"
+        tabs:
+          all: "Todos"
+          pending: "Pendientes de Pago"
+          confirmed: "Confirmados"
+          ordered: "En Proveedor"
+          ready: "Listos para Retiro"
+          delivered: "Entregados"
+        table:
+          order: "Pedido"
+          student: "Alumno"
+          product: "Producto"
+          deposit: "Anticipo"
+          status: "Estado"
+          receipt: "Comprobante"
+          actions: "Acciones"
+        empty_state: "No hay pedidos en esta categoría."
+      show:
+        title: "Pedido #%{id} - %{product}"
+        student_info: "Datos del Alumno"
+        order_info: "Datos del Pedido"
+        receipt_title: "Comprobante SINPE Móvil"
+        actions_title: "Acciones de Estado"
+        confirm_payment_button: "Confirmar Pago (Enviar Email)"
+        mark_ordered_button: "Marcar Pedido al Proveedor (Enviar Email)"
+        mark_ready_button: "Marcar Listo para Retirar (Enviar Email)"
+        mark_delivered_button: "Marcar como Entregado"
+        cancel_button: "Cancelar Pedido"
+      actions:
+        payment_confirmed: "Pago verificado exitosamente y correo enviado al alumno."
+        ordered_from_supplier: "Pedido marcado como solicitado al proveedor y correo enviado al alumno."
+        ready_for_pickup: "Pedido marcado como listo para retiro y correo enviado al alumno."
+        delivered: "Pedido marcado como entregado con éxito."
+        cancelled: "Pedido cancelado."
 
   # === ENUMS (Global) ===
   enums:
@@ -762,5 +842,90 @@ es:
       blank: "no puede estar en blanco"
       taken: "ya está en uso"
       confirmation: "no coincide con la confirmación"
+      accepted: "debe ser aceptado"
+      greater_than_or_equal_to: "debe ser mayor que o igual a %{count}"
+      greater_than: "debe ser mayor que %{count}"
+      less_than_or_equal_to: "debe ser menor que o igual a %{count}"
+      less_than: "debe ser menor que %{count}"
+      not_an_integer: "debe ser un número entero"
+      invalid: "no es válido"
     template:
       header: "Error en el formulario"
+
+  # === CATÁLOGO Y PRODUCTOS ===
+  products:
+    index:
+      title: "Catálogo Oficial"
+      subtitle: "Equipamiento, indumentaria y accesorios de Puerto BJJ"
+      empty_state: "No hay productos disponibles en el catálogo en este momento."
+      view_details: "Ver producto"
+      order_badge: "Bajo Pedido"
+      deposit_tag: "Anticipo requerido: %{percentage}%"
+    show:
+      title: "Detalle del Producto"
+      price_label: "Precio Total"
+      deposit_label: "Anticipo para ordenar (%{percentage}%)"
+      notes_title: "Información y Tiempos de Entrega"
+      order_button: "Solicitar este producto"
+      back_to_catalog: "Volver al catálogo"
+      payment_instructions_title: "Instrucciones de Pago SINPE Móvil"
+      sinpe_phone: "Teléfono SINPE:"
+      sinpe_owner: "Titular:"
+      sinpe_hint: "Transfiere únicamente el monto del anticipo y adjunta el comprobante en el siguiente paso."
+
+  # === PEDIDOS DE PRODUCTOS (CLIENTE) ===
+  product_orders:
+    new:
+      title: "Solicitar Pedido"
+      subtitle: "Completa los datos y sube tu comprobante de pago para ordenar"
+      summary_title: "Resumen del Producto"
+      total_price: "Precio Total:"
+      deposit_required: "Anticipo a pagar hoy (%{percentage}%):"
+      pending_balance: "Saldo a pagar al retirar:"
+      notes_label: "Talla, Color o Especificaciones"
+      notes_placeholder: "Ej: Talla M, Color Negro, etc."
+      receipt_label: "Comprobante de Pago SINPE Móvil o Transferencia"
+      receipt_hint: "Sube una captura de pantalla clara donde se aprecie el monto, fecha y número de comprobante."
+      terms_title: "Términos y Condiciones de Pedidos"
+      terms_body: "Al realizar este encargo, autorizas a Puerto BJJ a gestionar la compra ante el proveedor oficial con tu anticipo del 50%. El saldo restante se cancela físicamente al momento de retirar el producto en la academia. Los tiempos de entrega pueden variar según disponibilidad de fábrica. Una vez procesado el pedido con el proveedor, el anticipo no es reembolsable."
+      terms_checkbox: "He leído y acepto los términos y condiciones de pedidos por encargo."
+      submit_button: "Confirmar y Enviar Pedido"
+      cancel: "Cancelar"
+    create:
+      success: "¡Tu solicitud de pedido ha sido enviada con éxito! La administración verificará tu comprobante en breve."
+      error: "No se pudo procesar tu pedido. Por favor verifica que hayas adjuntado el comprobante y aceptado los términos."
+    index:
+      title: "Mis Pedidos"
+      subtitle: "Historial y estado de tus productos solicitados"
+      empty_state: "Aún no has realizado pedidos de productos."
+      order_number: "Pedido #%{id}"
+      date: "Fecha:"
+      deposit_paid: "Anticipo:"
+      pending_balance: "Saldo pendiente:"
+      view_order: "Ver detalles"
+    show:
+      title: "Pedido #%{id}"
+      order_details: "Detalles del Pedido"
+      timeline_title: "Estado del Pedido"
+      receipt_uploaded: "Comprobante Adjuntado"
+      view_receipt: "Ver comprobante"
+      admin_note: "Nota de Administración:"
+    status:
+      pending_verification: "Pendiente de Verificación"
+      payment_confirmed: "Pago Confirmado"
+      ordered_from_supplier: "Pedido al Proveedor"
+      ready_for_pickup: "Listo para Retirar"
+      delivered: "Entregado"
+      cancelled: "Cancelado"
+
+  # === CORREOS ELECTRÓNICOS (MAILERS) ===
+  mailers:
+    product_order_mailer:
+      admin_new_order_notification:
+        subject: "Nuevo Pedido: %{user_name} ha solicitado %{product_name}"
+      user_payment_confirmed_email:
+        subject: "Pago Confirmado: Tu pedido de %{product_name} está en proceso"
+      user_ordered_from_supplier_email:
+        subject: "Pedido al Proveedor: Tu %{product_name} ha sido ordenado"
+      user_ready_for_pickup_email:
+        subject: "¡Listo para Retirar! Tu %{product_name} ha llegado a la academia"

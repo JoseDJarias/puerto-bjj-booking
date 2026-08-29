@@ -1,0 +1,93 @@
+<%= form_with model: [:admin, product], class: "space-y-6" do |f| %>
+  <% if product.errors.any? %>
+    <div class="rounded-2xl bg-red-50 p-4 border border-red-100 text-red-700 text-sm">
+      <p class="font-bold mb-1"><%= t('errors.template.header') %></p>
+      <ul class="list-disc pl-5 space-y-1">
+        <% product.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-5">
+    <div>
+      <%= f.label :name, t('admin.products.form.name_label'), class: "block text-xs font-black text-slate-700 uppercase tracking-wider mb-2" %>
+      <%= f.text_field :name, placeholder: "Ej: Rashguard Puerto BJJ Edición Especial", required: true, class: "w-full rounded-2xl border-slate-200 focus:border-indigo-600 focus:ring-indigo-600 text-sm font-medium py-3 px-4 shadow-sm" %>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <%= f.label :price, t('admin.products.form.price_label'), class: "block text-xs font-black text-slate-700 uppercase tracking-wider mb-2" %>
+        <%= f.number_field :price, step: 100, min: 0, placeholder: "25000", required: true, class: "w-full rounded-2xl border-slate-200 focus:border-indigo-600 focus:ring-indigo-600 text-sm font-medium py-3 px-4 shadow-sm" %>
+      </div>
+
+      <div>
+        <%= f.label :deposit_percentage, t('admin.products.form.deposit_label'), class: "block text-xs font-black text-slate-700 uppercase tracking-wider mb-2" %>
+        <%= f.number_field :deposit_percentage, min: 1, max: 100, placeholder: "50", required: true, class: "w-full rounded-2xl border-slate-200 focus:border-indigo-600 focus:ring-indigo-600 text-sm font-medium py-3 px-4 shadow-sm" %>
+      </div>
+    </div>
+
+    <div>
+      <%= f.label :category, t('admin.products.form.category_label'), class: "block text-xs font-black text-slate-700 uppercase tracking-wider mb-2" %>
+      <%= f.text_field :category, placeholder: "Ej: Ropa, Kimonos, Accesorios", class: "w-full rounded-2xl border-slate-200 focus:border-indigo-600 focus:ring-indigo-600 text-sm font-medium py-3 px-4 shadow-sm" %>
+    </div>
+
+    <div>
+      <%= f.label :description, t('admin.products.form.description_label'), class: "block text-xs font-black text-slate-700 uppercase tracking-wider mb-2" %>
+      <%= f.text_area :description, rows: 4, placeholder: "Detalles del material, especificaciones y calidad...", class: "w-full rounded-2xl border-slate-200 focus:border-indigo-600 focus:ring-indigo-600 text-sm font-medium py-3 px-4 shadow-sm" %>
+    </div>
+
+    <div>
+      <%= f.label :notes, t('admin.products.form.notes_label'), class: "block text-xs font-black text-slate-700 uppercase tracking-wider mb-2" %>
+      <%= f.text_area :notes, rows: 3, placeholder: "Ej: Tiempo estimado de entrega de 15 a 20 días hábiles tras ordenar.", class: "w-full rounded-2xl border-slate-200 focus:border-indigo-600 focus:ring-indigo-600 text-sm font-medium py-3 px-4 shadow-sm" %>
+    </div>
+
+    <div data-controller="image-preview">
+      <%= f.label :images, t('admin.products.form.images_label'), class: "block text-xs font-black text-slate-700 uppercase tracking-wider mb-2" %>
+      <p class="text-[11px] text-slate-400 font-medium mb-3">Puedes seleccionar varias fotos a la vez. Al guardar, las nuevas fotos se añadirán a la galería del producto.</p>
+      
+      <%= f.file_field :images, 
+                       multiple: true, 
+                       accept: "image/*", 
+                       data: { 
+                         image_preview_target: "input", 
+                         action: "change->image-preview#preview" 
+                       },
+                       class: "w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:uppercase file:tracking-wider file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" %>
+      
+      <%# Images Grid (Existing & Previews) %>
+      <div class="mt-4 flex flex-wrap gap-3" data-image-preview-target="previewContainer">
+        <% if product.images.attached? %>
+          <% product.images.each do |img| %>
+            <div class="relative w-24 h-24 rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 shadow-sm group">
+              <%= image_tag img, class: "w-full h-full object-cover" %>
+              
+              <%# Delete Image Button %>
+              <% if product.persisted? %>
+                <%= button_to destroy_image_admin_product_path(product, image_id: img.id), 
+                              method: :delete, 
+                              data: { turbo_confirm: "¿Estás seguro de eliminar esta foto del producto?" },
+                              class: "absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-slate-900/80 hover:bg-red-600 text-white flex items-center justify-center backdrop-blur-sm shadow-sm transition-colors cursor-pointer" do %>
+                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="pt-2">
+      <label class="flex items-center gap-3 cursor-pointer">
+        <%= f.check_box :active, class: "rounded-lg border-slate-300 text-indigo-600 focus:ring-indigo-500 h-5 w-5" %>
+        <span class="text-sm font-bold text-slate-700"><%= t('admin.products.form.active_label') %></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-end gap-3">
+    <%= link_to t('admin.products.form.cancel'), admin_products_path, class: "px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-wider text-slate-500 hover:bg-slate-100 transition-all" %>
+    <%= f.submit t('admin.products.form.save_button'), class: "px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-xs font-black uppercase tracking-wider shadow-lg shadow-indigo-100 active:scale-95 transition-all cursor-pointer" %>
+  </div>
+<% end %>

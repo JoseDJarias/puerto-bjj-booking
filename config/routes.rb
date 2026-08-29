@@ -61,7 +61,30 @@ Rails.application.routes.draw do
         delete :destroy_last
       end
     end
+
+    # Admin Catalog & Orders Management
+    resources :products, path: "catalogo" do
+      member do
+        delete "images/:image_id", to: "products#destroy_image", as: :destroy_image
+      end
+    end
+    resources :product_orders, path: "pedidos", only: [:index, :show, :update] do
+      member do
+        patch :confirm_payment
+        patch :mark_as_ordered
+        patch :mark_as_ready
+        patch :mark_as_delivered
+        patch :cancel_order
+      end
+    end
   end
+
+  # User Catalog & Custom Orders
+  resources :products, only: [:index, :show], path: "catalogo" do
+    resources :product_orders, only: [:new, :create], path: "pedidos"
+  end
+  get "mis-pedidos", to: "product_orders#index", as: :my_orders
+  get "mis-pedidos/:id", to: "product_orders#show", as: :my_order
 
   get "up" => "rails/health#show", as: :rails_health_check
 end

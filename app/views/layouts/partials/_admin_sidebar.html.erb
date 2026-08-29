@@ -52,6 +52,23 @@
         <span><%= t('admin.class_schedules.index.title') %></span>
       <% end %>
 
+      <%# --- STORE & ORDERS SECTION (Access: Only Admin) --- %>
+      <p class="<%= section_header %>"><%= t('admin.layout.sidebar.catalog_section') %></p>
+
+      <%= link_to admin_products_path, class: "#{link_classes} #{request.path.start_with?('/admin/catalogo') ? active_classes : inactive_classes}" do %>
+        <svg class="h-5 w-5 <%= request.path.start_with?('/admin/catalogo') ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600' %>" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        </svg>
+        <span><%= t('admin.layout.sidebar.catalog') %></span>
+      <% end %>
+
+      <%= link_to admin_product_orders_path, class: "#{link_classes} #{request.path.start_with?('/admin/pedidos') ? active_classes : inactive_classes}" do %>
+        <svg class="h-5 w-5 <%= request.path.start_with?('/admin/pedidos') ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600' %>" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+        </svg>
+        <span><%= t('admin.layout.sidebar.orders') %></span>
+      <% end %>
+
       <%# --- CONFIGURATION SECTION (Access: Only Admin) --- %>
       <p class="<%= section_header %>"><%= t('admin.layout.menu.config_section') %></p>
 

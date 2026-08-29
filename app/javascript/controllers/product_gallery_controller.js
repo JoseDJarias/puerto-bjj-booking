@@ -14,7 +14,7 @@ export default class extends Controller {
 
   static values = {
     currentIndex: { type: Number, default: 0 },
-    images: Array
+    images: { type: Array, default: [] }
   }
 
   connect() {
@@ -24,20 +24,25 @@ export default class extends Controller {
 
   disconnect() {
     window.removeEventListener("keydown", this.boundKeydown)
+    document.body.style.overflow = ""
   }
 
   // Smooth scroll to a specific slide index
   goToSlide(event) {
     const index = parseInt(event.currentTarget.dataset.index, 10)
-    this.scrollToIndex(index)
+    if (!isNaN(index)) {
+      this.scrollToIndex(index)
+    }
   }
 
   nextSlide() {
+    if (!this.hasImagesValue || this.imagesValue.length === 0) return
     const nextIndex = (this.currentIndexValue + 1) % this.imagesValue.length
     this.scrollToIndex(nextIndex)
   }
 
   prevSlide() {
+    if (!this.hasImagesValue || this.imagesValue.length === 0) return
     const prevIndex = (this.currentIndexValue - 1 + this.imagesValue.length) % this.imagesValue.length
     this.scrollToIndex(prevIndex)
   }
@@ -55,7 +60,7 @@ export default class extends Controller {
 
   // Detect scroll and update indicators dynamically
   onScroll() {
-    if (!this.hasContainerTarget) return
+    if (!this.hasContainerTarget || !this.hasImagesValue || this.imagesValue.length === 0) return
     const container = this.containerTarget
     const width = container.clientWidth
     if (width === 0) return
@@ -67,6 +72,7 @@ export default class extends Controller {
 
   updateIndicator(index) {
     this.currentIndexValue = index
+    const total = this.hasImagesValue ? this.imagesValue.length : 0
 
     // Update dots
     if (this.hasDotTargets) {
@@ -93,19 +99,26 @@ export default class extends Controller {
     }
 
     // Update text counter (e.g. 1 / 4)
-    if (this.hasCounterTarget) {
-      this.counterTarget.textContent = `${index + 1} / ${this.imagesValue.length}`
+    if (this.hasCounterTarget && total > 0) {
+      this.counterTarget.textContent = `${index + 1} / ${total}`
     }
   }
 
   // --- Lightbox Modal (Expand Fullscreen) ---
 
   openLightbox(event) {
+    if (event) event.preventDefault()
+    if (!this.hasImagesValue || this.imagesValue.length === 0) return
+
     let index = 0
-    if (event.currentTarget.dataset.index) {
+    if (event && event.currentTarget && event.currentTarget.dataset.index !== undefined) {
       index = parseInt(event.currentTarget.dataset.index, 10)
     } else {
       index = this.currentIndexValue
+    }
+
+    if (isNaN(index) || index < 0 || index >= this.imagesValue.length) {
+      index = 0
     }
 
     this.showModalImage(index)
@@ -117,7 +130,15 @@ export default class extends Controller {
     }
   }
 
-  closeLightbox() {
+  closeLightbox(event) {
+    if (event) {
+      // If clicking inside the content box, do not close unless target is the close button or backdrop
+      if (event.target !== event.currentTarget && !event.target.closest("[data-close-lightbox]")) {
+        return
+      }
+      event.preventDefault()
+    }
+
     if (this.hasModalTarget) {
       this.modalTarget.classList.add("hidden")
       this.modalTarget.classList.remove("flex")
@@ -126,24 +147,30 @@ export default class extends Controller {
     }
   }
 
-  nextLightbox() {
+  nextLightbox(event) {
+    if (event) event.stopPropagation()
+    if (!this.hasImagesValue || this.imagesValue.length === 0) return
     const nextIndex = (this.currentIndexValue + 1) % this.imagesValue.length
     this.showModalImage(nextIndex)
   }
 
-  prevLightbox() {
+  prevLightbox(event) {
+    if (event) event.stopPropagation()
+    if (!this.hasImagesValue || this.imagesValue.length === 0) return
     const prevIndex = (this.currentIndexValue - 1 + this.imagesValue.length) % this.imagesValue.length
     this.showModalImage(prevIndex)
   }
 
   showModalImage(index) {
     this.currentIndexValue = index
+    const total = this.imagesValue.length
     const imageUrl = this.imagesValue[index]
+
     if (this.hasModalImageTarget && imageUrl) {
       this.modalImageTarget.src = imageUrl
     }
-    if (this.hasModalCounterTarget) {
-      this.modalCounterTarget.textContent = `${index + 1} / ${this.imagesValue.length}`
+    if (this.hasModalCounterTarget && total > 0) {
+      this.modalCounterTarget.textContent = `${index + 1} / ${total}`
     }
     this.updateIndicator(index)
   }

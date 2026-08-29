@@ -31,18 +31,24 @@ class Admin::ProductsControllerTest < ActionDispatch::IntegrationTest
       }
     end
 
-    assert_redirected_to admin_products_path
+    new_product = Product.last
+    assert_redirected_to admin_product_path(new_product)
   end
 
-  test "should update product" do
-    patch admin_product_path(@product), params: {
-      product: {
-        name: "Rashguard Puerto BJJ Pro Actualizado",
-        price: 26000
+  test "should update product and attach new images" do
+    assert_difference -> { @product.images.count }, 1 do
+      patch admin_product_path(@product), params: {
+        product: {
+          name: "Rashguard Puerto BJJ Pro Actualizado",
+          price: 26000,
+          images: [
+            fixture_file_upload("test/fixtures/files/receipt.png", "image/png")
+          ]
+        }
       }
-    }
+    end
 
-    assert_redirected_to admin_products_path
+    assert_redirected_to admin_product_path(@product)
     @product.reload
     assert_equal "Rashguard Puerto BJJ Pro Actualizado", @product.name
     assert_equal 26000.0, @product.price

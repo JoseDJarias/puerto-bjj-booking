@@ -17,10 +17,12 @@ module Admin
     end
 
     def create
-      @product = Product.new(product_params)
+      images_to_attach = Array(params.dig(:product, :images)).compact_blank
+      @product = Product.new(product_params.except(:images))
+      @product.images.attach(images_to_attach) if images_to_attach.any?
 
       if @product.save
-        redirect_to admin_products_path, notice: t("admin.products.create.success")
+        redirect_to admin_product_path(@product), notice: t("admin.products.create.success")
       else
         render :new, status: :unprocessable_entity
       end
@@ -28,12 +30,13 @@ module Admin
 
     def update
       # Append new images if provided, otherwise preserve existing
-      if params[:product][:images].present?
-        @product.images.attach(params[:product][:images])
+      images_to_attach = Array(params.dig(:product, :images)).compact_blank
+      if images_to_attach.any?
+        @product.images.attach(images_to_attach)
       end
 
       if @product.update(product_params.except(:images))
-        redirect_to admin_products_path, notice: t("admin.products.update.success")
+        redirect_to admin_product_path(@product), notice: t("admin.products.update.success")
       else
         render :edit, status: :unprocessable_entity
       end

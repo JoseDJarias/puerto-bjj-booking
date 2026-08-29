@@ -31,14 +31,18 @@
           <% @products.each do |product| %>
             <tr class="hover:bg-slate-50/50 transition-colors">
               <td class="py-4 px-6">
-                <%= link_to admin_product_path(product), class: "block group" do %>
-                  <div class="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200 overflow-hidden flex items-center justify-center shrink-0 group-hover:ring-2 group-hover:ring-indigo-600 transition-all">
-                    <% if product.images.attached? %>
-                      <%= image_tag product.images.first, class: "w-full h-full object-cover" %>
-                    <% else %>
-                      <svg class="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                <%= link_to admin_product_path(product), class: "inline-flex items-center gap-1.5 flex-wrap max-w-[220px] group", title: "Ver detalle y fotos del producto" do %>
+                  <% if product.images.attached? %>
+                    <% product.images.each do |img| %>
+                      <div class="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200 overflow-hidden flex items-center justify-center shrink-0 group-hover:border-indigo-500 group-hover:shadow-sm transition-all">
+                        <%= image_tag img, class: "w-full h-full object-cover" %>
+                      </div>
                     <% end %>
-                  </div>
+                  <% else %>
+                    <div class="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200 overflow-hidden flex items-center justify-center shrink-0 text-slate-400">
+                      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                    </div>
+                  <% end %>
                 <% end %>
               </td>
               <td class="py-4 px-6">

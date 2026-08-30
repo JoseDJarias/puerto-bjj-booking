@@ -3,7 +3,7 @@ module Admin
     before_action :set_order, only: %i[show update confirm_payment mark_as_ordered mark_as_ready mark_as_delivered cancel_order]
 
     def index
-      @orders = ProductOrder.includes(:user, :product, payment_receipt_attachment: :blob).recent
+      @orders = ProductOrder.includes(:user, payment_receipt_attachment: :blob).recent
 
       if params[:status].present? && ProductOrder.statuses.key?(params[:status])
         @orders = @orders.where(status: params[:status])

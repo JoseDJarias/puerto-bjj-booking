@@ -11,7 +11,7 @@ module Admin
       # Get the classes for that specific operative date
       scope = current_user.admin? ? ClassSchedule : ClassSchedule.where(instructor: current_user)
       @schedules = scope.for_date(@date)
-                        .includes(:class_type, :instructor, :bookings)
+                        .includes(:class_type, :instructor)
                         .order(:starts_at)
     
       if current_user.admin?

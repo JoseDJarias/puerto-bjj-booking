@@ -3,7 +3,7 @@ module Admin
     before_action :set_user, only: %i[show edit update destroy approve]
 
     def index
-      scope = User.includes(memberships: :membership_package).order(created_at: :desc)
+      scope = User.order(created_at: :desc)
 
       case params[:filter]
       when "pending"

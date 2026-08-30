@@ -19,3 +19,13 @@ one:
   status: 0
   identification: "111111112"
   approved_at: <%= Time.current %>
+
+two:
+  first_name: "Maria"
+  last_name: "Gomez"
+  email_address: "maria@puertobjj.com"
+  password_digest: <%= BCrypt::Password.create('password') %>
+  role: 0
+  status: 0
+  identification: "111111113"
+  approved_at: <%= Time.current %>

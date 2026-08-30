@@ -9,22 +9,16 @@ module Admin
 
       # monthly calendar
       @class_schedules = ClassSchedule.for_range(start_date.beginning_of_month, start_date.end_of_month)
-                                      .includes(:class_type, :instructor)
+                                      .includes(:class_type)
     end
 
     def show
-      @class_schedule = ClassSchedule.includes(
-        :class_type,
-        :instructor,
-        bookings: { user: [:memberships, :drop_in_tickets] }
-        ).find(params[:id])
+      @class_schedule = ClassSchedule.includes(:class_type, :instructor, :bookings).find(params[:id])
       @bookings = @class_schedule.bookings.order(status: :asc, updated_at: :desc)
 
       # modal: manual search
       booked_user_ids = @class_schedule.active_bookings_list.map(&:user_id)
-      @available_users = User.includes(:memberships, :drop_in_tickets)
-                        .where.not(id: booked_user_ids)
-                        .order(:first_name)
+      @available_users = User.where.not(id: booked_user_ids).order(:first_name)
 
       @back_path = if params[:from] == 'dashboard'
                      admin_dashboard_path
@@ -101,13 +95,12 @@ module Admin
 
       # Roster list
       @bookings = @class_schedule.bookings
-                           .includes(user: [:memberships, :drop_in_tickets])
+                           .includes(:user)
                            .where(status: active_statuses)
                            .order("users.first_name ASC")
 
       # Available users (Excluding the ones that have a place and the admin)
       @available_users = User.active
-                             .includes(:memberships, :drop_in_tickets)
                              .where.not(id: enrolled_user_ids + [1])
                              .order(:first_name)
     end

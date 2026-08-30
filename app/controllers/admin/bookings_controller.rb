@@ -67,7 +67,7 @@ module Admin
       @schedule.bookings.reload
       respond_to do |format|
         format.turbo_stream { render "admin/bookings/destroy" }
-        format.html { redirect_back fallback_location: admin_root_path }
+        format.html { redirect_back fallback_location: admin_dashboard_path }
       end
     end
     

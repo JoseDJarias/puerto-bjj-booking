@@ -62,6 +62,9 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # N+1 query detection and optimization [https://github.com/flyerhzm/bullet]
+  gem "bullet"
 end
 
 group :development do
@@ -73,4 +76,7 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+  
+  # Allow testing controller assigns [https://github.com/rails/rails-controller-testing]
+  gem "rails-controller-testing"
 end

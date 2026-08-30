@@ -131,7 +131,7 @@ class ClassSchedule < ApplicationRecord
   end
 
   def blocked_bookings_count
-    bookings.to_a.count(&:blocked?).size
+    bookings.to_a.count(&:blocked?)
   end
 
   # --- DISPLAY LOGIC ---

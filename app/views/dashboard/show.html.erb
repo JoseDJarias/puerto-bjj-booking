@@ -5,7 +5,7 @@
     <%# --- Waiting for Admin approval --- %>
     <%= render "dashboard/states/pending" %>
 
-  <% elsif @user.approved? && !@user.has_booking_access? %>
+  <% elsif @user.approved? && !@has_booking_access %>
     <%# --- Selection of Plan (Sales) --- %>
     <article class="w-full">
        <%= render "dashboard/states/pricing_options", packages: @packages, plans: @plans %>

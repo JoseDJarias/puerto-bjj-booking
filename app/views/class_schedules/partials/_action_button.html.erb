@@ -1,6 +1,6 @@
 <%# app/views/class_schedules/partials/_action_button.html.erb %>
 <div id="action_button_schedule_<%= schedule.id %>" class="w-full space-y-3">
-  <% my_booking = schedule.bookings.find_by(user: user) %>
+  <% my_booking = schedule.bookings.find { |b| b.user_id == user&.id } %>
   <% is_on_last_chance = my_booking && my_booking.submission_count == Booking::MAX_SUBMISSION_LIMIT %>
   
   <%# --- Estilos base para botones --- %>

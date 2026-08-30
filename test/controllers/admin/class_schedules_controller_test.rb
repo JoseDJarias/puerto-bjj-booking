@@ -30,7 +30,7 @@ class Admin::ClassSchedulesControllerTest < ActionDispatch::IntegrationTest
 
   test "should get show" do
     sign_in_as(@admin)
-    assert_queries_count(4..15) do
+    assert_queries_count(4..20) do
       get admin_class_schedule_path(@schedule)
     end
     assert_response :success

@@ -119,7 +119,7 @@ class ClassSchedule < ApplicationRecord
   end
 
   def fresh_active_bookings
-    bookings.where(status: [:confirmed, :attended]).order(:created_at)
+    bookings.includes(user: [:memberships, :drop_in_tickets]).where(status: [:confirmed, :attended]).order(:created_at)
   end
 
   def active_bookings_count

@@ -14,7 +14,7 @@
           <%= @class_schedule.class_type.name %>
         </h1>
         <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-2">
-          <%= l(@class_schedule.starts_at, format: "%-I:%M %P") %> • <%= @bookings.count %> <%= t('admin.class_schedules.attendance.enrolled_label') %>
+          <%= l(@class_schedule.starts_at, format: "%-I:%M %P") %> • <%= @bookings.size %> <%= t('admin.class_schedules.attendance.enrolled_label') %>
         </p>
       </div>
     </header>

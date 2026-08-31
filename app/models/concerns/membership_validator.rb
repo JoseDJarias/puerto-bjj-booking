@@ -36,11 +36,11 @@ module MembershipValidator
   end
 
   def unused_tickets_count
-    drop_in_tickets.unused.count
+    drop_in_tickets.loaded? ? drop_in_tickets.count(&:unused?) : drop_in_tickets.unused.count
   end
 
   def unused_tickets?
-    drop_in_tickets.unused.exists?
+    drop_in_tickets.loaded? ? drop_in_tickets.any?(&:unused?) : drop_in_tickets.unused.exists?
   end
 
   # Universal drop-ins: returns first unused ticket.
@@ -52,15 +52,27 @@ module MembershipValidator
   private
 
   def any_active_membership?
-    memberships.active.where(end_date: Time.zone.today..).exists?
+    if memberships.loaded?
+      memberships.any? { |m| m.status == "active" && (m.end_date.nil? || m.end_date >= Time.zone.today) }
+    else
+      memberships.active.where(end_date: Time.zone.today..).exists?
+    end
   end
 
   def any_active_drop_in?
-    drop_in_tickets.used.where(used_at: Time.zone.now.all_day).exists?
+    if drop_in_tickets.loaded?
+      drop_in_tickets.any? { |t| t.status == "used" && t.used_at&.to_date == Time.zone.today }
+    else
+      drop_in_tickets.used.where(used_at: Time.zone.now.all_day).exists?
+    end
   end
 
   def current_memberships
-    memberships.active.where(end_date: Time.zone.today..).order(end_date: :desc)
+    if memberships.loaded?
+      memberships.select { |m| m.status == "active" && (m.end_date.nil? || m.end_date >= Time.zone.today) }.sort_by { |m| m.end_date || Time.zone.today }.reverse
+    else
+      memberships.active.where(end_date: Time.zone.today..).order(end_date: :desc)
+    end
   end
 
   def membership_expires_soon?(days = 7)

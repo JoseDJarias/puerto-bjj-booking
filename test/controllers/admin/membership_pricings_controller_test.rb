@@ -22,7 +22,7 @@ class Admin::MembershipPricingsControllerTest < ActionDispatch::IntegrationTest
 
   test "should redirect index if not admin" do
     sign_in_as(@student)
-    assert_queries_count(2..6) do
+    assert_queries(2) do
       get admin_membership_pricings_path
     end
     assert_redirected_to root_path
@@ -30,7 +30,7 @@ class Admin::MembershipPricingsControllerTest < ActionDispatch::IntegrationTest
 
   test "should get index" do
     sign_in_as(@admin)
-    assert_queries_count(2..10) do
+    assert_queries(3) do
       get admin_membership_pricings_path
     end
     assert_response :success
@@ -39,7 +39,7 @@ class Admin::MembershipPricingsControllerTest < ActionDispatch::IntegrationTest
 
   test "should get new" do
     sign_in_as(@admin)
-    assert_queries_count(1..6) do
+    assert_queries(4) do
       get new_admin_membership_pricing_path
     end
     assert_response :success
@@ -52,7 +52,7 @@ class Admin::MembershipPricingsControllerTest < ActionDispatch::IntegrationTest
     new_plan = MembershipPlan.create!(name: "Annual", duration_months: 12, price: 300000, active: true)
     
     assert_difference -> { MembershipPricing.count }, 1 do
-      assert_queries_count(2..10) do
+      assert_queries(5) do
         post admin_membership_pricings_path, params: {
           membership_pricing: {
             membership_package_id: @package.id,
@@ -68,7 +68,7 @@ class Admin::MembershipPricingsControllerTest < ActionDispatch::IntegrationTest
 
   test "should get edit" do
     sign_in_as(@admin)
-    assert_queries_count(2..8) do
+    assert_queries(7) do
       get edit_admin_membership_pricing_path(@pricing)
     end
     assert_response :success
@@ -77,7 +77,7 @@ class Admin::MembershipPricingsControllerTest < ActionDispatch::IntegrationTest
 
   test "should update membership pricing" do
     sign_in_as(@admin)
-    assert_queries_count(2..10) do
+    assert_queries(4) do
       patch admin_membership_pricing_path(@pricing), params: {
         membership_pricing: { price: 40000 }
       }
@@ -90,7 +90,7 @@ class Admin::MembershipPricingsControllerTest < ActionDispatch::IntegrationTest
   test "should destroy membership pricing" do
     sign_in_as(@admin)
     assert_difference -> { MembershipPricing.count }, -1 do
-      assert_queries_count(2..10) do
+      assert_queries(4) do
         delete admin_membership_pricing_path(@pricing)
       end
     end

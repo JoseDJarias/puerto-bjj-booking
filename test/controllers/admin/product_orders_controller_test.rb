@@ -25,7 +25,7 @@ class Admin::ProductOrdersControllerTest < ActionDispatch::IntegrationTest
 
   test "should redirect index if not admin" do
     sign_in_as(@student)
-    assert_queries_count(2..6) do
+    assert_queries(2) do
       get admin_product_orders_path
     end
     assert_redirected_to root_path
@@ -33,7 +33,7 @@ class Admin::ProductOrdersControllerTest < ActionDispatch::IntegrationTest
 
   test "should get index" do
     sign_in_as(@admin)
-    assert_queries_count(2..10) do
+    assert_queries(7) do
       get admin_product_orders_path
     end
     assert_response :success
@@ -42,7 +42,7 @@ class Admin::ProductOrdersControllerTest < ActionDispatch::IntegrationTest
 
   test "should get show" do
     sign_in_as(@admin)
-    assert_queries_count(2..10) do
+    assert_queries(6) do
       get admin_product_order_path(@order)
     end
     assert_response :success
@@ -51,7 +51,7 @@ class Admin::ProductOrdersControllerTest < ActionDispatch::IntegrationTest
 
   test "should update order admin notes" do
     sign_in_as(@admin)
-    assert_queries_count(2..10) do
+    assert_queries(4) do
       patch admin_product_order_path(@order), params: {
         product_order: { admin_notes: "Pagado por sinpe" }
       }
@@ -64,7 +64,7 @@ class Admin::ProductOrdersControllerTest < ActionDispatch::IntegrationTest
   test "should confirm payment" do
     sign_in_as(@admin)
     assert_enqueued_emails 1 do
-      assert_queries_count(2..15) do
+      assert_queries(4) do
         patch confirm_payment_admin_product_order_path(@order)
       end
     end
@@ -78,7 +78,7 @@ class Admin::ProductOrdersControllerTest < ActionDispatch::IntegrationTest
     @order.payment_confirmed!
     
     assert_enqueued_emails 1 do
-      assert_queries_count(2..15) do
+      assert_queries(4) do
         patch mark_as_ordered_admin_product_order_path(@order)
       end
     end
@@ -92,7 +92,7 @@ class Admin::ProductOrdersControllerTest < ActionDispatch::IntegrationTest
     @order.ordered_from_supplier!
     
     assert_enqueued_emails 1 do
-      assert_queries_count(2..15) do
+      assert_queries(4) do
         patch mark_as_ready_admin_product_order_path(@order)
       end
     end
@@ -105,7 +105,7 @@ class Admin::ProductOrdersControllerTest < ActionDispatch::IntegrationTest
     sign_in_as(@admin)
     @order.ready_for_pickup!
     
-    assert_queries_count(2..10) do
+    assert_queries(4) do
       patch mark_as_delivered_admin_product_order_path(@order)
     end
     assert_redirected_to admin_product_order_path(@order)
@@ -116,7 +116,7 @@ class Admin::ProductOrdersControllerTest < ActionDispatch::IntegrationTest
   test "should cancel order" do
     sign_in_as(@admin)
     
-    assert_queries_count(2..10) do
+    assert_queries(4) do
       patch cancel_order_admin_product_order_path(@order)
     end
     assert_redirected_to admin_product_order_path(@order)

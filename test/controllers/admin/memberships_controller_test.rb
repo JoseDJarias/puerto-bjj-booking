@@ -28,7 +28,7 @@ class Admin::MembershipsControllerTest < ActionDispatch::IntegrationTest
 
   test "should redirect index if not admin" do
     sign_in_as(@student)
-    assert_queries_count(2..6) do
+    assert_queries(2) do
       get admin_memberships_path
     end
     assert_redirected_to root_path
@@ -36,7 +36,7 @@ class Admin::MembershipsControllerTest < ActionDispatch::IntegrationTest
 
   test "should get index" do
     sign_in_as(@admin)
-    assert_queries_count(2..12) do
+    assert_queries(8) do
       get admin_memberships_path
     end
     assert_response :success
@@ -46,7 +46,7 @@ class Admin::MembershipsControllerTest < ActionDispatch::IntegrationTest
 
   test "should get new" do
     sign_in_as(@admin)
-    assert_queries_count(2..10) do
+    assert_queries(5) do
       get new_admin_membership_path
     end
     assert_response :success
@@ -63,7 +63,7 @@ class Admin::MembershipsControllerTest < ActionDispatch::IntegrationTest
     plan = MembershipPlan.first
     
     assert_difference -> { Membership.count }, 1 do
-      assert_queries_count(2..15) do
+      assert_queries(6) do
         post admin_memberships_path, params: {
           membership: {
             user_id: @student.id,
@@ -81,7 +81,7 @@ class Admin::MembershipsControllerTest < ActionDispatch::IntegrationTest
 
   test "should get edit" do
     sign_in_as(@admin)
-    assert_queries_count(2..10) do
+    assert_queries(6) do
       get edit_admin_membership_path(@membership)
     end
     assert_response :success
@@ -90,7 +90,7 @@ class Admin::MembershipsControllerTest < ActionDispatch::IntegrationTest
 
   test "should update membership" do
     sign_in_as(@admin)
-    assert_queries_count(2..10) do
+    assert_queries(4) do
       patch admin_membership_path(@membership), params: {
         membership: { amount_paid: 99999 }
       }
@@ -103,7 +103,7 @@ class Admin::MembershipsControllerTest < ActionDispatch::IntegrationTest
   test "should destroy membership" do
     sign_in_as(@admin)
     assert_difference -> { Membership.count }, -1 do
-      assert_queries_count(2..10) do
+      assert_queries(4) do
         delete admin_membership_path(@membership)
       end
     end
@@ -116,7 +116,7 @@ class Admin::MembershipsControllerTest < ActionDispatch::IntegrationTest
     package = MembershipPackage.first
     plan = MembershipPlan.first
     
-    assert_queries_count(2..10) do
+    assert_queries(4) do
       get calculate_totals_admin_memberships_path, params: {
         membership: {
           membership_package_id: package.id,

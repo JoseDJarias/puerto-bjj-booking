@@ -21,7 +21,7 @@ class Admin::ClassSchedulesControllerTest < ActionDispatch::IntegrationTest
 
   test "should get index" do
     sign_in_as(@admin)
-    assert_queries_count(2..10) do
+    assert_queries(4) do
       get admin_class_schedules_path
     end
     assert_response :success
@@ -30,7 +30,7 @@ class Admin::ClassSchedulesControllerTest < ActionDispatch::IntegrationTest
 
   test "should get show" do
     sign_in_as(@admin)
-    assert_queries_count(4..20) do
+    assert_queries(21) do
       get admin_class_schedule_path(@schedule)
     end
     assert_response :success
@@ -41,7 +41,7 @@ class Admin::ClassSchedulesControllerTest < ActionDispatch::IntegrationTest
 
   test "should get new" do
     sign_in_as(@admin)
-    assert_queries_count(2..10) do
+    assert_queries(4) do
       get new_admin_class_schedule_path
     end
     assert_response :success
@@ -53,7 +53,7 @@ class Admin::ClassSchedulesControllerTest < ActionDispatch::IntegrationTest
   test "should create class schedule" do
     sign_in_as(@admin)
     assert_difference -> { ClassSchedule.count }, 1 do
-      assert_queries_count(4..15) do
+      assert_queries(5) do
         post admin_class_schedules_path, params: {
           class_schedule: {
             class_type_id: @class_type.id,
@@ -70,7 +70,7 @@ class Admin::ClassSchedulesControllerTest < ActionDispatch::IntegrationTest
 
   test "should get attendance" do
     sign_in_as(@admin)
-    assert_queries_count(4..15) do
+    assert_queries(18) do
       get attendance_admin_class_schedule_path(@schedule)
     end
     assert_response :success
@@ -80,7 +80,7 @@ class Admin::ClassSchedulesControllerTest < ActionDispatch::IntegrationTest
 
   test "should get batch_new" do
     sign_in_as(@admin)
-    assert_queries_count(2..10) do
+    assert_queries(4) do
       get batch_new_admin_class_schedules_path
     end
     assert_response :success

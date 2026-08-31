@@ -15,7 +15,7 @@ class Admin::ProductsControllerTest < ActionDispatch::IntegrationTest
   test "should redirect index if not admin" do
     sign_in_as(@student)
     
-    assert_queries_count(2..6) do
+    assert_queries(2) do
       get admin_products_path
     end
     assert_redirected_to root_path
@@ -24,7 +24,7 @@ class Admin::ProductsControllerTest < ActionDispatch::IntegrationTest
   test "should get index" do
     sign_in_as(@admin)
     
-    assert_queries_count(2..8) do
+    assert_queries(5) do
       get admin_products_path
     end
     assert_response :success
@@ -34,7 +34,7 @@ class Admin::ProductsControllerTest < ActionDispatch::IntegrationTest
   test "should get new" do
     sign_in_as(@admin)
     
-    assert_queries_count(1..6) do
+    assert_queries(2) do
       get new_admin_product_path
     end
     assert_response :success
@@ -45,7 +45,7 @@ class Admin::ProductsControllerTest < ActionDispatch::IntegrationTest
     sign_in_as(@admin)
     
     assert_difference -> { Product.count }, 1 do
-      assert_queries_count(2..10) do
+      assert_queries(3) do
         post admin_products_path, params: {
           product: {
             name: "Nuevo Rashguard V2",
@@ -66,7 +66,7 @@ class Admin::ProductsControllerTest < ActionDispatch::IntegrationTest
     sign_in_as(@admin)
     
     assert_difference -> { @product.images.count }, 1 do
-      assert_queries_count(2..12) do
+      assert_queries(9) do
         patch admin_product_path(@product), params: {
           product: {
             name: "Rashguard Puerto BJJ Pro Actualizado",
@@ -89,7 +89,7 @@ class Admin::ProductsControllerTest < ActionDispatch::IntegrationTest
     sign_in_as(@admin)
     
     assert_difference -> { Product.count }, -1 do
-      assert_queries_count(2..10) do
+      assert_queries(6) do
         delete admin_product_path(@product)
       end
     end
@@ -108,7 +108,7 @@ class Admin::ProductsControllerTest < ActionDispatch::IntegrationTest
     image = @product.images.last
 
     assert_difference -> { @product.images.count }, -1 do
-      assert_queries_count(2..10) do
+      assert_queries(7) do
         delete destroy_image_admin_product_path(@product, image_id: image.id)
       end
     end

@@ -29,3 +29,13 @@ two:
   status: 0
   identification: "111111113"
   approved_at: <%= Time.current %>
+
+instructor:
+  first_name: "Bruce"
+  last_name: "Lee"
+  email_address: "instructor@puertobjj.com"
+  password_digest: <%= BCrypt::Password.create('password') %>
+  role: 1
+  status: 0
+  identification: "111111114"
+  approved_at: <%= Time.current %>

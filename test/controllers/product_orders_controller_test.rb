@@ -14,7 +14,7 @@ class ProductOrdersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get new order form" do
-    assert_queries_count(2..8) do
+    assert_queries(6) do
       get new_product_product_order_path(@product)
     end
     assert_response :success
@@ -25,7 +25,7 @@ class ProductOrdersControllerTest < ActionDispatch::IntegrationTest
   test "should create product order and send admin notification" do
     assert_difference -> { @user.product_orders.count }, 1 do
       assert_enqueued_emails 1 do
-        assert_queries_count(4..15) do
+        assert_queries(8) do
           post product_product_orders_path(@product), params: {
             product_order: {
               user_notes: "Talla L, Color Negro",
@@ -45,7 +45,7 @@ class ProductOrdersControllerTest < ActionDispatch::IntegrationTest
   
   test "should fail to create without terms accepted" do
     assert_no_difference -> { @user.product_orders.count } do
-      assert_queries_count(2..8) do
+      assert_queries(6) do
         post product_product_orders_path(@product), params: {
           product_order: {
             user_notes: "Talla L, Color Negro",
@@ -62,7 +62,7 @@ class ProductOrdersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get my orders index" do
-    assert_queries_count(2..10) do
+    assert_queries(5) do
       get my_orders_path
     end
     assert_response :success
@@ -73,7 +73,7 @@ class ProductOrdersControllerTest < ActionDispatch::IntegrationTest
     # Clear orders
     @user.product_orders.destroy_all
     
-    assert_queries_count(2..8) do
+    assert_queries(5) do
       get my_orders_path
     end
     assert_response :success

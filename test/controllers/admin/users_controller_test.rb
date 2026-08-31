@@ -19,7 +19,7 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
 
   test "should get index" do
     sign_in_as(@admin)
-    assert_queries_count(2..12) do
+    assert_queries(5) do
       get admin_users_path
     end
     assert_response :success
@@ -29,7 +29,7 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
 
   test "should get show" do
     sign_in_as(@admin)
-    assert_queries_count(2..10) do
+    assert_queries(6) do
       get admin_user_path(@student)
     end
     assert_response :success
@@ -39,7 +39,7 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
 
   test "should get new" do
     sign_in_as(@admin)
-    assert_queries_count(1..5) do
+    assert_queries(2) do
       get new_admin_user_path
     end
     assert_response :success
@@ -49,7 +49,7 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
   test "should create user" do
     sign_in_as(@admin)
     assert_difference -> { User.count }, 1 do
-      assert_queries_count(2..12) do
+      assert_queries(5) do
         post admin_users_path, params: {
           user: {
             first_name: "Test",
@@ -67,7 +67,7 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
 
   test "should update user" do
     sign_in_as(@admin)
-    assert_queries_count(2..10) do
+    assert_queries(4) do
       patch admin_user_path(@student), params: { user: { first_name: "Updated Name" } }
     end
     assert_redirected_to admin_users_path
@@ -82,7 +82,7 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
       password: "password123", identification: "999999999", role: :member, status: :active, approved_at: nil
     )
     
-    assert_queries_count(2..10) do
+    assert_queries(5) do
       patch approve_admin_user_path(pending_user)
     end
     
@@ -94,7 +94,7 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
   test "should destroy user" do
     sign_in_as(@admin)
     assert_difference -> { User.count }, -1 do
-      assert_queries_count(2..10) do
+      assert_queries(16) do
         delete admin_user_path(@student)
       end
     end

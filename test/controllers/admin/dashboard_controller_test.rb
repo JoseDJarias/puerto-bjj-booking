@@ -16,7 +16,7 @@ class Admin::DashboardControllerTest < ActionDispatch::IntegrationTest
   test "should redirect index if not admin or instructor" do
     sign_in_as(@student)
     
-    assert_queries_count(2..10) do
+    assert_queries(2) do
       get admin_dashboard_path
     end
     assert_redirected_to root_path
@@ -25,7 +25,7 @@ class Admin::DashboardControllerTest < ActionDispatch::IntegrationTest
   test "should get index for admin with queries and data structures asserted" do
     sign_in_as(@admin)
     
-    assert_queries_count(4..15) do
+    assert_queries(8) do
       get admin_dashboard_path
     end
     
@@ -46,7 +46,7 @@ class Admin::DashboardControllerTest < ActionDispatch::IntegrationTest
   test "should get index for admin with offset date" do
     sign_in_as(@admin)
     
-    assert_queries_count(4..15) do
+    assert_queries(8) do
       get admin_dashboard_path(offset: 1)
     end
     

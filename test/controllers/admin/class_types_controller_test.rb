@@ -18,7 +18,7 @@ class Admin::ClassTypesControllerTest < ActionDispatch::IntegrationTest
 
   test "should redirect index if not admin" do
     sign_in_as(@student)
-    assert_queries_count(2..6) do
+    assert_queries(2) do
       get admin_class_types_path
     end
     assert_redirected_to root_path
@@ -26,7 +26,7 @@ class Admin::ClassTypesControllerTest < ActionDispatch::IntegrationTest
 
   test "should get index" do
     sign_in_as(@admin)
-    assert_queries_count(2..10) do
+    assert_queries(3) do
       get admin_class_types_path
     end
     assert_response :success
@@ -35,7 +35,7 @@ class Admin::ClassTypesControllerTest < ActionDispatch::IntegrationTest
 
   test "should get new" do
     sign_in_as(@admin)
-    assert_queries_count(1..6) do
+    assert_queries(2) do
       get new_admin_class_type_path
     end
     assert_response :success
@@ -46,7 +46,7 @@ class Admin::ClassTypesControllerTest < ActionDispatch::IntegrationTest
     sign_in_as(@admin)
     
     assert_difference -> { ClassType.count }, 1 do
-      assert_queries_count(2..10) do
+      assert_queries(4) do
         post admin_class_types_path, params: {
           class_type: {
             name: "Muay Thai",
@@ -62,7 +62,7 @@ class Admin::ClassTypesControllerTest < ActionDispatch::IntegrationTest
 
   test "should get edit" do
     sign_in_as(@admin)
-    assert_queries_count(2..8) do
+    assert_queries(3) do
       get edit_admin_class_type_path(@class_type)
     end
     assert_response :success
@@ -71,7 +71,7 @@ class Admin::ClassTypesControllerTest < ActionDispatch::IntegrationTest
 
   test "should update class type" do
     sign_in_as(@admin)
-    assert_queries_count(2..10) do
+    assert_queries(5) do
       patch admin_class_type_path(@class_type), params: {
         class_type: { name: "BJJ Advanced" }
       }

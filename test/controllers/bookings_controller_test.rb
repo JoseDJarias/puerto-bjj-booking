@@ -15,7 +15,7 @@ class BookingsControllerTest < ActionDispatch::IntegrationTest
   test "should redirect if unauthorized (no membership/tickets)" do
     sign_in_as(@student)
     
-    assert_queries_count(2..12) do
+    assert_queries(7) do
       post bookings_url, params: { class_schedule_id: @schedule.id }
     end
     
@@ -27,7 +27,7 @@ class BookingsControllerTest < ActionDispatch::IntegrationTest
     sign_in_as(@student)
     @student.drop_in_tickets.create!(price_paid: 20)
     
-    assert_queries_count(10..40) do
+    assert_queries(19) do
       post bookings_url, params: { class_schedule_id: @schedule.id }
     end
     
@@ -43,7 +43,7 @@ class BookingsControllerTest < ActionDispatch::IntegrationTest
     @student.drop_in_tickets.create!(price_paid: 20)
     Booking.create!(user: @student, class_schedule: @schedule, status: :confirmed)
     
-    assert_queries_count(10..45) do
+    assert_queries(24) do
       post bookings_url, params: { class_schedule_id: @schedule.id, booking: { status: 'cancelled_user' } }
     end
     

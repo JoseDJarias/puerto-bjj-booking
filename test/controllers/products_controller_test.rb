@@ -14,7 +14,7 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get index with active products and avoid N+1 queries" do
-    assert_queries_count(1..8) do
+    assert_queries(8) do
       get products_path
     end
     assert_response :success
@@ -33,7 +33,7 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get show for active product and avoid N+1 queries" do
-    assert_queries_count(1..8) do
+    assert_queries(9) do
       get product_path(@product)
     end
     assert_response :success

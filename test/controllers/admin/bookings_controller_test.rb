@@ -28,7 +28,7 @@ class Admin::BookingsControllerTest < ActionDispatch::IntegrationTest
     new_student = users(:two)
     
     assert_difference -> { Booking.count }, 1 do
-      assert_queries_count(4..25) do
+      assert_queries(16) do
         post admin_bookings_path, params: {
           booking: {
             user_id: new_student.id,
@@ -44,7 +44,7 @@ class Admin::BookingsControllerTest < ActionDispatch::IntegrationTest
 
   test "should update booking (toggle block)" do
     sign_in_as(@admin)
-    assert_queries_count(4..20) do
+    assert_queries(10) do
       patch admin_booking_path(@booking), params: { action_type: "toggle_block" }
     end
     assert_redirected_to admin_dashboard_path
@@ -54,10 +54,8 @@ class Admin::BookingsControllerTest < ActionDispatch::IntegrationTest
 
   test "should toggle attendance (check-in)" do
     sign_in_as(@admin)
-    @booking.update!(status: :confirmed)
-    
-    assert_queries_count(4..30) do
-      patch toggle_attendance_admin_booking_path(@booking)
+    assert_queries(19) do
+      patch toggle_attendance_admin_booking_url(@booking)
     end
     assert_redirected_to admin_class_schedule_path(@booking.class_schedule)
     @booking.reload
@@ -68,7 +66,7 @@ class Admin::BookingsControllerTest < ActionDispatch::IntegrationTest
     sign_in_as(@admin)
     
     assert_no_difference -> { Booking.count } do
-      assert_queries_count(4..15) do
+      assert_queries(11) do
         delete admin_booking_path(@booking)
       end
     end

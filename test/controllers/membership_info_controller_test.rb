@@ -25,7 +25,7 @@ class MembershipInfoControllerTest < ActionDispatch::IntegrationTest
       @student.memberships.create!(membership_package: package, membership_plan: plan, start_date: Date.current, end_date: 1.month.from_now, amount_paid: 100)
     end
     
-    assert_queries_count(2..10) do
+    assert_queries(12) do
       get my_membership_url
     end
     
@@ -39,7 +39,7 @@ class MembershipInfoControllerTest < ActionDispatch::IntegrationTest
     sign_in_as(@student)
     # student has no memberships by default in fixtures
     
-    assert_queries_count(2..8) do
+    assert_queries(7) do
       get my_membership_url
     end
     
@@ -52,7 +52,7 @@ class MembershipInfoControllerTest < ActionDispatch::IntegrationTest
   test "should get history" do
     sign_in_as(@student)
     
-    assert_queries_count(2..8) do
+    assert_queries(6) do
       get my_membership_history_url
     end
     

@@ -18,7 +18,7 @@ class Admin::MembershipPackagesControllerTest < ActionDispatch::IntegrationTest
 
   test "should redirect index if not admin" do
     sign_in_as(@student)
-    assert_queries_count(2..6) do
+    assert_queries(2) do
       get admin_membership_packages_path
     end
     assert_redirected_to root_path
@@ -26,7 +26,7 @@ class Admin::MembershipPackagesControllerTest < ActionDispatch::IntegrationTest
 
   test "should get index" do
     sign_in_as(@admin)
-    assert_queries_count(2..10) do
+    assert_queries(5) do
       get admin_membership_packages_path
     end
     assert_response :success
@@ -35,7 +35,7 @@ class Admin::MembershipPackagesControllerTest < ActionDispatch::IntegrationTest
 
   test "should get new" do
     sign_in_as(@admin)
-    assert_queries_count(1..6) do
+    assert_queries(3) do
       get new_admin_membership_package_path
     end
     assert_response :success
@@ -46,7 +46,7 @@ class Admin::MembershipPackagesControllerTest < ActionDispatch::IntegrationTest
     sign_in_as(@admin)
     
     assert_difference -> { MembershipPackage.count }, 1 do
-      assert_queries_count(2..10) do
+      assert_queries(3) do
         post admin_membership_packages_path, params: {
           membership_package: {
             name: "Basic",
@@ -63,7 +63,7 @@ class Admin::MembershipPackagesControllerTest < ActionDispatch::IntegrationTest
 
   test "should get edit" do
     sign_in_as(@admin)
-    assert_queries_count(2..8) do
+    assert_queries(5) do
       get edit_admin_membership_package_path(@package)
     end
     assert_response :success
@@ -72,7 +72,7 @@ class Admin::MembershipPackagesControllerTest < ActionDispatch::IntegrationTest
 
   test "should update membership package" do
     sign_in_as(@admin)
-    assert_queries_count(2..10) do
+    assert_queries(4) do
       patch admin_membership_package_path(@package), params: {
         membership_package: { name: "Unlimited Plus" }
       }

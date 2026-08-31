@@ -26,7 +26,7 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
   test "should get show for approved user without booking access" do
     sign_in_as(@student)
     
-    assert_queries_count(10..20) do
+    assert_queries(17) do
       get root_url
     end
     
@@ -51,7 +51,7 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
       @student.bookings.create!(class_schedule: class_schedule, status: :confirmed)
     end
     
-    assert_queries_count(15..30) do
+    assert_queries(25) do
       get root_url
     end
     
@@ -73,7 +73,7 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
   test "should get show for pending user" do
     sign_in_as(@pending_user)
     
-    assert_queries_count(2..6) do
+    assert_queries(3) do
       get root_url
     end
     

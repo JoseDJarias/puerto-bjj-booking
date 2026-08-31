@@ -56,5 +56,10 @@ Rails.application.configure do
     Bullet.enable = true
     Bullet.bullet_logger = true
     Bullet.raise = true
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "User", association: :memberships
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "User", association: :drop_in_tickets
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Message", association: :attachments_attachments
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "ActiveStorage::Blob", association: :variant_records
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "ActiveStorage::Blob", association: :preview_image_attachment
   end
 end

@@ -14,6 +14,17 @@ Rails.application.routes.draw do
   get "mi-membresia", to: "membership_info#show", as: :my_membership
   get "contacto", to: "contact#show", as: :contact
   get "dog-fights", to: "dog_fights#show", as: :dog_fights
+  
+  resources :groups, only: [:index, :show] do
+    resources :messages, only: [:create]
+    resources :group_memberships, only: [] do
+      member do
+        patch :accept
+        patch :decline
+      end
+    end
+  end
+  
   root "dashboard#show"
 
   namespace :admin do
@@ -23,6 +34,10 @@ Rails.application.routes.draw do
     resources :membership_plans, path: "planes"
     resources :class_types
     resources :membership_packages, path: "paquetes"
+    resources :groups do
+      resources :messages, only: [:create]
+      resources :group_memberships, only: [:create, :destroy]
+    end
     resources :users do
       member do
         patch :approve #Generates: /admin/users/:id/approve

@@ -1,0 +1,39 @@
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <h1 class="text-3xl font-black italic tracking-tighter uppercase text-slate-900"><%= t("admin.groups.title") %></h1>
+    <%= link_to t("admin.groups.new"), new_admin_group_path, class: "bg-indigo-600 text-white font-bold py-2 px-6 rounded-full hover:bg-indigo-700 transition" %>
+  </div>
+
+  <% if @groups.empty? %>
+    <div class="bg-white rounded-3xl border border-slate-200 p-12 text-center flex flex-col items-center justify-center">
+      <div class="bg-slate-50 w-16 h-16 rounded-full flex items-center justify-center mb-4">
+        <svg class="w-8 h-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+      </div>
+      <h3 class="text-xl font-bold text-slate-900 mb-2">No hay grupos creados</h3>
+      <p class="text-slate-500 mb-6 max-w-md">Comienza creando el primer grupo para organizar a tus estudiantes, compartir anuncios o discutir técnicas específicas.</p>
+      <%= link_to t("admin.groups.new"), new_admin_group_path, class: "bg-indigo-600 text-white font-bold py-2 px-6 rounded-full hover:bg-indigo-700 transition shadow-sm hover:shadow" %>
+    </div>
+  <% else %>
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <% @groups.each do |group| %>
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 flex flex-col justify-between">
+          <div>
+            <h2 class="text-xl font-bold text-slate-900 mb-2"><%= group.name %></h2>
+            <p class="text-sm text-slate-500 line-clamp-2 mb-4"><%= group.description %></p>
+            <div class="flex items-center text-xs text-slate-400 gap-4 mb-4">
+              <span class="flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                <%= @member_counts[group.id] || 0 %> <%= t("admin.groups.members") %>
+              </span>
+            </div>
+          </div>
+          
+          <div class="flex gap-2 border-t border-slate-100 pt-4">
+            <%= link_to "Ver & Gestionar", admin_group_path(group), class: "flex-1 text-center bg-indigo-50 text-indigo-700 font-bold py-2 px-4 rounded-xl hover:bg-indigo-100 transition" %>
+            <%= link_to t("admin.groups.edit"), edit_admin_group_path(group), class: "bg-slate-50 text-slate-600 font-bold py-2 px-4 rounded-xl hover:bg-slate-100 transition" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

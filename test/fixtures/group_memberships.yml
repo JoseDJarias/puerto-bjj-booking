@@ -1,0 +1,9 @@
+one:
+  group: one
+  user: one
+  status: accepted
+
+two:
+  group: two
+  user: two
+  status: invited

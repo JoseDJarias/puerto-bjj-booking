@@ -1,0 +1,9 @@
+one:
+  name: "BJJ Techniques"
+  description: "Discuss techniques"
+  creator: admin
+
+two:
+  name: "Morning Class Group"
+  description: "Group for 6am morning class"
+  creator: instructor

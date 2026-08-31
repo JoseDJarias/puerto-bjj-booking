@@ -230,6 +230,21 @@ es:
 
   # === ADMIN PANEL ===
   admin:
+    groups:
+      title: "Gestión de Grupos"
+      new: "Nuevo Grupo"
+      edit: "Editar Grupo"
+      create: "Crear Grupo"
+      update: "Actualizar Grupo"
+      form:
+        name: "Nombre del Grupo"
+        description: "Descripción"
+      members: "Miembros"
+      invite: "Invitar Usuario"
+      remove: "Eliminar"
+      send_message: "Enviar Mensaje"
+      chat: "Chat del Grupo"
+      no_members: "Este grupo no tiene miembros aún."
     layout:
       title: "Panel de Administración"
       brand: "Puerto BJJ Admin"
@@ -933,3 +948,27 @@ es:
         subject: "Pedido al Proveedor: Tu %{product_name} ha sido ordenado"
       user_ready_for_pickup_email:
         subject: "¡Listo para Retirar! Tu %{product_name} ha llegado a la academia"
+
+  # === GRUPOS E INVITACIONES ===
+  groups:
+    sidebar_title: "Comunidades"
+    index:
+      title: "Mis Grupos"
+      no_groups: "Aún no perteneces a ningún grupo."
+      invited_groups: "Invitaciones Pendientes"
+    show:
+      type_message: "Escribe tu mensaje..."
+      send: "Enviar"
+      empty_chat: "Aún no hay mensajes. ¡Rompe el hielo!"
+    flash:
+      created: "Grupo creado exitosamente."
+      updated: "Grupo actualizado."
+      destroyed: "Grupo eliminado."
+      message_sent: "Mensaje enviado."
+  
+  group_memberships:
+    flash:
+      accepted: "¡Te has unido al grupo %{name}!"
+      declined: "Has rechazado la invitación."
+      invited: "Invitación enviada a %{name}."
+      removed: "Usuario eliminado del grupo."

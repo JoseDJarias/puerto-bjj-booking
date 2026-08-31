@@ -43,6 +43,12 @@
       <span><%= t("nav.dog_fights") %></span>
     <% end %>
 
+    <% if current_user.admin? || current_user.instructor? || current_user.group_memberships.any? %>
+      <%= turbo_frame_tag "groups_sidebar_item_#{current_user.id}" do %>
+        <%= render "groups/partials/sidebar_item", user: current_user %>
+      <% end %>
+    <% end %>
+
     <p class="<%= section_header %>"><%= t("nav.sections.shop") %></p>
 
     <%= link_to products_path, class: "#{link_classes} #{request.path.start_with?('/catalogo') ? active_classes : inactive_classes}" do %>

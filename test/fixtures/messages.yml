@@ -1,0 +1,9 @@
+one:
+  group: one
+  user: admin
+  content: "Welcome to the BJJ Techniques group!"
+
+two:
+  group: one
+  user: one
+  content: "Thanks! Happy to be here."

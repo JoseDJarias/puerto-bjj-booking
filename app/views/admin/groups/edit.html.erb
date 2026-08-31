@@ -1,0 +1,14 @@
+<div class="max-w-2xl mx-auto space-y-6">
+  <div class="flex items-center gap-4">
+    <%= link_to admin_groups_path, class: "text-slate-400 hover:text-slate-600 transition" do %>
+      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+    <% end %>
+    <h1 class="text-3xl font-black italic tracking-tighter uppercase text-slate-900"><%= t("admin.groups.edit") %></h1>
+  </div>
+
+  <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
+    <%= render "form", group: @group %>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+<%= form_with model: [:admin, group], class: "space-y-6" do |f| %>
+  <% if group.errors.any? %>
+    <div class="p-4 bg-red-50 text-red-600 rounded-2xl mb-6">
+      <h2 class="font-bold mb-2"><%= pluralize(group.errors.count, "error") %> impidieron guardar el grupo:</h2>
+      <ul class="list-disc pl-5 text-sm space-y-1">
+        <% group.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :name, t("admin.groups.form.name"), class: "block text-sm font-bold text-slate-700 mb-2" %>
+    <%= f.text_field :name, class: "w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition outline-none" %>
+  </div>
+
+  <div>
+    <%= f.label :description, t("admin.groups.form.description"), class: "block text-sm font-bold text-slate-700 mb-2" %>
+    <%= f.text_area :description, rows: 4, class: "w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition outline-none" %>
+  </div>
+
+  <div class="pt-4 flex gap-4">
+    <%= f.submit group.persisted? ? t("admin.groups.update") : t("admin.groups.create"), class: "flex-1 bg-indigo-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-indigo-700 transition cursor-pointer" %>
+    <%= link_to "Cancelar", admin_groups_path, class: "flex-1 text-center bg-slate-100 text-slate-600 font-bold py-3 px-6 rounded-xl hover:bg-slate-200 transition" %>
+  </div>
+<% end %>

@@ -1,0 +1,33 @@
+<%= turbo_stream_from "group_#{@group.id}_messages" %>
+
+<div class="max-w-4xl mx-auto h-[calc(100vh-12rem)] flex flex-col bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
+  
+  <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+    <div>
+      <h1 class="text-xl font-black text-slate-900"><%= @group.name %></h1>
+      <p class="text-sm text-slate-500"><%= @group.description %></p>
+    </div>
+    <%= link_to groups_path, class: "text-slate-400 hover:text-slate-600 transition" do %>
+      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    <% end %>
+  </div>
+
+  <div class="flex-1 overflow-y-auto p-6 space-y-4" id="group_<%= @group.id %>_messages_list">
+    <% if @messages.any? %>
+      <%= render partial: "messages/message", collection: @messages, as: :message %>
+    <% else %>
+      <div class="h-full flex items-center justify-center text-slate-400 italic" id="empty_chat_message">
+        <%= t("groups.show.empty_chat") %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="p-4 border-t border-slate-100 bg-white">
+    <%= form_with model: [@group, Message.new], url: group_messages_path(@group), class: "flex gap-3", data: { controller: "reset-form", action: "turbo:submit-end->reset-form#reset" } do |f| %>
+      <%= f.text_field :content, class: "flex-1 rounded-full border-slate-200 bg-slate-50 px-4 py-3 focus:ring-indigo-500 focus:border-indigo-500", placeholder: t("groups.show.type_message"), required: true, autocomplete: "off" %>
+      <%= f.submit t("groups.show.send"), class: "bg-indigo-600 text-white font-bold px-6 py-3 rounded-full hover:bg-indigo-700 transition cursor-pointer" %>
+    <% end %>
+  </div>
+</div>

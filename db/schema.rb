@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_29_062133) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_30_225314) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -96,6 +96,25 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_29_062133) do
     t.index ["user_id"], name: "index_drop_in_tickets_on_user_id"
   end
 
+  create_table "group_memberships", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "group_id", null: false
+    t.integer "status", default: 0
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["group_id"], name: "index_group_memberships_on_group_id"
+    t.index ["user_id"], name: "index_group_memberships_on_user_id"
+  end
+
+  create_table "groups", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "creator_id", null: false
+    t.text "description"
+    t.string "name"
+    t.datetime "updated_at", null: false
+    t.index ["creator_id"], name: "index_groups_on_creator_id"
+  end
+
   create_table "membership_package_class_types", force: :cascade do |t|
     t.integer "class_type_id", null: false
     t.datetime "created_at", null: false
@@ -153,6 +172,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_29_062133) do
     t.index ["status"], name: "index_memberships_on_status"
     t.index ["user_id", "status"], name: "index_memberships_on_user_id_and_status"
     t.index ["user_id"], name: "index_memberships_on_user_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.integer "group_id", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["group_id"], name: "index_messages_on_group_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
   create_table "private_class_requests", force: :cascade do |t|
@@ -253,6 +282,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_29_062133) do
   add_foreign_key "class_schedules", "users", column: "instructor_id"
   add_foreign_key "drop_in_tickets", "bookings"
   add_foreign_key "drop_in_tickets", "users"
+  add_foreign_key "group_memberships", "groups"
+  add_foreign_key "group_memberships", "users"
+  add_foreign_key "groups", "users", column: "creator_id"
   add_foreign_key "membership_package_class_types", "class_types"
   add_foreign_key "membership_package_class_types", "membership_packages"
   add_foreign_key "membership_pricings", "membership_packages"
@@ -260,6 +292,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_29_062133) do
   add_foreign_key "memberships", "membership_packages"
   add_foreign_key "memberships", "membership_plans"
   add_foreign_key "memberships", "users"
+  add_foreign_key "messages", "groups"
+  add_foreign_key "messages", "users"
   add_foreign_key "private_class_requests", "class_schedules"
   add_foreign_key "private_class_requests", "users"
   add_foreign_key "private_class_requests", "users", column: "preferred_instructor_id"

@@ -58,3 +58,44 @@ en:
   auth:
     sign_in:
       remember_me: "Keep me signed in"
+
+  # === GRUPOS E INVITACIONES ===
+  groups:
+    sidebar_title: "Communities"
+    index:
+      title: "My Groups"
+      no_groups: "You do not belong to any group yet."
+      invited_groups: "Pending Invitations"
+    show:
+      type_message: "Type your message..."
+      send: "Send"
+      empty_chat: "No messages yet. Break the ice!"
+    flash:
+      created: "Group created successfully."
+      updated: "Group updated."
+      destroyed: "Group deleted."
+      message_sent: "Message sent."
+  
+  group_memberships:
+    flash:
+      accepted: "You have joined the group %{name}!"
+      declined: "You have declined the invitation."
+      invited: "Invitation sent to %{name}."
+      removed: "User removed from group."
+
+  admin:
+    groups:
+      title: "Group Management"
+      new: "New Group"
+      edit: "Edit Group"
+      create: "Create Group"
+      update: "Update Group"
+      form:
+        name: "Group Name"
+        description: "Description"
+      members: "Members"
+      invite: "Invite User"
+      remove: "Remove"
+      send_message: "Send Message"
+      chat: "Group Chat"
+      no_members: "This group has no members yet."

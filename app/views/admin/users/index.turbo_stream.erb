@@ -44,17 +44,20 @@
 <% else %>
   <%# 3. ESCENARIO DE FILTRO/BÚSQUEDA: Lo que ya tenías (reemplaza todo) %>
   <%= turbo_stream.replace "users_list" do %>
-    <%= turbo_frame_tag "users_list" do %>
+    <%= turbo_frame_tag "users_list", target: "_top" do %>
       <div class="overflow-x-auto">
-        <table class="w-full min-w-full divide-y divide-slate-200">
-          <%# Recomiendo incluir el thread aquí para que al buscar no se pierdan los títulos %>
-          <thead class="bg-slate-50">
+        <table class="w-full min-w-full divide-y divide-slate-200 table-fixed sm:table-auto" style="min-width: 640px;">
+          <thead class="bg-slate-50 text-left">
             <tr>
-              <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase text-slate-600">Usuario</th>
-              <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase text-slate-600">Rol</th>
-              <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase text-slate-600">Programa</th>
-              <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase text-slate-600">Estado</th>
-              <th scope="col" class="relative px-4 py-3"><span class="sr-only">Acciones</span></th>
+              <th scope="col" class="sticky left-0 z-10 w-[200px] lg:w-[30%] bg-slate-50 px-4 py-3 text-xs font-bold uppercase tracking-wider text-slate-500 shadow-[1px_0_0_0_rgba(0,0,0,0.05)]">
+                <%= t('activerecord.models.user') %>
+              </th>
+              <th scope="col" class="px-4 py-3 text-xs font-bold uppercase text-slate-500"><%= t('activerecord.attributes.user.role') %></th>
+              <th scope="col" class="px-4 py-3 text-[10px] font-black uppercase tracking-widest text-slate-500">Aprobación</th>
+              <th scope="col" class="px-4 py-3 text-xs font-bold uppercase text-slate-500">Estado</th>
+              <th scope="col" class="px-6 py-4 text-center text-xs font-bold uppercase tracking-wider text-slate-500">
+                Acciones
+              </th>
             </tr>
           </thead>
           <tbody id="users_table_body" class="divide-y divide-slate-200 bg-white">

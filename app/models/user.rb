@@ -11,6 +11,11 @@ class User < ApplicationRecord
   has_many :drop_in_tickets, dependent: :destroy
   has_many :bookings, dependent: :destroy
   has_many :product_orders, dependent: :destroy
+  
+  has_many :group_memberships, dependent: :destroy
+  has_many :groups, through: :group_memberships
+  has_many :messages, dependent: :destroy
+  has_many :created_groups, class_name: "Group", foreign_key: "creator_id", dependent: :destroy
 
  #pending how to destroy a instructor user
 
@@ -31,8 +36,8 @@ class User < ApplicationRecord
   after_update :send_welcome_email, if: -> { saved_change_to_approved_at?(from: nil) && approved? }
   before_save :handle_manual_approval, if: -> { approve_on_create == "1" }
   #Admin scope for accounts management
-  scope :pending, -> { where(approved_at: nil) }
-  scope :approved, -> { where.not(approved_at: nil) }
+  scope :pending, -> { where(approved_at: nil, role: :member) }
+  scope :approved, -> { where.not(approved_at: nil).or(where(role: [:admin, :instructor])) }
   scope :active_status, -> { where(status: :active) }
   scope :inactive_status, -> { where(status: :inactive) }
 
@@ -67,11 +72,11 @@ class User < ApplicationRecord
   def self.stats(base_scope = User.all)
     counts = base_scope.select(
       "COUNT(*) as total_rows",
-      # pending: Does not have approved_at and is not inactive/suspended
-      "COUNT(CASE WHEN approved_at IS NULL AND status = 0 THEN 1 END) as pending_rows",
+      # pending: Does not have approved_at, is member (role 0), and is active (status 0)
+      "COUNT(CASE WHEN approved_at IS NULL AND role = 0 AND status = 0 THEN 1 END) as pending_rows",
       
-      # approved: Has approved_at and is active (0)
-      "COUNT(CASE WHEN approved_at IS NOT NULL AND status = 0 THEN 1 END) as approved_rows",
+      # approved: (Has approved_at OR is admin/instructor) and is active (status 0)
+      "COUNT(CASE WHEN (approved_at IS NOT NULL OR role IN (1, 2)) AND status = 0 THEN 1 END) as approved_rows",
       
       # inactive: Any user with status 1 or 2, regardless of approved_at
       "COUNT(CASE WHEN status IN (1, 2) THEN 1 END) as inactive_rows"

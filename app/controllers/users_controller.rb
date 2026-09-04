@@ -21,6 +21,11 @@ class UsersController < ApplicationController
     end
   end
 
+  def acknowledge_review_prompt
+    @user.touch(:review_prompt_acknowledged_at)
+    head :ok
+  end
+
   private
 
   def set_user

@@ -13,6 +13,10 @@
 
   <% else %>
     
+    <% if @user.eligible_for_review_prompt? %>
+      <%= render "dashboard/partials/review_prompt" %>
+    <% end %>
+
     <%# 1. Welcome Card %>
     <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm mb-6 relative overflow-hidden">
       <div class="relative z-10">

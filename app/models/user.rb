@@ -68,6 +68,14 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  def eligible_for_review_prompt?
+    return false if review_prompt_acknowledged_at.present?
+    
+    # Show if user is active and has attended at least 3 classes
+    # Usamos .size en lugar de .count para evitar queries adicionales si la colección ya está cargada (evitar N+1).
+    active? && bookings.attended.size >= 3
+  end
+
   UserStats = Struct.new(:total, :pending, :approved, :inactive)
   def self.stats(base_scope = User.all)
     counts = base_scope.select(

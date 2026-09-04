@@ -1,12 +1,12 @@
-<% password_digest = BCrypt::Password.create("password") %>
+<% password_digest = BCrypt::Password.create("password", cost: BCrypt::Engine::MIN_COST) %>
 
 admin:
   first_name: "Daniel"
   last_name: "Admin"
   email_address: "admin@puertobjj.com"
-  password_digest: <%= BCrypt::Password.create('password') %>
+  password_digest: <%= password_digest %>
   role: 2
-  status: 1
+  status: 0
   identification: "111111111"
   approved_at: <%= Time.current %>
 
@@ -14,7 +14,7 @@ one:
   first_name: "Juan"
   last_name: "Perez"
   email_address: "juan@puertobjj.com"
-  password_digest: <%= BCrypt::Password.create('password') %>
+  password_digest: <%= password_digest %>
   role: 0
   status: 0
   identification: "111111112"
@@ -24,7 +24,7 @@ two:
   first_name: "Maria"
   last_name: "Gomez"
   email_address: "maria@puertobjj.com"
-  password_digest: <%= BCrypt::Password.create('password') %>
+  password_digest: <%= password_digest %>
   role: 0
   status: 0
   identification: "111111113"
@@ -34,7 +34,7 @@ instructor:
   first_name: "Bruce"
   last_name: "Lee"
   email_address: "instructor@puertobjj.com"
-  password_digest: <%= BCrypt::Password.create('password') %>
+  password_digest: <%= password_digest %>
   role: 1
   status: 0
   identification: "111111114"

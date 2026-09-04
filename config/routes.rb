@@ -9,7 +9,9 @@ Rails.application.routes.draw do
     end
   end
   resources :bookings, only: [:create, :index]
-  resource :user, only: [:show, :edit, :update], controller: 'users'
+  resource :user, only: [:show, :edit, :update], controller: 'users' do
+    patch :acknowledge_review_prompt, on: :collection
+  end
   get "mi-membresia/historial", to: "membership_info#history", as: :my_membership_history
   get "mi-membresia", to: "membership_info#show", as: :my_membership
   get "contacto", to: "contact#show", as: :contact
